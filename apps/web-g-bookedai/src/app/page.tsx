@@ -10,13 +10,23 @@ interface Message {
   content: string;
 }
 
-const LANG_LABELS: Record<string, string> = {
-  en: 'EN', vi: 'VI', zh: 'ZH', ja: 'JA', ko: 'KO', th: 'TH', fr: 'FR', de: 'DE', es: 'ES',
-};
+// Primary languages (shown as buttons)
+const PRIMARY_LANGS = ['en', 'vi'] as const;
 
-const LANG_FLAGS: Record<string, string> = {
-  en: '🇦🇺', vi: '🇻🇳', zh: '🇨🇳', ja: '🇯🇵', ko: '🇰🇷', th: '🇹🇭', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸',
-};
+// All languages with labels
+const ALL_LANGS: { code: string; flag: string; label: string }[] = [
+  { code: 'en', flag: '🇦🇺', label: 'English' },
+  { code: 'vi', flag: '🇻🇳', label: 'Tiếng Việt' },
+  { code: 'zh', flag: '🇨🇳', label: '中文' },
+  { code: 'ja', flag: '🇯🇵', label: '日本語' },
+  { code: 'ko', flag: '🇰🇷', label: '한국어' },
+  { code: 'th', flag: '🇹🇭', label: 'ไทย' },
+  { code: 'fr', flag: '🇫🇷', label: 'Français' },
+  { code: 'de', flag: '🇩🇪', label: 'Deutsch' },
+  { code: 'es', flag: '🇪🇸', label: 'Español' },
+];
+
+const LANG_FLAGS: Record<string, string> = Object.fromEntries(ALL_LANGS.map(l => [l.code, l.flag]));
 
 const WELCOME_MSG = "Hello! I'm the bookedai.au assistant. I can help you find AI mentoring services, book sessions, or answer questions about our programs. What can I help you with?";
 

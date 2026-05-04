@@ -30,11 +30,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Longcare' }],
   openGraph: {
-    title: 'Longcare — AI Mentor & Learning Platform',
+    title: 'Longcare — AI Mentor & Learning',
     description:
-      'AI-powered mentoring and learning programs. Smart scheduling, progress tracking, and personalised insights for individuals and SMEs.',
+      'AI-powered mentoring sessions and learning programs for individuals and SMEs in Australia.',
     url: 'https://longcare.au',
-    siteName: 'Longcare',
+    siteName: 'Longcare AU',
     locale: 'en_AU',
     type: 'website',
     images: [
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Longcare — AI Mentor & Learning Platform',
+    title: 'Longcare — AI Mentor & Learning',
     description:
-      'AI-powered mentoring and learning. Book sessions, track progress, grow with AI insights.',
+      'Personalised AI mentoring from $29 AUD. Google Meet + AI notes.',
     images: ['/og-image.png'],
   },
   icons: {
