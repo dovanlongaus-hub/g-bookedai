@@ -11,6 +11,58 @@ import { randomUUID } from 'crypto';
 
 export const paymentRouter = Router();
 
+// Guest checkout — no auth required (for booking page)
+paymentRouter.post('/guest-checkout', async (req, res, next) => {
+  try {
+    const { serviceId } = req.body;
+    const env = getEnv();
+
+    if (!serviceId) {
+      res.status(400).json({ success: false, error: { code: 'MISSING_SERVICE', message: 'serviceId required' } });
+      return;
+    }
+
+    // Get service from DB
+    const serviceResult = await query('SELECT * FROM services WHERE id = $1 AND active = true', [serviceId]);
+    if (serviceResult.rows.length === 0) {
+      res.status(404).json({ success: false, error: { code: 'SERVICE_NOT_FOUND', message: 'Service not found' } });
+      return;
+    }
+
+    const service = serviceResult.rows[0];
+
+    if (!env.STRIPE_SECRET_KEY) {
+      res.status(503).json({ success: false, error: { code: 'PAYMENT_UNAVAILABLE', message: 'Stripe not configured' } });
+      return;
+    }
+
+    const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [{
+        price_data: {
+          currency: 'aud',
+          product_data: {
+            name: service.name,
+            description: service.description || 'AI Mentoring Session — Longcare AU',
+          },
+          unit_amount: service.price_cents,
+        },
+        quantity: 1,
+      }],
+      success_url: 'https://book.longcare.au?success=true',
+      cancel_url: 'https://book.longcare.au?cancelled=true',
+      metadata: { serviceId: service.id, serviceName: service.name },
+    });
+
+    logger.info({ serviceId, sessionId: session.id }, 'Guest Stripe checkout created');
+    res.json({ success: true, data: { checkoutUrl: session.url } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Authenticated checkout
 paymentRouter.post('/checkout', authenticate, validate(checkoutSchema), async (req, res, next) => {
   try {
     const { bookingId, method } = req.body;

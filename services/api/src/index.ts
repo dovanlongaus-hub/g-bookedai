@@ -22,6 +22,9 @@ import { closePool } from '@bookedai/db';
 const env = getEnv();
 const app = express();
 
+// Trust proxy (behind nginx/Cloudflare)
+app.set('trust proxy', 1);
+
 // Security
 app.use(helmet());
 app.use(requestId);

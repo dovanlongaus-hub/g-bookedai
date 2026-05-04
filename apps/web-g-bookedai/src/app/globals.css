@@ -2,15 +2,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #050510;
-  --text-main: #f8f9fa;
-  --text-muted: #8b92a5;
-  --primary: #6366f1;
-  --primary-hover: #818cf8;
-  --accent: #22d3ee;
-  --surface: rgba(255, 255, 255, 0.04);
-  --surface-border: rgba(255, 255, 255, 0.08);
-  --surface-hover: rgba(255, 255, 255, 0.08);
+  --bg-color: #ffffff;
+  --text-main: #0f2942;
+  --text-muted: #64748b;
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --accent: #2dd4bf;
+  --navy: #0f2942;
+  --surface: rgba(15, 41, 66, 0.04);
+  --surface-border: rgba(15, 41, 66, 0.1);
+  --surface-hover: rgba(15, 41, 66, 0.08);
   --success: #22c55e;
 }
 
@@ -21,8 +22,8 @@ body {
   background-color: var(--bg-color);
   color: var(--text-main);
   background-image:
-    radial-gradient(circle at 30% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 30% 0%, rgba(13, 148, 136, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.05) 0%, transparent 50%);
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -44,7 +45,7 @@ body {
 .chat-header h1 {
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #fff, #818cf8);
+  background: linear-gradient(135deg, #0f2942, #0d9488);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -77,7 +78,7 @@ body {
 .lang-btn.active, .lang-btn:hover {
   border-color: var(--primary);
   color: var(--primary);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(13, 148, 136, 0.1);
 }
 
 /* Messages */
@@ -168,8 +169,8 @@ body {
 
 .suggestion:hover {
   border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(34, 211, 238, 0.1);
+  color: var(--primary);
+  background: rgba(13, 148, 136, 0.08);
 }
 
 /* Input */

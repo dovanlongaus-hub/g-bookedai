@@ -63,20 +63,20 @@ export default function BookingPage() {
     setStripeLoading(true);
     setStripeError(null);
     try {
-      const res = await fetch('/api/payment/checkout', {
+      const res = await fetch('/api/payment/guest-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookingId: 'demo', method: 'stripe_card' }),
+        body: JSON.stringify({ serviceId: selectedService?.id }),
       });
       const json = await res.json();
       if (json.success && json.data?.checkoutUrl) {
         window.location.href = json.data.checkoutUrl;
       } else {
-        setStripeError('Stripe test mode — configure STRIPE_SECRET_KEY to enable');
+        setStripeError(json.error?.message || 'Payment service unavailable. Please try bank transfer.');
         setPaymentMode('stripe');
       }
     } catch {
-      setStripeError('Stripe test mode — configure STRIPE_SECRET_KEY to enable');
+      setStripeError('Unable to connect to payment service. Please try bank transfer or Pay Later.');
       setPaymentMode('stripe');
     } finally {
       setStripeLoading(false);

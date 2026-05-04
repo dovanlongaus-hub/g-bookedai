@@ -1,3 +1,18 @@
+// Load .env file
+const { readFileSync } = require('fs');
+const { resolve } = require('path');
+const dotenv = {};
+try {
+  const envFile = readFileSync(resolve(__dirname, '.env'), 'utf-8');
+  envFile.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [key, ...vals] = trimmed.split('=');
+      dotenv[key.trim()] = vals.join('=').trim();
+    }
+  });
+} catch (e) {}
+
 module.exports = {
   apps: [
     {
@@ -7,11 +22,13 @@ module.exports = {
       cwd: '/home/dovanlong/g.bookedai.au',
       env: {
         PORT: 8090,
-        DATABASE_URL: 'postgresql://bookedai:localpass@localhost:5432/longcare',
+        DATABASE_URL: dotenv.DATABASE_URL || 'postgresql://bookedai:localpass@localhost:5432/longcare',
         NODE_ENV: 'production',
         AGENT_SERVICE_URL: 'http://localhost:8091',
-        GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
+        GEMINI_API_KEY: dotenv.GEMINI_API_KEY || '',
+        STRIPE_SECRET_KEY: dotenv.STRIPE_SECRET_KEY || '',
+        GOOGLE_CLIENT_ID: dotenv.GOOGLE_CLIENT_ID || '',
+        GOOGLE_CLIENT_SECRET: dotenv.GOOGLE_CLIENT_SECRET || '',
         ALLOWED_ORIGINS: 'https://longcare.au,https://book.longcare.au,https://app.longcare.au,https://admin.longcare.au,https://g.longcare.au,http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004',
       },
     },
@@ -22,7 +39,7 @@ module.exports = {
       cwd: '/home/dovanlong/g.bookedai.au',
       env: {
         PORT: 8091,
-        GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+        GEMINI_API_KEY: dotenv.GEMINI_API_KEY || '',
       },
     },
     {
