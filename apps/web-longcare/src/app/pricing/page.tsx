@@ -166,7 +166,7 @@ export default function PricingPage() {
               <li key={f}>{f}</li>
             ))}
           </ul>
-          <a href="https://wa.me/61481993178?text=Hi%2C%20I%27m%20interested%20in%20AI%20Business%20Transformation" className="btn btn-primary" style={{ width: '100%' }}>Contact Us</a>
+          <a href="https://wa.me/61455301335?text=Hi%2C%20I%27m%20interested%20in%20AI%20Business%20Transformation" className="btn btn-primary" style={{ width: '100%' }}>Contact Us</a>
         </div>
       </div>
 
@@ -235,7 +235,7 @@ export default function PricingPage() {
 
       <div style={{ textAlign: 'center', marginTop: '2rem' }}>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>All sessions via Google Meet | Pay by card, QR, or Pay Later | Cancel free 24h before</p>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>Questions? WhatsApp <a href="https://wa.me/61481993178" style={{ color: 'var(--accent)' }}>+61 481 993 178</a></p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>Questions? WhatsApp <a href="https://wa.me/61455301335" style={{ color: 'var(--accent)' }}>+61 455 301 335</a></p>
       </div>
     </div>
   );

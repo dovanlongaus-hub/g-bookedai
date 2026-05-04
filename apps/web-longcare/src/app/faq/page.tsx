@@ -20,7 +20,7 @@ const faqCategories = [
       },
       {
         q: 'Can I reschedule or cancel a session?',
-        a: 'Yes. You can reschedule or cancel free of charge up to 24 hours before your session. Simply use the link in your confirmation email or contact us via WhatsApp at +61 481 993 178.',
+        a: 'Yes. You can reschedule or cancel free of charge up to 24 hours before your session. Simply use the link in your confirmation email or contact us via WhatsApp at +61 455 301 335.',
       },
     ],
   },
@@ -188,7 +188,7 @@ export default function FAQPage() {
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
-              href="https://wa.me/61481993178?text=Hi%2C%20I%20have%20a%20question%20about%20Longcare"
+              href="https://wa.me/61455301335?text=Hi%2C%20I%20have%20a%20question%20about%20Longcare"
               className="btn btn-primary"
             >
               WhatsApp Us

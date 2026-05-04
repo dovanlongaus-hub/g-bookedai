@@ -162,18 +162,18 @@ async function generateFallbackReply(message: string, language?: string): Promis
       return 'Để đặt lịch mentoring AI:\n\n1. Truy cập book.longcare.au\n2. Chọn dịch vụ phù hợp\n3. Chọn thời gian\n4. Điền thông tin: tên, email, số điện thoại\n5. Thanh toán bằng thẻ, QR code, hoặc chọn "Trả sau"\n\nBuổi học diễn ra qua Google Meet. Bạn muốn bắt đầu với buổi 30 phút ($29 AUD)?';
     }
     if (lower.includes('hủy') || lower.includes('đổi') || lower.includes('cancel')) {
-      return 'Chính sách hủy/đổi lịch:\n\n• Hủy miễn phí trước 24h\n• Dưới 24h: phí $15 AUD\n• Không đến: không hoàn tiền\n\nLiên hệ để đổi lịch:\n• WhatsApp: +61 481 993 178\n• Email: ceo@longcare.au';
+      return 'Chính sách hủy/đổi lịch:\n\n• Hủy miễn phí trước 24h\n• Dưới 24h: phí $15 AUD\n• Không đến: không hoàn tiền\n\nLiên hệ để đổi lịch:\n• WhatsApp: +61 455 301 335\n• Email: ceo@longcare.au';
     }
     if (lower.includes('thanh toán') || lower.includes('chuyển khoản') || lower.includes('trả')) {
       return 'Các hình thức thanh toán:\n\n• Thẻ tín dụng/ghi nợ (Stripe)\n• Quét mã QR (AUD hoặc VND)\n• Chuyển khoản Vietcombank\n• Trả sau (đặt trước, thanh toán sau)\n\nTruy cập book.longcare.au để thanh toán!';
     }
     if (lower.includes('liên hệ') || lower.includes('hỗ trợ') || lower.includes('contact')) {
-      return 'Liên hệ Longcare:\n\n• WhatsApp: +61 481 993 178 (nhanh nhất)\n• Email: ceo@longcare.au\n• Chat AI: g.longcare.au (24/7)\n\nChúng tôi trả lời trong 2 giờ (giờ làm việc 9h-18h AEST).';
+      return 'Liên hệ Longcare:\n\n• WhatsApp: +61 455 301 335 (nhanh nhất)\n• Email: ceo@longcare.au\n• Chat AI: g.longcare.au (24/7)\n\nChúng tôi trả lời trong 2 giờ (giờ làm việc 9h-18h AEST).';
     }
     if (lower.includes('xin chào') || lower.includes('chào') || lower.includes('hello') || lower.includes('hi')) {
       return 'Xin chào! Chào mừng đến với Longcare AU!\n\nTôi có thể giúp bạn:\n• Tìm hiểu dịch vụ mentoring AI\n• Đặt lịch học\n• Xem bảng giá & thanh toán\n• Hỗ trợ hủy/đổi lịch\n\nBạn cần gì?';
     }
-    return 'Xin chào! Tôi là trợ lý AI của Longcare AU.\n\nTôi có thể giúp bạn:\n• Tìm hiểu dịch vụ mentoring AI\n• Đặt lịch: book.longcare.au\n• Xem bảng giá & thanh toán\n• Hủy/đổi lịch\n• Hỗ trợ kỹ thuật\n\nHoặc chat WhatsApp: +61 481 993 178\n\nBạn muốn bắt đầu với gì?';
+    return 'Xin chào! Tôi là trợ lý AI của Longcare AU.\n\nTôi có thể giúp bạn:\n• Tìm hiểu dịch vụ mentoring AI\n• Đặt lịch: book.longcare.au\n• Xem bảng giá & thanh toán\n• Hủy/đổi lịch\n• Hỗ trợ kỹ thuật\n\nHoặc chat WhatsApp: +61 455 301 335\n\nBạn muốn bắt đầu với gì?';
   }
 
   if (language === 'zh') {
@@ -191,7 +191,7 @@ async function generateFallbackReply(message: string, language?: string): Promis
     return 'Great! To book a session:\n\n1. Visit book.longcare.au\n2. Choose your service\n3. Select a time slot\n4. Enter your name, email & phone\n5. Pay with card, QR scan, or choose "Pay Later"\n\nYour session will be on Google Meet, and you\'ll get AI-generated notes afterward.\n\nWould you like to start with our $29 Starter Session?';
   }
   if (lower.includes('cancel') || lower.includes('reschedule') || lower.includes('change')) {
-    return 'No worries! Here\'s our policy:\n\n• Cancel or reschedule for free up to 24h before\n• Less than 24h: $15 reschedule fee\n• No-show: no refund\n\nTo reschedule, contact us:\n• WhatsApp: +61 481 993 178\n• Email: ceo@longcare.au\n\nWe\'re happy to find a better time for you!';
+    return 'No worries! Here\'s our policy:\n\n• Cancel or reschedule for free up to 24h before\n• Less than 24h: $15 reschedule fee\n• No-show: no refund\n\nTo reschedule, contact us:\n• WhatsApp: +61 455 301 335\n• Email: ceo@longcare.au\n\nWe\'re happy to find a better time for you!';
   }
   if (lower.includes('refund') || lower.includes('money back')) {
     return 'Refund policy:\n\n• Full refund if cancelled 24h+ before session\n• 50% refund for cancellation within 24h\n• No refund for no-shows\n\nRefunds are processed within 5 business days.\n\nContact ceo@longcare.au for refund requests.';
@@ -203,7 +203,7 @@ async function generateFallbackReply(message: string, language?: string): Promis
     return 'All sessions are conducted online via Google Meet!\n\n• You\'ll receive a Meet link after booking\n• Calendar invite is sent to your email\n• No software to install — works in your browser\n• Sessions are recorded (with your consent) for AI notes\n\nAfter your session, you\'ll get:\n• AI-generated summary & notes\n• Q&A extraction\n• Personalized next steps';
   }
   if (lower.includes('contact') || lower.includes('email') || lower.includes('phone') || lower.includes('whatsapp') || lower.includes('support')) {
-    return 'You can reach us at:\n\n• WhatsApp: +61 481 993 178 (fastest)\n• Email: ceo@longcare.au\n• AI Chat: g.longcare.au (24/7)\n\nWe respond within 2 hours during business hours (9am-6pm AEST).';
+    return 'You can reach us at:\n\n• WhatsApp: +61 455 301 335 (fastest)\n• Email: ceo@longcare.au\n• AI Chat: g.longcare.au (24/7)\n\nWe respond within 2 hours during business hours (9am-6pm AEST).';
   }
   if (lower.includes('mentor') || lower.includes('learn') || lower.includes('ai') || lower.includes('what')) {
     return 'Longcare AU offers personalized AI mentoring:\n\n• AI Starter ($29) — Quick intro to AI tools\n• AI Mentor ($99) — Deep-dive personalized session\n• Packages ($450-$850) — Structured learning paths\n• Business Transformation ($1,500+) — For SMEs\n\nEach session includes:\n• Live Google Meet with your mentor\n• AI-generated session notes\n• Q&A extraction\n• Personalized next steps\n\nWhat are you looking to learn?';
@@ -212,10 +212,10 @@ async function generateFallbackReply(message: string, language?: string): Promis
     return 'Hello! Welcome to Longcare AU!\n\nI\'m here to help you with:\n• Finding the right AI mentoring service\n• Booking a session\n• Pricing & payment info\n• Technical support\n\nWhat can I help you with today?';
   }
   if (lower.includes('thank') || lower.includes('thanks') || lower.includes('cheers')) {
-    return 'You\'re welcome! Happy to help.\n\nIf you need anything else:\n• Book: book.longcare.au\n• WhatsApp: +61 481 993 178\n• Email: ceo@longcare.au\n\nHave a great day!';
+    return 'You\'re welcome! Happy to help.\n\nIf you need anything else:\n• Book: book.longcare.au\n• WhatsApp: +61 455 301 335\n• Email: ceo@longcare.au\n\nHave a great day!';
   }
 
-  return 'Hello! I\'m the Longcare AI assistant. I can help you with:\n\n• Finding the right AI mentoring service\n• Booking a session (book.longcare.au)\n• Pricing & payment information\n• Cancel/reschedule support\n• Technical questions\n\nOr chat with us on WhatsApp: +61 481 993 178\n\nWhat would you like to know?';
+  return 'Hello! I\'m the Longcare AI assistant. I can help you with:\n\n• Finding the right AI mentoring service\n• Booking a session (book.longcare.au)\n• Pricing & payment information\n• Cancel/reschedule support\n• Technical questions\n\nOr chat with us on WhatsApp: +61 455 301 335\n\nWhat would you like to know?';
 }
 
 function extractActions(reply: string): { type: string; label: string; action: string }[] {

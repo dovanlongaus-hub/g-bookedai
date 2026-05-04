@@ -37,7 +37,7 @@ export const welcomeSequence: DripEmail[] = [
             <p><strong>Date:</strong> {{date}}</p>
             <p><strong>Meeting:</strong> <a href="{{meetLink}}">{{meetLink}}</a></p>
           </div>
-          <p style="margin-top: 1.5rem;">Questions? Reply to this email or WhatsApp us at <a href="https://wa.me/61481993178">+61 481 993 178</a></p>
+          <p style="margin-top: 1.5rem;">Questions? Reply to this email or WhatsApp us at <a href="https://wa.me/61455301335">+61 455 301 335</a></p>
         </div>
         <div style="padding: 1rem; text-align: center; color: #999; font-size: 12px;">
           Longcare AU — AI-powered mentoring | <a href="https://longcare.au">longcare.au</a>

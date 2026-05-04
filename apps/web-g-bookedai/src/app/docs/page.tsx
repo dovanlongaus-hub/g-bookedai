@@ -214,7 +214,7 @@ export default function DocsPage() {
               </div>
               <div style={{ marginBottom: 20 }}>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 8 }}>WhatsApp</p>
-                <a href="https://wa.me/61481993178" style={{ color: 'var(--accent)', fontSize: '1.1rem', fontWeight: 600 }}>+61 481 993 178</a>
+                <a href="https://wa.me/61455301335" style={{ color: 'var(--accent)', fontSize: '1.1rem', fontWeight: 600 }}>+61 455 301 335</a>
               </div>
               <div>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 8 }}>Location</p>
@@ -254,7 +254,7 @@ export default function DocsPage() {
           <div>
             <h4 className="footer-heading">Contact</h4>
             <a href="mailto:ceo@longcare.au" className="footer-link">ceo@longcare.au</a>
-            <a href="https://wa.me/61481993178" className="footer-link">WhatsApp</a>
+            <a href="https://wa.me/61455301335" className="footer-link">WhatsApp</a>
             <span className="footer-link">Sydney, Australia</span>
           </div>
         </div>

@@ -66,7 +66,7 @@ export const tools = {
   },
 
   generateWhatsAppLink(message: string): string {
-    return `https://wa.me/61481993178?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/61455301335?text=${encodeURIComponent(message)}`;
   },
 
   generateMeetLink(ref: string): string {

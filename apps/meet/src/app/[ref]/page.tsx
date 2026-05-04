@@ -86,7 +86,7 @@ export default function MeetingRoom() {
       <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         <a href="https://longcare.au" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.85rem' }}>longcare.au</a>
         <a href="https://book.longcare.au" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.85rem' }}>Book Another</a>
-        <a href={`https://wa.me/61481993178?text=${encodeURIComponent(`Hi, I'm joining meeting ${ref}`)}`} style={{ color: '#25D366', textDecoration: 'none', fontSize: '0.85rem' }}>WhatsApp Support</a>
+        <a href={`https://wa.me/61455301335?text=${encodeURIComponent(`Hi, I'm joining meeting ${ref}`)}`} style={{ color: '#25D366', textDecoration: 'none', fontSize: '0.85rem' }}>WhatsApp Support</a>
       </div>
 
       <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', marginTop: '2rem' }}>

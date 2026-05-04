@@ -218,7 +218,7 @@ export default function SecurityPage() {
           <div>
             <h4 className="footer-heading">Contact</h4>
             <a href="mailto:ceo@longcare.au" className="footer-link">ceo@longcare.au</a>
-            <a href="https://wa.me/61481993178" className="footer-link">WhatsApp</a>
+            <a href="https://wa.me/61455301335" className="footer-link">WhatsApp</a>
             <span className="footer-link">Sydney, Australia</span>
           </div>
         </div>

@@ -523,7 +523,7 @@ export default function BookingPage() {
                   <div style={{ background: '#fff', display: 'inline-block', padding: '16px', borderRadius: '16px' }}>
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
-                        `BSB: 062517\nAccount: 11404999\nPayID: 0481993178\nName: Van Long DO\nAmount: ${selectedService ? (selectedService.price_cents / 100).toFixed(2) : '0'} AUD\nRef: BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`
+                        `BSB: 062517\nAccount: 11404999\nPayID: 0455301335\nName: Van Long DO\nAmount: ${selectedService ? (selectedService.price_cents / 100).toFixed(2) : '0'} AUD\nRef: BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`
                       )}`}
                       alt="Scan to Pay AUD"
                       width={220}
@@ -664,7 +664,7 @@ export default function BookingPage() {
                 : 'Your session will be via Google Meet.'}
             </p>
             <a
-              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent((selectedService?.name || 'AI Session') + ' — Longcare AU')}&dates=${(() => { const d = new Date(); d.setDate(d.getDate() + 3); const start = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; d.setHours(d.getHours() + 1); const end = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; return start + '/' + end; })()}&details=${encodeURIComponent(`Longcare AU — AI Mentoring Session\n\nService: ${selectedService?.name || ''}\nBooking Ref: ${bookingRef}\nClient: ${contactName}\n\nJoin via Google Meet:\n${meetLink}\n\nContact: ceo@longcare.au\nWhatsApp: +61 481 993 178`)}&location=${encodeURIComponent(meetLink)}`}
+              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent((selectedService?.name || 'AI Session') + ' — Longcare AU')}&dates=${(() => { const d = new Date(); d.setDate(d.getDate() + 3); const start = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; d.setHours(d.getHours() + 1); const end = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; return start + '/' + end; })()}&details=${encodeURIComponent(`Longcare AU — AI Mentoring Session\n\nService: ${selectedService?.name || ''}\nBooking Ref: ${bookingRef}\nClient: ${contactName}\n\nJoin via Google Meet:\n${meetLink}\n\nContact: ceo@longcare.au\nWhatsApp: +61 455 301 335`)}&location=${encodeURIComponent(meetLink)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
@@ -679,7 +679,7 @@ export default function BookingPage() {
           {contactPhone && (
             <div style={{ background: 'rgba(37, 211, 102, 0.08)', border: '1px solid rgba(37, 211, 102, 0.2)', borderRadius: '12px', padding: '1rem', marginBottom: '1rem' }}>
               <a
-                href={`https://wa.me/61481993178?text=${encodeURIComponent(`Hi Longcare! I just booked: ${selectedService?.name || 'a session'}\nRef: ${bookingRef}\nName: ${contactName}\nTime: ${selectedTime}`)}`}
+                href={`https://wa.me/61455301335?text=${encodeURIComponent(`Hi Longcare! I just booked: ${selectedService?.name || 'a session'}\nRef: ${bookingRef}\nName: ${contactName}\nTime: ${selectedTime}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary"

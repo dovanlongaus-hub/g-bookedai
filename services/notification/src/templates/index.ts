@@ -28,7 +28,7 @@ export function getEmailTemplate(type: NotificationType, data: Record<string, un
             <div style="background: #fff3cd; padding: 0.75rem 1rem; border-radius: 6px; margin: 1rem 0; font-size: 13px; color: #856404;">
               Please complete payment before your session if you haven't already. <a href="https://book.longcare.au" style="color: #856404; font-weight: bold;">Pay Now</a>
             </div>
-            <p style="color: #666; font-size: 13px; margin-top: 1rem;">Need help? WhatsApp: <a href="https://wa.me/61481993178" style="color: #25D366;">+61 481 993 178</a> | Email: <a href="mailto:ceo@longcare.au">ceo@longcare.au</a></p>
+            <p style="color: #666; font-size: 13px; margin-top: 1rem;">Need help? WhatsApp: <a href="https://wa.me/61455301335" style="color: #25D366;">+61 455 301 335</a> | Email: <a href="mailto:ceo@longcare.au">ceo@longcare.au</a></p>
             <hr style="margin: 2rem 0; border: none; border-top: 1px solid #eee;" />
             <p style="color: #999; font-size: 11px;">Longcare AU — AI-powered mentoring | <a href="https://longcare.au" style="color: #999;">longcare.au</a></p>
           </div>`,
