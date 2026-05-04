@@ -14,9 +14,11 @@ export default function Home() {
             <img src="/logo-light.png" alt="BookedAI" style={{ height: 32 }} />
           </a>
           <div className="nav-links">
-            <a href="#features">Features</a>
+            <a href="/features">Features</a>
             <a href="#pricing">Pricing</a>
-            <a href="#how-it-works">Docs</a>
+            <a href="/docs">Docs</a>
+            <a href="/integrations">Integrations</a>
+            <a href="/partners">Partners</a>
             <a href="https://longcare.au">Case Study</a>
             <a href="#signup" className="btn btn-primary">Get Started</a>
           </div>
@@ -402,16 +404,16 @@ export default function Home() {
           </div>
           <div>
             <h4 className="footer-heading">Product</h4>
-            <a href="#features" className="footer-link">Features</a>
+            <a href="/features" className="footer-link">Features</a>
             <a href="#pricing" className="footer-link">Pricing</a>
-            <a href="#how-it-works" className="footer-link">How It Works</a>
-            <a href="#signup" className="footer-link">Sign Up</a>
+            <a href="/integrations" className="footer-link">Integrations</a>
+            <a href="/security" className="footer-link">Security</a>
           </div>
           <div>
             <h4 className="footer-heading">Resources</h4>
             <a href="https://longcare.au" className="footer-link">Case Study</a>
-            <a href="#features" className="footer-link">Documentation</a>
-            <a href="#pricing" className="footer-link">API Reference</a>
+            <a href="/docs" className="footer-link">Documentation</a>
+            <a href="/partners" className="footer-link">Partners</a>
           </div>
           <div>
             <h4 className="footer-heading">Contact</h4>

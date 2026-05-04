@@ -199,6 +199,10 @@ export default function Home() {
       </div>
       <div className="footer-bottom">
         &copy; 2026 Longcare AU. All rights reserved.
+        <span style={{ margin: '0 0.5rem' }}>|</span>
+        <a href="/terms" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Terms of Service</a>
+        <span style={{ margin: '0 0.5rem' }}>|</span>
+        <a href="/privacy" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Privacy Policy</a>
       </div>
     </footer>
   </>

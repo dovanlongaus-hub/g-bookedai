@@ -22,6 +22,9 @@ export function Nav() {
           <a href="/pricing" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>Pricing</a>
           <a href="/how-it-works" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>How it Works</a>
           <a href="/faq" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>FAQ</a>
+          <a href="/mentors" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>Mentors</a>
+          <a href="/testimonials" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>Testimonials</a>
+          <a href="/blog" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>Blog</a>
           <a href="/about" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>About</a>
           <a href="/contact" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>Contact</a>
           <a href="https://g.longcare.au" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.9rem' }}>AI Chat</a>
