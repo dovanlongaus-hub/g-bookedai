@@ -1,4 +1,17 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 export default function AdminDashboard() {
+  const [apiHealth, setApiHealth] = useState<any>(null);
+  const [serviceCount, setServiceCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('/api/health').then(r => r.json()).then(setApiHealth).catch(() => {});
+    fetch('/api/services').then(r => r.json()).then(d => {
+      if (d.success) setServiceCount(d.data.length);
+    }).catch(() => {});
+  }, []);
   const recentBookings = [
     { id: 'BK-1058', user: 'Long D.', service: 'Career Pathway Review', status: 'pending' as const, amount: '$149.00', date: '9 May 2026' },
     { id: 'BK-1052', user: 'Minh T.', service: 'ML Fundamentals', status: 'confirmed' as const, amount: '$199.00', date: '7 May 2026' },
@@ -240,6 +253,27 @@ export default function AdminDashboard() {
       {/* System Health */}
       <section className="section">
         <h2>System Health</h2>
+        {apiHealth && (
+          <div className="card" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className={`health-dot ${apiHealth.status === 'ok' ? 'healthy' : 'degraded'}`} />
+            <div>
+              <strong>Live API Status:</strong>{' '}
+              <span style={{ color: apiHealth.status === 'ok' ? 'var(--success)' : 'var(--warning)' }}>
+                {apiHealth.status === 'ok' ? 'Healthy' : 'Degraded'}
+              </span>
+              {apiHealth.timestamp && (
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginLeft: '0.75rem' }}>
+                  Last checked: {new Date(apiHealth.timestamp).toLocaleTimeString()}
+                </span>
+              )}
+              {serviceCount !== null && (
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginLeft: '0.75rem' }}>
+                  {serviceCount} services active
+                </span>
+              )}
+            </div>
+          </div>
+        )}
         <div className="health-grid">
           {systemHealth.map((item) => (
             <div className="health-item" key={item.name}>

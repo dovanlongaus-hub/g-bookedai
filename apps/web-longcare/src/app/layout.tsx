@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { LocalBusinessSchema } from '../components/schema-markup';
 import { Analytics } from '../components/analytics';
+import { Nav } from '../components/nav';
 
 export const metadata: Metadata = {
   title: 'Longcare — AI Mentor & Learning',
@@ -19,7 +20,8 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0070f3" />
       </head>
-      <body>
+      <body style={{ paddingTop: '64px' }}>
+        <Nav />
         <Analytics />
         <LocalBusinessSchema />
         {children}

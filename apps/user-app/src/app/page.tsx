@@ -1,4 +1,18 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 export default function Dashboard() {
+  const [isDemo, setIsDemo] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/services')
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) setIsDemo(false);
+      })
+      .catch(() => {});
+  }, []);
   const upcomingBookings = [
     {
       id: 'BK-1047',
@@ -91,6 +105,17 @@ export default function Dashboard() {
           </p>
         </div>
       </div>
+
+      {/* Demo Mode Banner */}
+      {isDemo && (
+        <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: 12, padding: '1rem 1.5rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <strong>Demo Mode</strong>
+            <span style={{ color: 'var(--text-muted)', marginLeft: '0.75rem' }}>Sign in with Google to see your real bookings and learning history</span>
+          </div>
+          <a href="https://g.longcare.au" className="btn btn-primary" style={{ margin: 0, padding: '0.5rem 1rem', width: 'auto', fontSize: '0.85rem' }}>Sign In</a>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="stats-grid">
