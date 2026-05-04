@@ -48,7 +48,7 @@ module.exports = {
       script: 'npx',
       args: 'next dev -p 3000',
       cwd: '/home/dovanlong/g.bookedai.au/apps/web-g-bookedai',
-      env: { API_URL: 'http://localhost:8090', NEXT_PUBLIC_GA4_ID: dotenv.GA4_MEASUREMENT_ID || '', NEXT_PUBLIC_GTM_ID: dotenv.GTM_ID || '' },
+      env: { API_URL: 'http://localhost:8090', NEXT_PUBLIC_GA4_ID: 'G-2L68DR1GD4', NEXT_PUBLIC_GTM_ID: dotenv.GTM_ID || '' },
     },
     {
       name: 'web-longcare',
