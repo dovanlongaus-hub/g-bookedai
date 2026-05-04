@@ -4,6 +4,38 @@ import { useState } from 'react';
 
 export default function Home() {
   const [formData, setFormData] = useState({ business: '', email: '', phone: '' });
+  const [signupStatus, setSignupStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [signupMessage, setSignupMessage] = useState('');
+
+  const handleSignup = async () => {
+    if (!formData.business || !formData.email) {
+      setSignupMessage('Please enter your business name and email.');
+      setSignupStatus('error');
+      return;
+    }
+    setSignupStatus('loading');
+    setSignupMessage('');
+    try {
+      const res = await fetch('/api/partners/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ businessName: formData.business, email: formData.email, phone: formData.phone, plan: 'starter' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSignupStatus('success');
+        setSignupMessage(data.data.message);
+        trackEvent('sign_up', { method: 'form' });
+        trackEvent('start_trial');
+      } else {
+        setSignupStatus('error');
+        setSignupMessage(data.error?.message || 'Something went wrong. Please try again.');
+      }
+    } catch {
+      setSignupStatus('error');
+      setSignupMessage('Network error. Please try again.');
+    }
+  };
 
   const trackEvent = (name: string, params?: Record<string, any>) => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -388,10 +420,24 @@ export default function Home() {
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
-            <button className="btn btn-primary btn-full btn-lg" onClick={() => { trackEvent('sign_up', { method: 'form' }); trackEvent('start_trial'); }}>Start Free Trial</button>
-            <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: 12 }}>
-              14-day free trial &middot; No credit card &middot; Cancel anytime
-            </p>
+            <button
+              className="btn btn-primary btn-full btn-lg"
+              disabled={signupStatus === 'loading'}
+              onClick={handleSignup}
+            >
+              {signupStatus === 'loading' ? 'Submitting...' : 'Start Free Trial'}
+            </button>
+            {signupStatus === 'success' && (
+              <p style={{ textAlign: 'center', color: '#10b981', fontSize: '0.85rem', marginTop: 12 }}>{signupMessage}</p>
+            )}
+            {signupStatus === 'error' && (
+              <p style={{ textAlign: 'center', color: '#ef4444', fontSize: '0.85rem', marginTop: 12 }}>{signupMessage}</p>
+            )}
+            {signupStatus === 'idle' && (
+              <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: 12 }}>
+                14-day free trial &middot; No credit card &middot; Cancel anytime
+              </p>
+            )}
           </div>
         </div>
       </section>

@@ -27,6 +27,49 @@ async function seed() {
     `, [s.name, s.desc, s.price]);
   }
 
+  // Seed availability slots for next 14 days
+  const serviceResult = await pool.query("SELECT id FROM services WHERE tenant_id = '00000000-0000-0000-0000-000000000001' LIMIT 5");
+  const serviceIds = serviceResult.rows.map((r: any) => r.id);
+
+  if (serviceIds.length > 0) {
+    const now = new Date();
+    let slotsCreated = 0;
+
+    for (let day = 1; day <= 14; day++) {
+      const date = new Date(now);
+      date.setDate(date.getDate() + day);
+
+      // Skip weekends
+      if (date.getDay() === 0 || date.getDay() === 6) continue;
+
+      // Create slots at 9am, 10am, 11am, 1pm, 2pm, 3pm, 4pm
+      for (const hour of [9, 10, 11, 13, 14, 15, 16]) {
+        const startsAt = new Date(date);
+        startsAt.setHours(hour, 0, 0, 0);
+        const endsAt = new Date(startsAt);
+        endsAt.setHours(hour + 1);
+
+        // Assign to random service
+        const serviceId = serviceIds[Math.floor(Math.random() * serviceIds.length)];
+
+        const existing = await pool.query(
+          'SELECT 1 FROM availability_slots WHERE service_id = $1 AND starts_at = $2',
+          [serviceId, startsAt.toISOString()]
+        );
+
+        if (existing.rows.length === 0) {
+          await pool.query(
+            `INSERT INTO availability_slots (service_id, starts_at, ends_at, status)
+             VALUES ($1, $2, $3, 'AVAILABLE')`,
+            [serviceId, startsAt.toISOString(), endsAt.toISOString()]
+          );
+          slotsCreated++;
+        }
+      }
+    }
+    console.log(`Seeded ${slotsCreated} availability slots`);
+  }
+
   await closePool();
   console.log('Seed complete');
 }

@@ -19,6 +19,7 @@ import { webhookRouter } from './routes/webhooks.js';
 import { healthRouter } from './routes/health.js';
 import { authRouter } from './routes/auth.js';
 import { sseRouter } from './routes/sse.js';
+import { partnersRouter } from './routes/partners.js';
 import { closePool } from '@bookedai/db';
 
 const env = getEnv();
@@ -74,6 +75,7 @@ app.use('/marketing', marketingRouter);
 app.use('/whatsapp', whatsappRouter);
 app.use('/cron', cronRouter);
 app.use('/events', sseRouter);
+app.use('/partners', partnersRouter);
 
 // Error handling
 app.use(notFoundHandler);
