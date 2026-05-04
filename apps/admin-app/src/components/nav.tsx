@@ -6,6 +6,7 @@ export function AdminNav() {
     { href: '/marketing', label: 'Marketing' },
     { href: '/emails', label: 'Emails' },
     { href: '/bookings', label: 'Bookings' },
+    { href: '/users', label: 'Users' },
     { href: '/health', label: 'Health' },
     { href: '/webhooks', label: 'Webhooks' },
   ];

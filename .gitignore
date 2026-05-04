@@ -36,3 +36,6 @@ coverage/
 .cache/
 tmp/
 upload/
+
+# Google Service Account
+credentials/

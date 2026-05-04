@@ -298,3 +298,10 @@ footer { border-top: 1px solid var(--card-border); padding: 3rem 0; margin-top: 
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* Print styles */
+@media print {
+  nav, .chat-widget, footer, .mobile-overlay { display: none !important; }
+  body { background: white !important; color: black !important; }
+  .card { border: 1px solid #ddd !important; background: white !important; }
+}

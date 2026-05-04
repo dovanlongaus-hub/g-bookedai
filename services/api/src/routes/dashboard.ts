@@ -164,3 +164,21 @@ dashboardRouter.post('/admin/approve-payment', async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+
+/**
+ * List all users
+ */
+dashboardRouter.get('/admin/users', async (_req, res) => {
+  try {
+    const result = await query(`
+      SELECT u.id, u.email, u.display_name, u.role, u.language, u.phone, u.created_at,
+             t.name as tenant
+      FROM users u
+      LEFT JOIN tenants t ON u.tenant_id = t.id
+      ORDER BY u.created_at DESC
+    `);
+    res.json({ success: true, data: result.rows });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
