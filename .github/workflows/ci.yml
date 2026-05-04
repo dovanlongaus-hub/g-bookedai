@@ -1,0 +1,107 @@
+name: CI — Lint, Test, Build
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint shared packages
+        run: |
+          pnpm --filter @bookedai/shared run lint
+          pnpm --filter @bookedai/db run lint
+          pnpm --filter @bookedai/google run lint
+
+      - name: Lint services
+        run: |
+          pnpm --filter @bookedai/api run lint
+          pnpm --filter @bookedai/agent run lint
+          pnpm --filter @bookedai/notification run lint
+          pnpm --filter @bookedai/drive-sync run lint
+
+      - name: Run tests
+        run: pnpm --filter @bookedai/api test
+
+  build-services:
+    name: Build Services
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    strategy:
+      matrix:
+        service: [api, agent, drive-sync, notification]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ${{ matrix.service }}
+        run: pnpm --filter @bookedai/${{ matrix.service }} run build
+
+  build-apps:
+    name: Build Apps
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    strategy:
+      matrix:
+        app:
+          - { name: web-g-bookedai, filter: '@bookedai/web-g' }
+          - { name: web-longcare, filter: '@bookedai/web-longcare' }
+          - { name: booking-web, filter: '@bookedai/booking-web' }
+          - { name: user-app, filter: '@bookedai/user-app' }
+          - { name: admin-app, filter: '@bookedai/admin-app' }
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ${{ matrix.app.name }}
+        run: pnpm --filter ${{ matrix.app.filter }} run build
+        env:
+          NEXT_PUBLIC_API_URL: https://api.g.bookedai.au

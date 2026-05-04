@@ -1,0 +1,132 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Service to deploy (or "all")'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - api
+          - agent
+          - web-g-bookedai
+          - web-longcare
+          - booking-web
+          - user-app
+          - admin-app
+          - drive-sync
+          - notification
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: australia-southeast1
+  REGISTRY: australia-southeast1-docker.pkg.dev
+
+jobs:
+  deploy-services:
+    name: Deploy ${{ matrix.service.name }}
+    runs-on: ubuntu-latest
+    if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
+    strategy:
+      matrix:
+        service:
+          - { name: api, dir: services/api, cloud_run: api-g-bookedai, port: 8080, domain: api.g.bookedai.au }
+          - { name: agent, dir: services/agent, cloud_run: agent-g-bookedai, port: 8080, domain: agent.g.bookedai.au }
+          - { name: drive-sync, dir: services/drive-sync, cloud_run: drive-sync, port: 8080 }
+          - { name: notification, dir: services/notification, cloud_run: notification-service, port: 8080 }
+      fail-fast: false
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Build and push
+        run: |
+          IMAGE=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.service.name }}:${{ github.sha }}
+          docker build -t $IMAGE ${{ matrix.service.dir }}
+          docker push $IMAGE
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ matrix.service.cloud_run }} \
+            --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.service.name }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --port ${{ matrix.service.port }} \
+            --allow-unauthenticated \
+            --min-instances 0 \
+            --max-instances 10 \
+            --memory 512Mi \
+            --cpu 1 \
+            --set-env-vars "NODE_ENV=production"
+
+  deploy-apps:
+    name: Deploy ${{ matrix.app.name }}
+    runs-on: ubuntu-latest
+    if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
+    strategy:
+      matrix:
+        app:
+          - { name: web-g-bookedai, dir: apps/web-g-bookedai, cloud_run: web-g-bookedai, domain: g.bookedai.au }
+          - { name: web-longcare, dir: apps/web-longcare, cloud_run: web-longcare, domain: longcare.au }
+          - { name: booking-web, dir: apps/booking-web, cloud_run: booking-web, domain: book.longcare.au }
+          - { name: user-app, dir: apps/user-app, cloud_run: user-app, domain: app.longcare.au }
+          - { name: admin-app, dir: apps/admin-app, cloud_run: admin-app, domain: admin.longcare.au }
+      fail-fast: false
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Build and push
+        run: |
+          IMAGE=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.app.name }}:${{ github.sha }}
+          docker build -t $IMAGE ${{ matrix.app.dir }} \
+            --build-arg NEXT_PUBLIC_API_URL=https://api.g.bookedai.au
+          docker push $IMAGE
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ matrix.app.cloud_run }} \
+            --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.app.name }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --port 3000 \
+            --allow-unauthenticated \
+            --min-instances 0 \
+            --max-instances 5 \
+            --memory 512Mi \
+            --cpu 1
