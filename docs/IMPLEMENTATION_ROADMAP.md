@@ -1,25 +1,49 @@
-# BookedAI — Professional Implementation Roadmap
+# bookedai.au — Implementation Roadmap
 
-> **Platform:** AI Revenue Engine for Australian Businesses
+> **Platform:** The AI Revenue Engine
 > **First Tenant:** longcare.au — AI Mentor & Learning
-> **Maturity Level:** 6.5/10 → Target 9.5/10
+> **Maturity Level:** 7.5/10 → Target 9.5/10
 > **Timeline:** 8 Phases across 10 weeks
+> **Last Updated:** 2026-05-04
+> **Related:** [PRD.md](PRD.md) | [architecture.html](architecture.html) | [brand-kit.html](brand-kit.html)
 
 ---
 
-## Current Maturity Assessment
+## Current Maturity Assessment (Updated 2026-05-04)
 
-| Area | Score | Status |
-|------|-------|--------|
-| Core Booking Logic | 9/10 | Production-ready, ACID transactions, OCC |
-| Auth & Security | 8/10 | Dual auth, role-based, Helmet, CORS |
-| Error Handling | 8.5/10 | AppError class, Zod validation, structured |
-| Database Design | 8/10 | 4 migrations, proper indexes, audit logs |
-| Testing | 3/10 | Schema tests only, no integration/E2E |
-| Observability | 2/10 | Pino logging only, no APM/tracing |
-| UI/UX & Design | 5/10 | CSS tokens exist, no component library, no brand assets |
-| Documentation | 4/10 | CLAUDE.md only, no OpenAPI |
-| CI/CD | 1/10 | Docker only, no automation |
+| Area | Previous | Current | Status |
+|------|----------|---------|--------|
+| Core Booking Logic | 9/10 | 9/10 | Production-ready, ACID, OCC, audit logs |
+| Auth & Security | 8/10 | 8.5/10 | Dual auth (Firebase + OpenAI OAuth), RBAC |
+| Error Handling | 8.5/10 | 8.5/10 | AppError, Zod validation, structured |
+| Database Design | 8/10 | 8/10 | 4 migrations, proper indexes |
+| UI/UX & Design | 5/10 | **7.5/10** | Premium dark theme, @bookedai/ui lib, official logos, Google Translate |
+| Landing Page | 4/10 | **8.5/10** | Dark premium design (Linear/Vercel quality), EN/VI, chat widget |
+| Brand Identity | 2/10 | **8/10** | Official logo suite, design tokens, brand-kit page, Design Agent |
+| Testing | 3/10 | 3/10 | Schema tests only |
+| Observability | 2/10 | 2/10 | Pino logging only |
+| Documentation | 4/10 | **6/10** | PRD, CLAUDE.md, architecture docs, brand-kit |
+| CI/CD | 1/10 | 1/10 | Docker only |
+
+**Overall: 6.5/10 → 7.5/10** (+1.0 from UI/UX, brand, landing page, auth improvements)
+
+---
+
+## What Changed Since Last Review (CR-001 to CR-011)
+
+| # | Change | Impact |
+|---|--------|--------|
+| CR-001 | Nginx + SSL + DNS infrastructure | Foundation LIVE |
+| CR-002 | Cloudflare subdomains (5 for g.bookedai.au) | All subdomains accessible |
+| CR-003 | OpenAI OAuth fallback auth | Dual auth system complete |
+| CR-004 | Docker monorepo fix (HOSTNAME, workspace deps) | All containers stable |
+| CR-005 | SSL fix (DNS-only for sub-subdomains) | All HTTPS working |
+| CR-006 | Design Agent service (9 AI endpoints) | Brand/UI automation |
+| CR-007 | @bookedai/ui component library (5 components) | Shared design system |
+| CR-008 | Official logo applied (PNG, 3 variants) | Consistent branding |
+| CR-009 | Google Translate integration (EN/VI) | Full-page translation |
+| CR-010 | Landing page redesign (dark premium theme) | Professional first impression |
+| CR-011 | Tailwind v4 fix (@source directive) | CSS compilation working |
 
 ---
 
@@ -742,62 +766,119 @@ Target Coverage: 80%+ for critical paths
 
 ---
 
-## Timeline Summary
+## Adjusted Priority Queue (Week 2 Onward)
+
+### SPRINT 1 — Revenue Ready (This Week)
+*Goal: Accept real payments and deliver sessions*
+
+| # | Task | CR# | Priority | Est. |
+|---|------|-----|----------|------|
+| 1 | Stripe products ($29/$99/$450) in Dashboard | CR-012 | CRITICAL | 1h |
+| 2 | Google service account (Calendar/Gmail/Drive) | CR-013 | CRITICAL | 2h |
+| 3 | Email templates (confirm/remind/cancel) | CR-014 | HIGH | 4h |
+| 4 | End-to-end booking test (real flow) | — | HIGH | 2h |
+| 5 | 24h reminder via Cloud Scheduler | — | HIGH | 3h |
+
+### SPRINT 2 — AI & Engagement (Week 3)
+*Goal: AI chat that books, learns, and re-engages*
+
+| # | Task | CR# | Priority | Est. |
+|---|------|-----|----------|------|
+| 6 | Agent orchestrator (intent → tool-use) | CR-015 | HIGH | 8h |
+| 7 | Cross-domain auth (g.bookedai.au ↔ longcare.au) | — | HIGH | 3h |
+| 8 | Booking flow UX polish (booking-web) | — | MEDIUM | 4h |
+| 9 | Admin dashboard charts (revenue, bookings) | — | MEDIUM | 4h |
+
+### SPRINT 3 — Growth & Analytics (Week 4)
+*Goal: Track, measure, acquire users*
+
+| # | Task | CR# | Priority | Est. |
+|---|------|-----|----------|------|
+| 10 | GA4 + GTM setup | CR-016 | HIGH | 3h |
+| 11 | Google Ads first campaign | — | HIGH | 4h |
+| 12 | SEO landing pages (services.longcare.au) | — | MEDIUM | 6h |
+| 13 | Search Console + Business Profile | — | MEDIUM | 2h |
+
+### SPRINT 4 — DevOps & Quality (Week 5)
+*Goal: Production-grade reliability*
+
+| # | Task | CR# | Priority | Est. |
+|---|------|-----|----------|------|
+| 14 | CI/CD pipeline (Cloud Build → Cloud Run) | CR-017 | HIGH | 4h |
+| 15 | OpenTelemetry + Sentry | — | HIGH | 4h |
+| 16 | Integration tests (booking + payment flows) | — | HIGH | 6h |
+| 17 | E2E tests (Playwright, 5 critical paths) | — | MEDIUM | 4h |
+
+### SPRINT 5 — Operations (Week 6-7)
+*Goal: Accounting, notifications, scale*
+
+| # | Task | CR# | Priority | Est. |
+|---|------|-----|----------|------|
+| 18 | Xero accounting sync | CR-018 | MEDIUM | 8h |
+| 19 | SMS notifications (Twilio) | CR-019 | MEDIUM | 3h |
+| 20 | Invoice PDF generation | — | MEDIUM | 6h |
+| 21 | OpenAPI 3.1 spec + docs | CR-020 | MEDIUM | 4h |
+
+### BACKLOG (Week 8+)
+
+| Task | Priority |
+|------|----------|
+| Push notifications (FCM) | LOW |
+| In-app notification center | LOW |
+| Multi-tenant isolation | LOW |
+| Course curriculum generator | LOW |
+| Quiz/assessment engine | LOW |
+| Certificate generation | LOW |
+| A/B testing framework | LOW |
+| White-label theming | LOW |
+| SOC 2 preparation | LOW |
+
+---
+
+## Timeline Summary (Adjusted)
 
 ```
-Week 1  ──────────────────────────────────────────────
-        │ Phase 1: DevOps + Observability + Tests    │
-        │ Phase 2: Payment production + Stripe       │
-        ──────────────────────────────────────────────
+Week 1-2 (DONE) ──────────────────────────────────────
+  ✅ Infrastructure (Nginx, SSL, DNS, Docker)
+  ✅ Auth (Firebase + OpenAI OAuth)
+  ✅ Booking engine + Payment routes
+  ✅ Landing page (premium dark theme)
+  ✅ Brand identity + Official logos
+  ✅ Design Agent + UI component library
+  ✅ Google Translate (EN/VI)
+  ✅ All 5 apps deployed + accessible
 
-Week 2  ──────────────────────────────────────────────
-        │ Phase 2: Booking enhancements              │
-        │ Phase 3: Notifications + Email templates   │
-        ──────────────────────────────────────────────
+Week 3 (NOW) ─────────────────────────────────────────
+  → Sprint 1: Stripe products + Google SA + Email templates
+  → Sprint 2: Agent orchestrator + Cross-domain auth
 
-Week 3  ──────────────────────────────────────────────
-        │ Phase 3: Auth hardening + Cross-domain     │
-        │ Phase 4: AI Agent + Intent detection       │
-        ──────────────────────────────────────────────
+Week 4 ───────────────────────────────────────────────
+  → Sprint 3: GA4/GTM + Google Ads + SEO pages
 
-Week 4  ──────────────────────────────────────────────
-        │ Phase 4: Learning engine + Recommendations │
-        │ Phase 5: GA4/GTM + Analytics setup         │
-        ──────────────────────────────────────────────
+Week 5 ───────────────────────────────────────────────
+  → Sprint 4: CI/CD + Testing + Observability
 
-Week 5  ──────────────────────────────────────────────
-        │ Phase 5: SEO + Google Ads + Organic        │
-        │ Phase 6: Xero + Invoice generation         │
-        ──────────────────────────────────────────────
+Week 6-7 ─────────────────────────────────────────────
+  → Sprint 5: Xero + SMS + Invoices + API docs
 
-Week 6  ──────────────────────────────────────────────
-        │ Phase 6: Multi-tenant + Security           │
-        │ Phase 7: OpenAPI + Documentation           │
-        ──────────────────────────────────────────────
-
-Week 7-8 ─────────────────────────────────────────────
-        │ Phase 6: Scale testing + Load testing      │
-        │ Phase 7: SDK + Integration guides          │
-        │ Launch prep + UAT + Go-live                │
-        ──────────────────────────────────────────────
+Week 8 ───────────────────────────────────────────────
+  → Backlog items + Scale testing + UAT
+  → Production launch readiness review
 ```
 
 ---
 
 ## Success Metrics (KPIs)
 
-| Metric | Week 2 | Month 1 | Month 3 |
-|--------|--------|---------|---------|
-| Bookings | 5-20 | 50-100 | 200-500 |
-| Revenue | $500-$2K | $5K-$10K | $20K-$50K |
-| Registered Users | 20-50 | 200+ | 1,000+ |
-| Conversion Rate | 5% | 10% | 15% |
-| AI Chat Sessions | 50+ | 500+ | 2,000+ |
-| Uptime | 99% | 99.5% | 99.9% |
-| Test Coverage | 40% | 70% | 85% |
-| Error Rate | <5% | <2% | <0.5% |
-| Avg Response Time | <500ms | <300ms | <200ms |
-| NPS Score | — | 30+ | 50+ |
+| Metric | Week 2 (Now) | Month 1 | Month 3 |
+|--------|-------------|---------|---------|
+| Bookings | 0 (building) | 50-100 | 200-500 |
+| Revenue | $0 | $5K-$10K | $20K-$50K |
+| Registered Users | 5 (team) | 200+ | 1,000+ |
+| Landing Page Live | ✅ | ✅ | ✅ |
+| Apps Deployed | 5/5 | 5/5 | 5/5 |
+| Test Coverage | 3% | 60% | 85% |
+| Uptime | 95% | 99.5% | 99.9% |
 
 ---
 
@@ -805,18 +886,30 @@ Week 7-8 ───────────────────────�
 
 | Service | Cost/Month | Notes |
 |---------|-----------|-------|
-| Cloud Run | $50-200 | Auto-scaling, pay per use |
-| Cloud SQL | $50-100 | db-f1-micro to db-n1-standard-1 |
-| Memorystore | $30-50 | Basic tier |
+| GCE Instance | $80 | Current e2-standard-4 |
+| Cloud Run (future) | $50-200 | Auto-scaling |
 | Cloudflare Pro | $20 | Already active |
 | Stripe fees | 1.75%+30c | Per transaction |
 | Twilio | $20-50 | SMS notifications |
-| Sentry | $0-26 | Error tracking (free tier → team) |
-| Google Ads | $500-2000 | Initial acquisition budget |
+| Sentry | $0 | Free tier to start |
+| Google Ads | $500-2,000 | Acquisition budget |
 | Xero | $55 | Standard plan |
 | **Total** | **$725-$2,500** | Scales with revenue |
 
 ---
 
+## Change Request Process
+
+New changes should be logged in [PRD.md](PRD.md) Section 9 (Change Request Log) with:
+- CR number (sequential)
+- Date
+- Description
+- Priority (CRITICAL / HIGH / MEDIUM / LOW)
+- Status (PENDING / IN PROGRESS / DONE / REJECTED)
+
+Sprint planning reviews the CR backlog weekly and adjusts priority queue above.
+
+---
+
 *Last updated: 2026-05-04*
-*Next review: Weekly on Monday*
+*Next review: Monday 2026-05-05*

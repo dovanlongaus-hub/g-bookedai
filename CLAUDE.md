@@ -64,12 +64,20 @@ docker compose up postgres redis -d  # Start local DB + cache
 
 ```
 apps/                       5 Frontend applications (Next.js 15)
-services/                   7 Backend microservices (Express 5)
+services/                   9 Backend microservices (Express 5)
 packages/
   shared/                   Types, constants, enums
-  db/                       PostgreSQL client, migrations (001, 002), seeds
+  db/                       PostgreSQL client, migrations (001-004), seeds
   google/                   ALL Google Cloud & Workspace API integrations
-docs/blueprint/             Original 14-day planning documents
+  ui/                       Shared React component library (Button, Card, Badge, Input, Footer)
+upload/logo_official/       Official logo PNG files (3 variants)
+docs/
+  PRD.md                    Product Requirements Document (v2.0)
+  IMPLEMENTATION_ROADMAP.md Prioritized implementation plan
+  architecture.html         Visual architecture diagrams (Mermaid)
+  brand-kit.html            Brand identity showcase
+  stack-architecture.svg    Stack architecture SVG
+  blueprint/                Original 14-day planning documents
 ```
 
 ## Security (Google-first)

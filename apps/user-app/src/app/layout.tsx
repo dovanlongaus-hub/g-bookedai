@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Analytics } from '../components/analytics';
 import { ChatWidget } from '../components/chat-widget';
+import { UserNav } from '../components/nav';
 
 export const metadata: Metadata = {
   title: 'Dashboard — Longcare',
@@ -15,7 +16,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ paddingTop: 56 }}>
+        <UserNav />
         <Analytics />
         {children}
         <ChatWidget />
