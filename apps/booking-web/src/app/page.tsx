@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-type Step = 'select' | 'datetime' | 'payment' | 'success';
+type Step = 'select' | 'datetime' | 'contact' | 'payment' | 'success';
 
 interface Service {
   id: string;
@@ -32,6 +32,18 @@ export default function BookingPage() {
   const [stripeLoading, setStripeLoading] = useState(false);
   const [stripeError, setStripeError] = useState<string | null>(null);
 
+  // Contact info
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+
+  // Exchange rate
+  const [audVndRate, setAudVndRate] = useState<number | null>(null);
+
+  // Generated Meet link
+  const [meetLink] = useState(`https://meet.google.com/new`);
+  const [bookingRef] = useState(`BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`);
+
   const selectedService = services.find((s) => s.id === selectedServiceId) || null;
 
   // Fetch services on mount
@@ -52,12 +64,31 @@ export default function BookingPage() {
       }
     }
     fetchServices();
+
+    // Fetch real-time AUD/VND exchange rate
+    async function fetchRate() {
+      try {
+        const res = await fetch('https://api.exchangerate-api.com/v4/latest/AUD');
+        const data = await res.json();
+        if (data.rates?.VND) {
+          setAudVndRate(Math.round(data.rates.VND));
+        }
+      } catch {
+        // Fallback rate
+        setAudVndRate(16500);
+      }
+    }
+    fetchRate();
   }, []);
 
   const handleNext = () => {
     if (step === 'select' && selectedServiceId) setStep('datetime');
-    else if (step === 'datetime' && selectedTime) setStep('payment');
+    else if (step === 'datetime' && selectedTime) setStep('contact');
+    else if (step === 'contact' && contactName && contactEmail) setStep('payment');
   };
+
+  const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  const contactValid = contactName.trim().length > 0 && isValidEmail(contactEmail);
 
   const handleStripeCheckout = async () => {
     setStripeLoading(true);
@@ -86,8 +117,9 @@ export default function BookingPage() {
   const stepNumber = (s: Step) => {
     if (s === 'select') return 1;
     if (s === 'datetime') return 2;
-    if (s === 'payment') return 3;
-    return 4;
+    if (s === 'contact') return 3;
+    if (s === 'payment') return 4;
+    return 5;
   };
   const currentNum = stepNumber(step);
 
@@ -100,7 +132,8 @@ export default function BookingPage() {
         <div className="stepper">
           <div className={`step ${currentNum === 1 ? 'active' : currentNum > 1 ? 'completed' : ''}`}>1</div>
           <div className={`step ${currentNum === 2 ? 'active' : currentNum > 2 ? 'completed' : ''}`}>2</div>
-          <div className={`step ${currentNum >= 3 ? 'active' : ''}`}>3</div>
+          <div className={`step ${currentNum === 3 ? 'active' : currentNum > 3 ? 'completed' : ''}`}>3</div>
+          <div className={`step ${currentNum >= 4 ? 'active' : ''}`}>4</div>
         </div>
       )}
 
@@ -281,7 +314,66 @@ export default function BookingPage() {
         </div>
       )}
 
-      {/* Step 3: Payment */}
+      {/* Step 3: Contact Info */}
+      {step === 'contact' && (
+        <div className="glass-panel">
+          <h2 style={{ marginBottom: '0.5rem' }}>3. Your Details</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+            We need your contact info to send booking confirmation and Meet link.
+          </p>
+
+          <div style={{ display: 'grid', gap: '1rem' }}>
+            <div>
+              <label style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Full Name *</label>
+              <input
+                type="text"
+                value={contactName}
+                onChange={(e) => setContactName(e.target.value)}
+                placeholder="e.g. John Smith"
+                style={{ width: '100%', padding: '0.85rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--surface-border)', borderRadius: '8px', color: 'var(--text-main)', fontSize: '1rem', outline: 'none' }}
+              />
+            </div>
+
+            <div>
+              <label style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Email Address *</label>
+              <input
+                type="email"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                placeholder="you@example.com"
+                style={{ width: '100%', padding: '0.85rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--surface-border)', borderRadius: '8px', color: 'var(--text-main)', fontSize: '1rem', outline: 'none' }}
+              />
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.3rem' }}>Calendar invite and Meet link will be sent here</p>
+            </div>
+
+            <div>
+              <label style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'block', marginBottom: '0.4rem' }}>Phone / WhatsApp</label>
+              <input
+                type="tel"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
+                placeholder="+61 4xx xxx xxx or +84 xxx xxx xxx"
+                style={{ width: '100%', padding: '0.85rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--surface-border)', borderRadius: '8px', color: 'var(--text-main)', fontSize: '1rem', outline: 'none' }}
+              />
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.3rem' }}>For WhatsApp support and session reminders</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+            <button className="btn-secondary" style={{ margin: 0 }} onClick={() => setStep('datetime')}>Back</button>
+            <button
+              className="btn-primary"
+              style={{ margin: 0, opacity: contactValid ? 1 : 0.5, cursor: contactValid ? 'pointer' : 'not-allowed' }}
+              disabled={!contactValid}
+              onClick={handleNext}
+            >
+              Continue to Payment
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 4: Payment */}
       {step === 'payment' && (
         <div className="glass-panel">
           <h2 style={{ marginBottom: '1.5rem' }}>3. Secure Payment</h2>
@@ -445,7 +537,7 @@ export default function BookingPage() {
                   </h3>
                   <div style={{ background: '#fff', display: 'inline-block', padding: '16px', borderRadius: '16px' }}>
                     <img
-                      src={`https://img.vietqr.io/image/VCB-0071000985789-compact2.png?amount=${selectedService ? selectedService.price_cents * 60 : 0}&addInfo=BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}&accountName=DO%20VAN%20LONG`}
+                      src={`https://img.vietqr.io/image/VCB-0071000985789-compact2.png?amount=${selectedService ? Math.round(selectedService.price_cents * (audVndRate || 16500) / 100) : 0}&addInfo=BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}&accountName=DO%20VAN%20LONG`}
                       alt="Quét mã thanh toán VND"
                       width={220}
                       height={220}
@@ -453,10 +545,10 @@ export default function BookingPage() {
                     />
                   </div>
                   <p style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '1.3rem', marginTop: '1rem' }}>
-                    {selectedService ? `${(selectedService.price_cents * 60).toLocaleString()} VND` : '—'}
+                    {selectedService ? `${(Math.round(selectedService.price_cents * (audVndRate || 16500) / 100)).toLocaleString()} VND` : '—'}
                   </p>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                    Tham khảo: 1 AUD ≈ 6,000 VND
+                    {`Tỷ giá: 1 AUD ≈ ${(audVndRate || 16500).toLocaleString()} VND (cập nhật realtime)`}
                   </p>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
                     Mở app ngân hàng và quét mã QR
@@ -532,23 +624,37 @@ export default function BookingPage() {
                 {selectedService ? formatPrice(selectedService.price_cents, selectedService.currency) + ' AUD' : '—'}
               </span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Booking Ref</span>
-              <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>BOOK-{Date.now().toString(36).toUpperCase().slice(-6)}</span>
+              <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>{bookingRef}</span>
             </div>
+            {contactName && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Name</span>
+                <span style={{ fontWeight: 600 }}>{contactName}</span>
+              </div>
+            )}
+            {contactEmail && (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Email</span>
+                <span style={{ fontWeight: 600 }}>{contactEmail}</span>
+              </div>
+            )}
           </div>
 
-          {/* Google Meet */}
+          {/* Google Meet + Calendar */}
           <div style={{ background: 'rgba(66, 133, 244, 0.08)', border: '1px solid rgba(66, 133, 244, 0.2)', borderRadius: '12px', padding: '1.25rem', marginBottom: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="14" height="16" rx="2" fill="#4285F4"/><path d="M16 8l6-3v14l-6-3V8z" fill="#34A853"/><rect x="5" y="9" width="8" height="6" rx="1" fill="white" opacity="0.9"/></svg>
-              <span style={{ fontWeight: 600, fontSize: '1.05rem' }}>Google Meet</span>
+              <span style={{ fontWeight: 600, fontSize: '1.05rem' }}>Google Meet Session</span>
             </div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
-              Your session will be via Google Meet. Link will be sent to your email.
+              {contactEmail
+                ? `Meet link and calendar invite will be sent to ${contactEmail}`
+                : 'Your session will be via Google Meet.'}
             </p>
             <a
-              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent((selectedService?.name || 'AI Session') + ' — Longcare AU')}&dates=${(() => { const d = new Date(); d.setDate(d.getDate() + 3); const start = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; d.setHours(d.getHours() + 1); const end = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; return start + '/' + end; })()}&details=${encodeURIComponent('Booking with Longcare AU\\nService: ' + (selectedService?.name || '') + '\\nJoin via Google Meet\\n\\nhttps://longcare.au')}&location=Google+Meet`}
+              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent((selectedService?.name || 'AI Session') + ' — Longcare AU')}&dates=${(() => { const d = new Date(); d.setDate(d.getDate() + 3); const start = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; d.setHours(d.getHours() + 1); const end = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; return start + '/' + end; })()}&details=${encodeURIComponent(`Longcare AU — AI Mentoring Session\n\nService: ${selectedService?.name || ''}\nBooking Ref: ${bookingRef}\nClient: ${contactName}\n\nJoin via Google Meet:\n${meetLink}\n\nContact: ceo@longcare.au\nWhatsApp: +61 481 993 178`)}&location=${encodeURIComponent(meetLink)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
@@ -559,10 +665,26 @@ export default function BookingPage() {
             </a>
           </div>
 
-          {/* Payment reminder for Pay Later */}
+          {/* WhatsApp Support */}
+          {contactPhone && (
+            <div style={{ background: 'rgba(37, 211, 102, 0.08)', border: '1px solid rgba(37, 211, 102, 0.2)', borderRadius: '12px', padding: '1rem', marginBottom: '1rem' }}>
+              <a
+                href={`https://wa.me/61481993178?text=${encodeURIComponent(`Hi Longcare! I just booked: ${selectedService?.name || 'a session'}\nRef: ${bookingRef}\nName: ${contactName}\nTime: ${selectedTime}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', margin: 0, padding: '0.75rem 1.5rem', width: 'auto', background: '#25D366' }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.46 3.43 1.27 4.88L2 22l5.23-1.23C8.67 21.54 10.3 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.46 14.12c-.23.65-1.36 1.22-1.87 1.28-.46.06-.81.21-2.73-.57-2.31-.94-3.78-3.3-3.89-3.45-.11-.15-.91-1.22-.91-2.33 0-1.1.57-1.65.78-1.87.21-.22.46-.28.61-.28h.44c.14 0 .33-.05.52.4.19.45.66 1.62.72 1.74.06.11.1.25.02.4-.08.15-.12.25-.23.38-.12.14-.25.31-.35.41-.12.12-.24.25-.1.49.13.24.6 1 1.3 1.62.9.8 1.65 1.05 1.89 1.17.24.11.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.58-.17 1.23z"/></svg>
+                Chat on WhatsApp
+              </a>
+            </div>
+          )}
+
+          {/* Payment reminder */}
           <div style={{ background: 'rgba(245, 158, 11, 0.06)', border: '1px solid rgba(245, 158, 11, 0.15)', borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem' }}>
             <p style={{ color: '#fcd34d', fontSize: '0.85rem' }}>
-              Please complete payment before your session. You can pay via Stripe, bank transfer, or PayID.
+              Please complete payment before your session. You can pay via Stripe, bank transfer, or QR scan.
             </p>
           </div>
 
@@ -581,6 +703,9 @@ export default function BookingPage() {
                 setPaymentMode('none');
                 setStripeError(null);
                 setBankCurrency('AUD');
+                setContactName('');
+                setContactEmail('');
+                setContactPhone('');
               }}
             >
               Book Another Session
