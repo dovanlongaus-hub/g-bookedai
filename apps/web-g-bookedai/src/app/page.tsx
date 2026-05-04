@@ -1,31 +1,28 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useGoogleTranslate, GoogleTranslateElement } from '../components/GoogleTranslate';
 
-type Language = 'en' | 'vi' | 'zh';
+type Language = 'en' | 'vi' | 'zh' | 'ja' | 'ko' | 'th' | 'fr' | 'de' | 'es';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
-const WELCOME: Record<Language, string> = {
-  en: "Hello! I'm the bookedai.au assistant. I can help you find AI mentoring services, book sessions, or answer questions about our programs. What can I help you with?",
-  vi: "Xin chao! Toi la tro ly bookedai.au. Toi co the giup ban tim dich vu mentoring AI, dat lich, hoac tra loi cau hoi. Toi co the giup gi cho ban?",
-  zh: "你好！我是bookedai.au助手。我可以帮您找到AI辅导服务、预约课程或回答问题。有什么可以帮您的？",
+const LANG_LABELS: Record<string, string> = {
+  en: 'EN', vi: 'VI', zh: 'ZH', ja: 'JA', ko: 'KO', th: 'TH', fr: 'FR', de: 'DE', es: 'ES',
 };
 
-const SUGGESTIONS: Record<Language, string[]> = {
-  en: ['View services', 'Book a session', 'Tell me about AI mentoring', 'Pricing'],
-  vi: ['Xem dich vu', 'Dat lich', 'Ve mentoring AI', 'Bang gia'],
-  zh: ['查看服务', '预约课程', '关于AI辅导', '价格'],
+const LANG_FLAGS: Record<string, string> = {
+  en: '🇦🇺', vi: '🇻🇳', zh: '🇨🇳', ja: '🇯🇵', ko: '🇰🇷', th: '🇹🇭', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸',
 };
 
-const PLACEHOLDERS: Record<Language, string> = {
-  en: 'Ask me anything about our services...',
-  vi: 'Hoi toi bat cu dieu gi...',
-  zh: '问我关于我们服务的任何问题...',
-};
+const WELCOME_MSG = "Hello! I'm the bookedai.au assistant. I can help you find AI mentoring services, book sessions, or answer questions about our programs. What can I help you with?";
+
+const SUGGESTIONS_LIST = ['View services', 'Book a session', 'Tell me about AI mentoring', 'Pricing'];
+
+const PLACEHOLDER_TEXT = 'Ask me anything about our services...';
 
 function useInView(threshold = 0.2) {
   const ref = useRef<HTMLDivElement>(null);
@@ -76,21 +73,34 @@ export default function Home() {
   const [lang, setLang] = useState<Language>('en');
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: WELCOME.en },
+    { role: 'assistant', content: WELCOME_MSG },
   ]);
   const [loading, setLoading] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [billingToggle, setBillingToggle] = useState<'monthly' | 'package'>('monthly');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { switchLanguage } = useGoogleTranslate();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
+  // Detect language from Google Translate cookie on load
+  useEffect(() => {
+    const match = document.cookie.match(/googtrans=\/en\/([a-z-]+)/i);
+    if (match) {
+      const detected = match[1].replace('-CN', '').replace('-TW', '') as Language;
+      if (detected in LANG_LABELS) setLang(detected);
+    }
+  }, []);
+
   function switchLang(newLang: Language) {
     setLang(newLang);
-    setMessages([{ role: 'assistant', content: WELCOME[newLang] }]);
+    setMessages([{ role: 'assistant', content: WELCOME_MSG }]);
+    // Trigger Google Translate for entire page
+    switchLanguage(newLang);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -130,13 +140,25 @@ export default function Home() {
             <a href="#how-it-works" className="hover:text-[#0f2942] transition-colors">How It Works</a>
             <a href="#pricing" className="hover:text-[#0f2942] transition-colors">Pricing</a>
             <a href="#testimonials" className="hover:text-[#0f2942] transition-colors">Testimonials</a>
-            <div className="flex gap-0.5 ml-2 border border-gray-200 rounded-lg overflow-hidden">
-              {(['en', 'vi', 'zh'] as Language[]).map((l) => (
-                <button key={l} onClick={() => switchLang(l)}
-                  className={`px-2.5 py-1.5 text-xs font-semibold uppercase transition-all ${lang === l ? 'bg-[#0d9488] text-white' : 'text-[#627d98] hover:bg-gray-50'}`}>
-                  {l}
-                </button>
-              ))}
+            <div className="relative ml-2">
+              <button onClick={() => setLangMenuOpen(!langMenuOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:border-[#0d9488] transition-all">
+                <span>{LANG_FLAGS[lang]}</span>
+                <span className="text-xs font-semibold uppercase text-[#627d98]">{LANG_LABELS[lang]}</span>
+                <svg className={`w-3 h-3 text-[#9fb3c8] transition-transform ${langMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {langMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl py-2 min-w-[160px] z-[200] animate-[slideUp_0.2s_ease-out]">
+                  {Object.entries(LANG_LABELS).map(([code, label]) => (
+                    <button key={code} onClick={() => { switchLang(code as Language); setLangMenuOpen(false); }}
+                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[#f0fdfa] transition-colors ${lang === code ? 'text-[#0d9488] font-semibold bg-[#f0fdfa]' : 'text-[#334e68]'}`}>
+                      <span className="text-base">{LANG_FLAGS[code]}</span>
+                      <span>{label}</span>
+                      {lang === code && <svg className="w-4 h-4 ml-auto text-[#0d9488]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="hidden md:flex items-center gap-3">
@@ -165,11 +187,11 @@ export default function Home() {
             <a href="#how-it-works" className="block text-sm font-medium text-[#627d98]">How It Works</a>
             <a href="#pricing" className="block text-sm font-medium text-[#627d98]">Pricing</a>
             <a href="#testimonials" className="block text-sm font-medium text-[#627d98]">Testimonials</a>
-            <div className="flex gap-1 pt-2">
-              {(['en', 'vi', 'zh'] as Language[]).map((l) => (
-                <button key={l} onClick={() => switchLang(l)}
-                  className={`px-3 py-1.5 text-xs font-semibold uppercase rounded ${lang === l ? 'bg-[#0d9488] text-white' : 'text-[#627d98] bg-gray-100'}`}>
-                  {l}
+            <div className="flex flex-wrap gap-1.5 pt-2">
+              {Object.entries(LANG_LABELS).map(([code, label]) => (
+                <button key={code} onClick={() => { switchLang(code as Language); setMobileMenuOpen(false); }}
+                  className={`flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg ${lang === code ? 'bg-[#0d9488] text-white' : 'text-[#627d98] bg-gray-100 hover:bg-gray-200'}`}>
+                  <span className="text-sm">{LANG_FLAGS[code]}</span> {label}
                 </button>
               ))}
             </div>
@@ -598,9 +620,9 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <div className="flex gap-0.5">
                   {(['en', 'vi', 'zh'] as Language[]).map((l) => (
-                    <button key={l} onClick={() => switchLang(l)}
+                    <button key={l} onClick={() => { setLang(l); setMessages([{ role: 'assistant', content: WELCOME_MSG }]); }}
                       className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded ${lang === l ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white/90'}`}>
-                      {l}
+                      {LANG_FLAGS[l]} {l}
                     </button>
                   ))}
                 </div>
@@ -637,7 +659,7 @@ export default function Home() {
             </div>
             {/* Suggestions */}
             <div className="px-4 py-2 bg-[#f8fafb] border-t border-gray-100 flex flex-wrap gap-1.5">
-              {SUGGESTIONS[lang].map((s) => (
+              {SUGGESTIONS_LIST.map((s) => (
                 <button key={s} onClick={() => { setQuery(s); }}
                   className="px-2.5 py-1 text-[11px] rounded-full border border-gray-200 text-[#627d98] hover:border-[#0d9488] hover:text-[#0d9488] transition-all bg-white">
                   {s}
@@ -647,7 +669,7 @@ export default function Home() {
             {/* Input */}
             <form onSubmit={handleSubmit} className="px-4 py-3 bg-white border-t border-gray-100 flex gap-2">
               <input type="text" value={query} onChange={(e) => setQuery(e.target.value)}
-                placeholder={PLACEHOLDERS[lang]}
+                placeholder={PLACEHOLDER_TEXT}
                 className="flex-1 bg-[#f8fafb] border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0d9488] focus:ring-2 focus:ring-[#0d9488]/10 transition-all placeholder:text-[#9fb3c8]" />
               <button type="submit" disabled={loading || !query.trim()}
                 className="px-4 py-2.5 bg-[#0d9488] hover:bg-[#0f766e] text-white rounded-xl text-sm font-semibold transition-all disabled:opacity-40">
@@ -669,6 +691,9 @@ export default function Home() {
           <span className="absolute inset-0 rounded-full bg-[#0d9488] animate-ping opacity-20" />
         </button>
       )}
+
+      {/* Google Translate (hidden) */}
+      <GoogleTranslateElement />
 
       {/* Global styles for animations */}
       <style jsx global>{`

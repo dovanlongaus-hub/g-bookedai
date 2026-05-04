@@ -56,9 +56,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={outfit.variable}>
-      <body className="antialiased" style={{ fontFamily: 'var(--font-outfit), system-ui, sans-serif' }}>
+      <body className="antialiased notranslate" style={{ fontFamily: 'var(--font-outfit), system-ui, sans-serif' }} translate="no">
         <Analytics />
-        {children}
+        <div className="translate" translate="yes">
+          {children}
+        </div>
+        <div id="google_translate_element" style={{ display: 'none' }} />
       </body>
     </html>
   );

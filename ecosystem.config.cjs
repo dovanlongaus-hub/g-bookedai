@@ -27,6 +27,7 @@ module.exports = {
         AGENT_SERVICE_URL: 'http://localhost:8091',
         GEMINI_API_KEY: dotenv.GEMINI_API_KEY || '',
         STRIPE_SECRET_KEY: dotenv.STRIPE_SECRET_KEY || '',
+        STRIPE_WEBHOOK_SECRET: dotenv.STRIPE_WEBHOOK_SECRET || '',
         GOOGLE_CLIENT_ID: dotenv.GOOGLE_CLIENT_ID || '',
         GOOGLE_CLIENT_SECRET: dotenv.GOOGLE_CLIENT_SECRET || '',
         ALLOWED_ORIGINS: 'https://longcare.au,https://book.longcare.au,https://app.longcare.au,https://admin.longcare.au,https://g.longcare.au,http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004',
