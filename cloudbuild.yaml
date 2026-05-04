@@ -1,0 +1,173 @@
+steps:
+  # Step 1: Install dependencies
+  - name: 'node:20-slim'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        corepack enable && corepack prepare pnpm@latest --activate
+        pnpm install --frozen-lockfile
+    id: 'install'
+
+  # Step 2: Run tests
+  - name: 'node:20-slim'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        corepack enable && corepack prepare pnpm@latest --activate
+        pnpm --filter @bookedai/api test
+    id: 'test'
+    waitFor: ['install']
+
+  # Step 3: Build and push API service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/api:${SHORT_SHA}', 'services/api']
+    id: 'build-api'
+    waitFor: ['test']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/api:${SHORT_SHA}']
+    id: 'push-api'
+    waitFor: ['build-api']
+
+  # Step 4: Build and push Agent service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/agent:${SHORT_SHA}', 'services/agent']
+    id: 'build-agent'
+    waitFor: ['test']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/agent:${SHORT_SHA}']
+    id: 'push-agent'
+    waitFor: ['build-agent']
+
+  # Step 5: Build and push web-g-bookedai
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-g-bookedai:${SHORT_SHA}', 'apps/web-g-bookedai']
+    id: 'build-web-g'
+    waitFor: ['test']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-g-bookedai:${SHORT_SHA}']
+    id: 'push-web-g'
+    waitFor: ['build-web-g']
+
+  # Step 6: Build and push web-longcare
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}', 'apps/web-longcare']
+    id: 'build-web-lc'
+    waitFor: ['test']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}']
+    id: 'push-web-lc'
+    waitFor: ['build-web-lc']
+
+  # Step 7: Build and push booking-web
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:${SHORT_SHA}', 'apps/booking-web']
+    id: 'build-booking'
+    waitFor: ['test']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:${SHORT_SHA}']
+    id: 'push-booking'
+    waitFor: ['build-booking']
+
+  # Step 8: Deploy API to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'api-g-bookedai'
+      - '--image=${_REGISTRY}/${PROJECT_ID}/bookedai-services/api:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--port=8080'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--min-instances=0'
+      - '--max-instances=10'
+      - '--set-env-vars=NODE_ENV=production'
+    id: 'deploy-api'
+    waitFor: ['push-api']
+
+  # Step 9: Deploy Agent to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'agent-g-bookedai'
+      - '--image=${_REGISTRY}/${PROJECT_ID}/bookedai-services/agent:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--port=8080'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+      - '--cpu=1'
+    id: 'deploy-agent'
+    waitFor: ['push-agent']
+
+  # Step 10: Deploy web-g-bookedai to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'web-g-bookedai'
+      - '--image=${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-g-bookedai:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--port=3000'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+    id: 'deploy-web-g'
+    waitFor: ['push-web-g']
+
+  # Step 11: Deploy web-longcare to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'web-longcare'
+      - '--image=${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--port=3000'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+    id: 'deploy-web-lc'
+    waitFor: ['push-web-lc']
+
+  # Step 12: Deploy booking-web to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'booking-web'
+      - '--image=${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--port=3000'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+    id: 'deploy-booking'
+    waitFor: ['push-booking']
+
+substitutions:
+  _REGISTRY: 'australia-southeast1-docker.pkg.dev'
+  _REGION: 'australia-southeast1'
+
+images:
+  - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/api:${SHORT_SHA}'
+  - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/agent:${SHORT_SHA}'
+  - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-g-bookedai:${SHORT_SHA}'
+  - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}'
+  - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:${SHORT_SHA}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: '1800s'
