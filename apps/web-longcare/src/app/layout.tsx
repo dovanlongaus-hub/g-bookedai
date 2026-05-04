@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { LocalBusinessSchema } from '../components/schema-markup';
+import { Analytics } from '../components/analytics';
 
 export const metadata: Metadata = {
   title: 'Longcare — AI Mentor & Learning',
@@ -19,6 +20,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0070f3" />
       </head>
       <body>
+        <Analytics />
         <LocalBusinessSchema />
         {children}
       </body>
