@@ -48,15 +48,22 @@ const FOLDER_STRUCTURE = [
 // Cache folder IDs after first lookup
 let _folderCache: Map<string, string> | null = null;
 
-function getDrive() {
-  const auth = USE_IMPERSONATION
-    ? getImpersonatedAuth(CEO_EMAIL)
-    : getGoogleAuth([
-        'https://www.googleapis.com/auth/drive',
-        'https://www.googleapis.com/auth/drive.file',
-      ]);
+let _driveClient: ReturnType<typeof google.drive> | null = null;
 
-  return google.drive({ version: 'v3', auth });
+function getDrive() {
+  if (_driveClient) return _driveClient;
+
+  // Always create fresh auth with full Drive scope
+  const auth = new google.auth.GoogleAuth({
+    scopes: [
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/documents',
+      'https://www.googleapis.com/auth/spreadsheets',
+    ],
+  });
+
+  _driveClient = google.drive({ version: 'v3', auth });
+  return _driveClient;
 }
 
 async function findFolder(name: string, parentId?: string): Promise<string | null> {

@@ -114,6 +114,7 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/google-service-account.json
       - CEO_EMAIL=${CEO_EMAIL:-ceo@longcare.au}
       - DOCS_ROOT=/app/docs
+      - USE_IMPERSONATION=false
     depends_on:
       postgres:
         condition: service_healthy

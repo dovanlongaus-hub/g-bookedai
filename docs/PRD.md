@@ -368,12 +368,52 @@ Radius:        12px / 20px
 | CR-025 | 2026-05-03 | Booking management | HIGH | DONE |
 | CR-026 | 2026-05-03 | Partner signup API | MEDIUM | DONE |
 | CR-027 | 2026-05-03 | Availability slots seeding | MEDIUM | DONE |
-| CR-028 | 2026-05-03 | Mobile responsive + search + PWA | HIGH | IN PROGRESS |
-| CR-029 | 2026-05-03 | E2E Playwright tests | MEDIUM | DONE |
+| CR-028 | 2026-05-04 | Mobile responsive + search + PWA | HIGH | DONE |
+| CR-029 | 2026-05-04 | E2E Playwright tests (16 tests) | MEDIUM | DONE |
 | CR-030 | 2026-05-04 | Google Drive auto-sync (docs, changelog, metrics, NotebookLM) | HIGH | DONE |
 | CR-031 | 2026-05-04 | Cron: daily sync 8AM AEST, weekly Monday 9AM AEST | HIGH | DONE |
-| CR-032 | 2026-05-04 | NotebookLM knowledge base doc (PRD+Roadmap+Architecture combined) | HIGH | DONE |
-| CR-033 | 2026-05-04 | Google Sheets CEO dashboard + Change Request tracker | HIGH | DONE |
+| CR-032 | 2026-05-04 | NotebookLM knowledge base doc | HIGH | DONE |
+| CR-033 | 2026-05-04 | Google Sheets CEO dashboard + CR tracker | HIGH | DONE |
+| CR-034 | 2026-05-04 | CSV export (bookings, revenue, users) | HIGH | DONE |
+| CR-035 | 2026-05-04 | Webhook logs viewer (admin) | MEDIUM | DONE |
+| CR-036 | 2026-05-04 | Referral tracking system | MEDIUM | DONE |
+| CR-037 | 2026-05-04 | Partner onboarding wizard (4-step) | HIGH | DONE |
+| CR-038 | 2026-05-04 | Course content pages (Track A, 5 lessons) | MEDIUM | DONE |
+| CR-039 | 2026-05-04 | Dark/Light theme toggle | LOW | DONE |
+| CR-040 | 2026-05-04 | Revenue SVG chart (admin) | MEDIUM | DONE |
+| CR-041 | 2026-05-04 | Availability calendar in booking | HIGH | DONE |
+| CR-042 | 2026-05-04 | SEO structured data (Article, Service, Breadcrumbs) | HIGH | DONE |
+| CR-043 | 2026-05-04 | Booking persist to DB (guest-booking API) | CRITICAL | DONE |
+| CR-044 | 2026-05-04 | Error boundaries + loading skeletons | MEDIUM | DONE |
+| CR-045 | 2026-05-04 | Accessibility (aria labels, progressbar) | MEDIUM | DONE |
+| CR-046 | 2026-05-04 | Dashboard real DB data (admin + user) | HIGH | DONE |
+| CR-047 | 2026-05-04 | Bank transfer approval API | HIGH | DONE |
+| CR-048 | 2026-05-04 | API Guide with code examples | MEDIUM | DONE |
+| CR-049 | 2026-05-04 | User management page (admin) | HIGH | DONE |
+| CR-050 | 2026-05-04 | Google Service Account configured | HIGH | DONE |
+| CR-051 | 2026-05-04 | OG image generation + analytics dashboard | MEDIUM | IN PROGRESS |
+
+---
+
+## 10. Project Statistics (as of 2026-05-04)
+
+| Metric | Value |
+|---|---|
+| Git commits | 43 |
+| Pages | 46 |
+| TypeScript files | 227 |
+| API route files | 17 (40+ endpoints) |
+| Live domains | 6 HTTPS |
+| PM2 services | 9 online |
+| Unit tests | 17 |
+| E2E tests | 16 |
+| DB tables | 16 |
+| DB bookings | 2 real |
+| DB users | 3 |
+| Stripe products | 5 LIVE |
+| Availability slots | 70 |
+| Tenants | 2 |
+| PRD Change Requests | 51 (47 DONE, 2 PARTIAL, 2 PENDING) |
 
 ---
 

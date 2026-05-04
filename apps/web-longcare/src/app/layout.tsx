@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://longcare.au/api/og?title=AI-Powered+Mentoring&subtitle=From+$29+AUD',
         width: 1200,
         height: 630,
         alt: 'Longcare — AI Mentor & Learning',
