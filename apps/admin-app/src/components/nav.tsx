@@ -5,6 +5,7 @@ export function AdminNav() {
     { href: '/', label: 'Dashboard' },
     { href: '/marketing', label: 'Marketing' },
     { href: '/emails', label: 'Emails' },
+    { href: '/bookings', label: 'Bookings' },
     { href: '/health', label: 'Health' },
   ];
 

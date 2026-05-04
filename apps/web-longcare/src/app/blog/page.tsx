@@ -12,7 +12,7 @@ const posts = [
     preview:
       'Artificial Intelligence is no longer just for tech giants. In this guide, we break down the fundamentals of AI and show you how to start using tools like ChatGPT, Gemini, and Claude to boost your productivity — no coding required.',
     tags: ['AI', 'Beginners', 'Guide'],
-    slug: '#',
+    slug: '/blog/getting-started-with-ai',
   },
   {
     title: '5 Ways AI Can Transform Your Small Business',
@@ -20,7 +20,7 @@ const posts = [
     preview:
       'Small businesses in Australia are discovering that AI tools can level the playing field against larger competitors. From automated customer support to smart scheduling, here are five practical ways to get started today.',
     tags: ['SME', 'Business', 'AI Tools'],
-    slug: '#',
+    slug: '/blog/5-ways-ai-transforms-business',
   },
   {
     title: 'How to Write Effective AI Prompts',
@@ -28,7 +28,7 @@ const posts = [
     preview:
       'The difference between a good and bad AI output often comes down to how you write your prompt. Learn the CRAFT framework for structuring prompts that consistently deliver high-quality results across any AI model.',
     tags: ['Prompt Engineering', 'Tips'],
-    slug: '#',
+    slug: '/blog/effective-ai-prompts',
   },
 ];
 

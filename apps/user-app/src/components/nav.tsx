@@ -13,6 +13,8 @@ export function UserNav() {
           <a href="/" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.85rem' }}>Dashboard</a>
           <a href="https://book.longcare.au" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.85rem' }}>Book Session</a>
           <a href="https://g.longcare.au" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.85rem' }}>AI Chat</a>
+          <a href="/notifications" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.85rem' }}>Notifications</a>
+          <a href="/settings" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.85rem' }}>Settings</a>
           <a href="/login" style={{ background: 'var(--primary, #6366f1)', color: '#fff', padding: '0.4rem 1rem', borderRadius: 6, fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none' }}>Sign In</a>
         </div>
       </div>
