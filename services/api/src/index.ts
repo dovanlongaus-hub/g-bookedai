@@ -13,6 +13,8 @@ import { paymentRouter } from './routes/payment.js';
 import { servicesRouter } from './routes/services.js';
 import { learningRouter } from './routes/learning.js';
 import { marketingRouter } from './routes/marketing.js';
+import { whatsappRouter } from './routes/whatsapp.js';
+import { cronRouter } from './routes/cron.js';
 import { webhookRouter } from './routes/webhooks.js';
 import { healthRouter } from './routes/health.js';
 import { authRouter } from './routes/auth.js';
@@ -69,6 +71,8 @@ app.use('/booking', bookingRouter);
 app.use('/payment', paymentRouter);
 app.use('/learning', learningRouter);
 app.use('/marketing', marketingRouter);
+app.use('/whatsapp', whatsappRouter);
+app.use('/cron', cronRouter);
 app.use('/events', sseRouter);
 
 // Error handling
