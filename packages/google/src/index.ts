@@ -12,4 +12,4 @@ export { cloudTasks } from './services/tasks.js';
 export { translationService } from './services/translation.js';
 export { firebaseAuth } from './services/firebase-auth.js';
 export { notebookLMService } from './services/notebooklm.js';
-export { getGoogleAuth } from './lib/auth.js';
+export { getGoogleAuth, getImpersonatedAuth } from './lib/auth.js';

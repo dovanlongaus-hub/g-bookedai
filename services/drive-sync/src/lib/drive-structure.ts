@@ -1,8 +1,9 @@
 import { google } from 'googleapis';
-import { getGoogleAuth } from '@bookedai/google';
+import { getGoogleAuth, getImpersonatedAuth } from '@bookedai/google';
 import { logger } from './logger.js';
 
 const CEO_EMAIL = process.env.CEO_EMAIL || 'ceo@longcare.au';
+const USE_IMPERSONATION = process.env.USE_IMPERSONATION !== 'false';
 
 /**
  * Drive folder structure for CEO:
@@ -48,13 +49,14 @@ const FOLDER_STRUCTURE = [
 let _folderCache: Map<string, string> | null = null;
 
 function getDrive() {
-  return google.drive({
-    version: 'v3',
-    auth: getGoogleAuth([
-      'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/drive.file',
-    ]),
-  });
+  const auth = USE_IMPERSONATION
+    ? getImpersonatedAuth(CEO_EMAIL)
+    : getGoogleAuth([
+        'https://www.googleapis.com/auth/drive',
+        'https://www.googleapis.com/auth/drive.file',
+      ]);
+
+  return google.drive({ version: 'v3', auth });
 }
 
 async function findFolder(name: string, parentId?: string): Promise<string | null> {

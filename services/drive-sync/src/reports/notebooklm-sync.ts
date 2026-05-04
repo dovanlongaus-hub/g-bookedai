@@ -116,7 +116,7 @@ ${architecture.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
       </body></html>
     `;
 
-    const folderId = await getFolderId('06_NotebookLM');
+    const folderId = await getFolderId('06_Learning_Sessions/Notes');
     const doc = await uploadDocument({
       title,
       folderId,

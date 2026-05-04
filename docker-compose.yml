@@ -105,11 +105,15 @@ services:
       context: .
       dockerfile: services/drive-sync/Dockerfile
     ports: ['8083:8080']
+    volumes:
+      - ./credentials:/app/credentials:ro
+      - ./docs:/app/docs:ro
     environment:
       - DATABASE_URL=postgresql://bookedai:localpass@postgres:5432/longcare
-      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT:-longcare-prod}
-      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT:-auschain-489904}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/google-service-account.json
       - CEO_EMAIL=${CEO_EMAIL:-ceo@longcare.au}
+      - DOCS_ROOT=/app/docs
     depends_on:
       postgres:
         condition: service_healthy

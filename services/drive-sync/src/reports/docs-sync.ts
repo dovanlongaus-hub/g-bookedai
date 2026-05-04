@@ -54,10 +54,10 @@ export async function syncDocsToDrive(): Promise<DocSyncResult> {
   const result: DocSyncResult = { files: [], errors: [] };
 
   const docsToSync = [
-    { file: 'PRD.md', title: 'bookedai.au — PRD (Product Requirements Document)', folder: '00_Project_Docs' },
-    { file: 'IMPLEMENTATION_ROADMAP.md', title: 'bookedai.au — Implementation Roadmap', folder: '00_Project_Docs' },
-    { file: 'architecture.md', title: 'bookedai.au — System Architecture', folder: '00_Project_Docs' },
-    { file: 'implementation-plan.md', title: 'bookedai.au — Implementation Plan (Phases)', folder: '00_Project_Docs' },
+    { file: 'PRD.md', title: 'bookedai.au — PRD (Product Requirements Document)', folder: '08_System_Architecture' },
+    { file: 'IMPLEMENTATION_ROADMAP.md', title: 'bookedai.au — Implementation Roadmap', folder: '08_System_Architecture' },
+    { file: 'architecture.md', title: 'bookedai.au — System Architecture', folder: '08_System_Architecture' },
+    { file: 'implementation-plan.md', title: 'bookedai.au — Implementation Plan (Phases)', folder: '08_System_Architecture' },
   ];
 
   for (const doc of docsToSync) {
@@ -118,7 +118,7 @@ export async function syncChangeLogToSheets(): Promise<{ name: string; link: str
       ...rows,
     ].join('\n');
 
-    const folderId = await getFolderId('00_Project_Docs');
+    const folderId = await getFolderId('08_System_Architecture');
     const sheet = await uploadSpreadsheet({
       title: 'bookedai.au — Change Request Tracker',
       folderId,
