@@ -79,5 +79,17 @@ module.exports = {
       args: 'next dev -p 3004',
       cwd: '/home/dovanlong/g.bookedai.au/apps/admin-app',
     },
+    {
+      name: 'drive-sync',
+      script: 'npx',
+      args: 'tsx services/drive-sync/src/index.ts',
+      cwd: '/home/dovanlong/g.bookedai.au',
+      env: {
+        PORT: 8083,
+        DATABASE_URL: dotenv.DATABASE_URL || 'postgresql://bookedai:localpass@localhost:5432/longcare',
+        CEO_EMAIL: 'ceo@longcare.au',
+        GOOGLE_CLOUD_PROJECT: dotenv.GOOGLE_CLOUD_PROJECT || 'auschain-489904',
+      },
+    },
   ],
 };
