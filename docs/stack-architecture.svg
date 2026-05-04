@@ -1,0 +1,393 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="cloudflareGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f97316"/>
+      <stop offset="100%" style="stop-color:#fb923c"/>
+    </linearGradient>
+    <linearGradient id="nginxGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#059669"/>
+      <stop offset="100%" style="stop-color:#34d399"/>
+    </linearGradient>
+    <linearGradient id="frontendGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="backendGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0891b2"/>
+      <stop offset="100%" style="stop-color:#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="gcpGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#dc2626"/>
+      <stop offset="100%" style="stop-color:#f87171"/>
+    </linearGradient>
+    <linearGradient id="externalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4338ca"/>
+      <stop offset="100%" style="stop-color:#818cf8"/>
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="url(#bgGrad)"/>
+  <!-- Grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+  </pattern>
+  <rect width="1200" height="900" fill="url(#grid)" opacity="0.5"/>
+
+  <!-- Title -->
+  <text x="600" y="45" text-anchor="middle" font-size="28" font-weight="700" fill="#f1f5f9">BookedAI Platform</text>
+  <text x="600" y="70" text-anchor="middle" font-size="14" fill="#94a3b8">Stack Architecture — AI Revenue Engine for Australian Businesses</text>
+
+  <!-- ============ LAYER 1: USERS & CDN ============ -->
+  <!-- Users -->
+  <g transform="translate(50, 95)">
+    <circle cx="25" cy="20" r="12" fill="#64748b" opacity="0.8"/>
+    <circle cx="25" cy="14" r="6" fill="#94a3b8"/>
+    <path d="M 13 28 Q 25 35 37 28" fill="#94a3b8"/>
+    <text x="25" y="48" text-anchor="middle" font-size="10" fill="#94a3b8">Users</text>
+  </g>
+
+  <!-- Arrow down -->
+  <path d="M 75 130 L 140 130" stroke="#f97316" stroke-width="2" marker-end="url(#arrowOrange)" opacity="0.6"/>
+
+  <!-- Cloudflare Layer -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="95" width="1010" height="55" rx="10" fill="#1e293b" stroke="url(#cloudflareGrad)" stroke-width="2"/>
+    <rect x="140" y="95" width="6" height="55" rx="3" fill="url(#cloudflareGrad)"/>
+    <text x="170" y="118" font-size="11" font-weight="600" fill="#fb923c">CLOUDFLARE</text>
+    <text x="170" y="135" font-size="10" fill="#94a3b8">DNS + CDN + DDoS + WAF + Proxy</text>
+    <!-- Domain chips -->
+    <rect x="420" y="103" width="110" height="22" rx="4" fill="#431407" opacity="0.8"/>
+    <text x="475" y="118" text-anchor="middle" font-size="9" fill="#fdba74">g.bookedai.au</text>
+    <rect x="540" y="103" width="130" height="22" rx="4" fill="#431407" opacity="0.8"/>
+    <text x="605" y="118" text-anchor="middle" font-size="9" fill="#fdba74">admin.g.bookedai.au</text>
+    <rect x="680" y="103" width="140" height="22" rx="4" fill="#431407" opacity="0.8"/>
+    <text x="750" y="118" text-anchor="middle" font-size="9" fill="#fdba74">booking.g.bookedai.au</text>
+    <rect x="830" y="103" width="120" height="22" rx="4" fill="#431407" opacity="0.8"/>
+    <text x="890" y="118" text-anchor="middle" font-size="9" fill="#fdba74">api.g.bookedai.au</text>
+    <rect x="960" y="103" width="100" height="22" rx="4" fill="#431407" opacity="0.8"/>
+    <text x="1010" y="118" text-anchor="middle" font-size="9" fill="#fdba74">longcare.au</text>
+    <!-- IP -->
+    <rect x="420" y="128" width="120" height="18" rx="3" fill="#0f172a"/>
+    <text x="480" y="141" text-anchor="middle" font-size="9" fill="#67e8f9">IP: 34.40.164.84</text>
+  </g>
+
+  <!-- Connector -->
+  <path d="M 600 150 L 600 165" stroke="#34d399" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- ============ LAYER 2: NGINX + SSL ============ -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="165" width="1010" height="50" rx="10" fill="#1e293b" stroke="url(#nginxGrad)" stroke-width="2"/>
+    <rect x="140" y="165" width="6" height="50" rx="3" fill="url(#nginxGrad)"/>
+    <text x="170" y="188" font-size="11" font-weight="600" fill="#34d399">NGINX + SSL</text>
+    <text x="170" y="203" font-size="10" fill="#94a3b8">Reverse Proxy + Let's Encrypt + WebSocket</text>
+    <!-- Port mappings -->
+    <text x="450" y="193" font-size="9" fill="#67e8f9" font-family="monospace">:443 → :3000</text>
+    <text x="580" y="193" font-size="9" fill="#67e8f9" font-family="monospace">:443 → :3004</text>
+    <text x="710" y="193" font-size="9" fill="#67e8f9" font-family="monospace">:443 → :3002</text>
+    <text x="840" y="193" font-size="9" fill="#67e8f9" font-family="monospace">:443 → :3003</text>
+    <text x="970" y="193" font-size="9" fill="#67e8f9" font-family="monospace">:443 → :8180</text>
+  </g>
+
+  <!-- Connector -->
+  <path d="M 600 215 L 600 235" stroke="#60a5fa" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- ============ LAYER 3: FRONTEND ============ -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="235" width="1010" height="100" rx="10" fill="#1e293b" stroke="url(#frontendGrad)" stroke-width="2"/>
+    <rect x="140" y="235" width="6" height="100" rx="3" fill="url(#frontendGrad)"/>
+    <text x="170" y="258" font-size="11" font-weight="600" fill="#60a5fa">FRONTEND LAYER</text>
+    <text x="310" y="258" font-size="9" fill="#94a3b8">Next.js 15 + React 19 + Tailwind CSS</text>
+
+    <!-- App boxes -->
+    <g transform="translate(170, 268)">
+      <rect width="160" height="55" rx="6" fill="#172554" stroke="#3b82f6" stroke-width="1"/>
+      <text x="80" y="18" text-anchor="middle" font-size="10" font-weight="600" fill="#93c5fd">web-g-bookedai</text>
+      <text x="80" y="32" text-anchor="middle" font-size="9" fill="#64748b">g.bookedai.au</text>
+      <text x="80" y="45" text-anchor="middle" font-size="8" fill="#475569">:3000 | i18n (en/vi/zh)</text>
+    </g>
+    <g transform="translate(345, 268)">
+      <rect width="160" height="55" rx="6" fill="#172554" stroke="#3b82f6" stroke-width="1"/>
+      <text x="80" y="18" text-anchor="middle" font-size="10" font-weight="600" fill="#93c5fd">web-longcare</text>
+      <text x="80" y="32" text-anchor="middle" font-size="9" fill="#64748b">longcare.au</text>
+      <text x="80" y="45" text-anchor="middle" font-size="8" fill="#475569">:3001 | SEO + Schema.org</text>
+    </g>
+    <g transform="translate(520, 268)">
+      <rect width="160" height="55" rx="6" fill="#172554" stroke="#3b82f6" stroke-width="1"/>
+      <text x="80" y="18" text-anchor="middle" font-size="10" font-weight="600" fill="#93c5fd">booking-web</text>
+      <text x="80" y="32" text-anchor="middle" font-size="9" fill="#64748b">booking.g.bookedai.au</text>
+      <text x="80" y="45" text-anchor="middle" font-size="8" fill="#475569">:3002 | Stripe Checkout</text>
+    </g>
+    <g transform="translate(695, 268)">
+      <rect width="145" height="55" rx="6" fill="#172554" stroke="#3b82f6" stroke-width="1"/>
+      <text x="72" y="18" text-anchor="middle" font-size="10" font-weight="600" fill="#93c5fd">user-app</text>
+      <text x="72" y="32" text-anchor="middle" font-size="9" fill="#64748b">app.g.bookedai.au</text>
+      <text x="72" y="45" text-anchor="middle" font-size="8" fill="#475569">:3003 | Dashboard</text>
+    </g>
+    <g transform="translate(855, 268)">
+      <rect width="145" height="55" rx="6" fill="#172554" stroke="#3b82f6" stroke-width="1"/>
+      <text x="72" y="18" text-anchor="middle" font-size="10" font-weight="600" fill="#93c5fd">admin-app</text>
+      <text x="72" y="32" text-anchor="middle" font-size="9" fill="#64748b">admin.g.bookedai.au</text>
+      <text x="72" y="45" text-anchor="middle" font-size="8" fill="#475569">:3004 | Management</text>
+    </g>
+  </g>
+
+  <!-- Connector -->
+  <path d="M 600 335 L 600 355" stroke="#a78bfa" stroke-width="2" stroke-dasharray="4,4"/>
+  <text x="615" y="350" font-size="8" fill="#a78bfa">API calls (HTTPS)</text>
+
+  <!-- ============ LAYER 4: BACKEND ============ -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="355" width="1010" height="140" rx="10" fill="#1e293b" stroke="url(#backendGrad)" stroke-width="2"/>
+    <rect x="140" y="355" width="6" height="140" rx="3" fill="url(#backendGrad)"/>
+    <text x="170" y="378" font-size="11" font-weight="600" fill="#a78bfa">BACKEND LAYER</text>
+    <text x="310" y="378" font-size="9" fill="#94a3b8">Express 5 + TypeScript + tsx runtime</text>
+
+    <!-- API Service (main - larger) -->
+    <g transform="translate(170, 388)">
+      <rect width="350" height="95" rx="8" fill="#2e1065" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="175" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#c4b5fd">API Service</text>
+      <text x="175" y="32" text-anchor="middle" font-size="9" fill="#7c3aed">api.g.bookedai.au | :8080 (host :8180)</text>
+
+      <!-- Dual Auth inside API -->
+      <rect x="10" y="40" width="155" height="45" rx="4" fill="#1e1b4b" stroke="#4338ca" stroke-width="1"/>
+      <text x="87" y="55" text-anchor="middle" font-size="8" font-weight="600" fill="#a5b4fc">Firebase Auth</text>
+      <text x="87" y="67" text-anchor="middle" font-size="7" fill="#6366f1">Google Identity Platform</text>
+      <text x="87" y="78" text-anchor="middle" font-size="7" fill="#4f46e5">PRIMARY</text>
+
+      <rect x="175" y="40" width="165" height="45" rx="4" fill="#1a1a2e" stroke="#10a37f" stroke-width="1"/>
+      <text x="257" y="55" text-anchor="middle" font-size="8" font-weight="600" fill="#6ee7b7">OpenAI OAuth</text>
+      <text x="257" y="67" text-anchor="middle" font-size="7" fill="#34d399">ChatGPT Sign-In + JWT</text>
+      <text x="257" y="78" text-anchor="middle" font-size="7" fill="#059669">FALLBACK</text>
+    </g>
+
+    <!-- Other services -->
+    <g transform="translate(540, 388)">
+      <rect width="130" height="42" rx="6" fill="#2e1065" stroke="#7c3aed" stroke-width="1"/>
+      <text x="65" y="17" text-anchor="middle" font-size="9" font-weight="600" fill="#c4b5fd">Agent</text>
+      <text x="65" y="30" text-anchor="middle" font-size="8" fill="#7c3aed">:8081 | Gemini AI</text>
+    </g>
+    <g transform="translate(685, 388)">
+      <rect width="130" height="42" rx="6" fill="#2e1065" stroke="#7c3aed" stroke-width="1"/>
+      <text x="65" y="17" text-anchor="middle" font-size="9" font-weight="600" fill="#c4b5fd">Notification</text>
+      <text x="65" y="30" text-anchor="middle" font-size="8" fill="#7c3aed">:8082 | Gmail+FCM</text>
+    </g>
+    <g transform="translate(830, 388)">
+      <rect width="130" height="42" rx="6" fill="#2e1065" stroke="#7c3aed" stroke-width="1"/>
+      <text x="65" y="17" text-anchor="middle" font-size="9" font-weight="600" fill="#c4b5fd">Drive-Sync</text>
+      <text x="65" y="30" text-anchor="middle" font-size="8" fill="#7c3aed">:8083 | Drive API</text>
+    </g>
+
+    <!-- Internal services row -->
+    <g transform="translate(540, 440)">
+      <rect width="95" height="38" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <text x="47" y="16" text-anchor="middle" font-size="8" fill="#a5b4fc">Payment</text>
+      <text x="47" y="28" text-anchor="middle" font-size="7" fill="#6366f1">Stripe SDK</text>
+    </g>
+    <g transform="translate(645, 440)">
+      <rect width="110" height="38" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <text x="55" y="16" text-anchor="middle" font-size="8" fill="#a5b4fc">Learning Agent</text>
+      <text x="55" y="28" text-anchor="middle" font-size="7" fill="#6366f1">Gemini + Docs</text>
+    </g>
+    <g transform="translate(765, 440)">
+      <rect width="110" height="38" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <text x="55" y="16" text-anchor="middle" font-size="8" fill="#a5b4fc">Marketing Agent</text>
+      <text x="55" y="28" text-anchor="middle" font-size="7" fill="#6366f1">8-channel AI</text>
+    </g>
+    <g transform="translate(885, 440)">
+      <rect width="110" height="38" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <text x="55" y="16" text-anchor="middle" font-size="8" fill="#a5b4fc">Accounting</text>
+      <text x="55" y="28" text-anchor="middle" font-size="7" fill="#6366f1">Xero SDK</text>
+    </g>
+  </g>
+
+  <!-- Connector -->
+  <path d="M 400 495 L 400 520" stroke="#22d3ee" stroke-width="2" stroke-dasharray="4,4"/>
+  <path d="M 800 495 L 800 520" stroke="#22d3ee" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- ============ LAYER 5: DATA ============ -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="520" width="480" height="80" rx="10" fill="#1e293b" stroke="url(#dataGrad)" stroke-width="2"/>
+    <rect x="140" y="520" width="6" height="80" rx="3" fill="url(#dataGrad)"/>
+    <text x="170" y="543" font-size="11" font-weight="600" fill="#22d3ee">DATA LAYER</text>
+
+    <!-- PostgreSQL -->
+    <g transform="translate(170, 552)">
+      <rect width="200" height="40" rx="6" fill="#083344" stroke="#0891b2" stroke-width="1"/>
+      <text x="100" y="17" text-anchor="middle" font-size="10" font-weight="600" fill="#67e8f9">PostgreSQL 16</text>
+      <text x="100" y="32" text-anchor="middle" font-size="8" fill="#0891b2">:5432 | DB: longcare | 4 migrations</text>
+    </g>
+
+    <!-- Redis -->
+    <g transform="translate(385, 552)">
+      <rect width="160" height="40" rx="6" fill="#083344" stroke="#0891b2" stroke-width="1"/>
+      <text x="80" y="17" text-anchor="middle" font-size="10" font-weight="600" fill="#67e8f9">Redis 7</text>
+      <text x="80" y="32" text-anchor="middle" font-size="8" fill="#0891b2">:6379 | Cache + Sessions</text>
+    </g>
+  </g>
+
+  <!-- ============ LAYER 5B: GOOGLE CLOUD ============ -->
+  <g filter="url(#shadow)">
+    <rect x="640" y="520" width="510" height="80" rx="10" fill="#1e293b" stroke="url(#gcpGrad)" stroke-width="2"/>
+    <rect x="640" y="520" width="6" height="80" rx="3" fill="url(#gcpGrad)"/>
+    <text x="670" y="543" font-size="11" font-weight="600" fill="#f87171">GOOGLE CLOUD PLATFORM</text>
+
+    <!-- GCP Services -->
+    <g transform="translate(660, 552)">
+      <rect width="75" height="38" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="0.5"/>
+      <text x="37" y="15" text-anchor="middle" font-size="7" font-weight="600" fill="#fca5a5">Gemini</text>
+      <text x="37" y="27" text-anchor="middle" font-size="6" fill="#ef4444">2.0 Flash</text>
+    </g>
+    <g transform="translate(745, 552)">
+      <rect width="75" height="38" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="0.5"/>
+      <text x="37" y="15" text-anchor="middle" font-size="7" font-weight="600" fill="#fca5a5">Pub/Sub</text>
+      <text x="37" y="27" text-anchor="middle" font-size="6" fill="#ef4444">Event Bus</text>
+    </g>
+    <g transform="translate(830, 552)">
+      <rect width="75" height="38" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="0.5"/>
+      <text x="37" y="15" text-anchor="middle" font-size="7" font-weight="600" fill="#fca5a5">Gmail</text>
+      <text x="37" y="27" text-anchor="middle" font-size="6" fill="#ef4444">Calendar+Meet</text>
+    </g>
+    <g transform="translate(915, 552)">
+      <rect width="75" height="38" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="0.5"/>
+      <text x="37" y="15" text-anchor="middle" font-size="7" font-weight="600" fill="#fca5a5">Drive</text>
+      <text x="37" y="27" text-anchor="middle" font-size="6" fill="#ef4444">Docs + Files</text>
+    </g>
+    <g transform="translate(1000, 552)">
+      <rect width="75" height="38" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="0.5"/>
+      <text x="37" y="15" text-anchor="middle" font-size="7" font-weight="600" fill="#fca5a5">BigQuery</text>
+      <text x="37" y="27" text-anchor="middle" font-size="6" fill="#ef4444">GA4 + Looker</text>
+    </g>
+    <g transform="translate(1085, 552)">
+      <rect width="55" height="38" rx="4" fill="#450a0a" stroke="#dc2626" stroke-width="0.5"/>
+      <text x="27" y="15" text-anchor="middle" font-size="7" font-weight="600" fill="#fca5a5">Tasks</text>
+      <text x="27" y="27" text-anchor="middle" font-size="6" fill="#ef4444">Scheduler</text>
+    </g>
+  </g>
+
+  <!-- ============ LAYER 6: EXTERNAL ============ -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="625" width="1010" height="65" rx="10" fill="#1e293b" stroke="url(#externalGrad)" stroke-width="2"/>
+    <rect x="140" y="625" width="6" height="65" rx="3" fill="url(#externalGrad)"/>
+    <text x="170" y="648" font-size="11" font-weight="600" fill="#818cf8">EXTERNAL SERVICES</text>
+
+    <!-- External service boxes -->
+    <g transform="translate(170, 655)">
+      <rect width="160" height="28" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+      <text x="80" y="18" text-anchor="middle" font-size="9" fill="#c4b5fd">Stripe (Payments + Webhooks)</text>
+    </g>
+    <g transform="translate(345, 655)">
+      <rect width="180" height="28" rx="5" fill="#022c22" stroke="#10a37f" stroke-width="1"/>
+      <text x="90" y="18" text-anchor="middle" font-size="9" fill="#6ee7b7">OpenAI OAuth (ChatGPT Auth)</text>
+    </g>
+    <g transform="translate(540, 655)">
+      <rect width="140" height="28" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+      <text x="70" y="18" text-anchor="middle" font-size="9" fill="#c4b5fd">Xero (Accounting)</text>
+    </g>
+    <g transform="translate(695, 655)">
+      <rect width="140" height="28" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+      <text x="70" y="18" text-anchor="middle" font-size="9" fill="#c4b5fd">GA4 + GTM (Analytics)</text>
+    </g>
+    <g transform="translate(850, 655)">
+      <rect width="160" height="28" rx="5" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+      <text x="80" y="18" text-anchor="middle" font-size="9" fill="#c4b5fd">Firebase (Auth Primary)</text>
+    </g>
+  </g>
+
+  <!-- Connector lines from backend to data/gcp -->
+  <line x1="350" y1="495" x2="350" y2="520" stroke="#22d3ee" stroke-width="1.5" opacity="0.5"/>
+  <line x1="500" y1="495" x2="500" y2="520" stroke="#22d3ee" stroke-width="1.5" opacity="0.5"/>
+  <line x1="700" y1="495" x2="700" y2="520" stroke="#f87171" stroke-width="1.5" opacity="0.5"/>
+  <line x1="850" y1="495" x2="850" y2="520" stroke="#f87171" stroke-width="1.5" opacity="0.5"/>
+  <line x1="1000" y1="495" x2="1000" y2="520" stroke="#f87171" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Connector to external -->
+  <path d="M 600 600 L 600 625" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+  <!-- ============ BOOKING FLOW (bottom section) ============ -->
+  <g transform="translate(140, 715)">
+    <rect width="1010" height="75" rx="10" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
+    <text x="20" y="22" font-size="11" font-weight="600" fill="#fbbf24">BOOKING TRUTH ENGINE FLOW</text>
+
+    <!-- Flow steps -->
+    <g transform="translate(20, 35)">
+      <rect width="90" height="30" rx="15" fill="#422006" stroke="#f59e0b" stroke-width="1"/>
+      <text x="45" y="19" text-anchor="middle" font-size="8" font-weight="600" fill="#fcd34d">AI Recommend</text>
+    </g>
+    <text x="120" y="55" font-size="14" fill="#f59e0b">→</text>
+    <g transform="translate(135, 35)">
+      <rect width="80" height="30" rx="15" fill="#422006" stroke="#f59e0b" stroke-width="1"/>
+      <text x="40" y="19" text-anchor="middle" font-size="8" font-weight="600" fill="#fcd34d">HOLD</text>
+    </g>
+    <text x="225" y="55" font-size="14" fill="#f59e0b">→</text>
+    <g transform="translate(240, 35)">
+      <rect width="100" height="30" rx="15" fill="#422006" stroke="#f59e0b" stroke-width="1"/>
+      <text x="50" y="19" text-anchor="middle" font-size="8" font-weight="600" fill="#fcd34d">PAYMENT</text>
+    </g>
+    <text x="350" y="55" font-size="14" fill="#f59e0b">→</text>
+    <g transform="translate(365, 35)">
+      <rect width="100" height="30" rx="15" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="50" y="19" text-anchor="middle" font-size="8" font-weight="700" fill="#86efac">CONFIRMED</text>
+    </g>
+    <text x="475" y="55" font-size="14" fill="#22c55e">→</text>
+    <g transform="translate(490, 35)">
+      <rect width="80" height="30" rx="15" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+      <text x="40" y="19" text-anchor="middle" font-size="8" fill="#93c5fd">Calendar</text>
+    </g>
+    <text x="578" y="55" font-size="10" fill="#60a5fa">+</text>
+    <g transform="translate(588, 35)">
+      <rect width="65" height="30" rx="15" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+      <text x="32" y="19" text-anchor="middle" font-size="8" fill="#93c5fd">Meet</text>
+    </g>
+    <text x="660" y="55" font-size="10" fill="#60a5fa">+</text>
+    <g transform="translate(670, 35)">
+      <rect width="65" height="30" rx="15" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+      <text x="32" y="19" text-anchor="middle" font-size="8" fill="#93c5fd">Gmail</text>
+    </g>
+    <text x="742" y="55" font-size="10" fill="#60a5fa">+</text>
+    <g transform="translate(752, 35)">
+      <rect width="75" height="30" rx="15" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+      <text x="37" y="19" text-anchor="middle" font-size="8" fill="#93c5fd">Pub/Sub</text>
+    </g>
+    <text x="835" y="55" font-size="10" fill="#60a5fa">+</text>
+    <g transform="translate(845, 35)">
+      <rect width="80" height="30" rx="15" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+      <text x="40" y="19" text-anchor="middle" font-size="8" fill="#93c5fd">Audit Log</text>
+    </g>
+  </g>
+
+  <!-- ============ SHARED PACKAGES (right side annotation) ============ -->
+  <g transform="translate(140, 800)">
+    <rect width="1010" height="45" rx="8" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="20" y="18" font-size="9" font-weight="600" fill="#94a3b8">SHARED PACKAGES:</text>
+    <rect x="150" y="5" width="150" height="22" rx="4" fill="#1e293b" stroke="#475569"/>
+    <text x="225" y="20" text-anchor="middle" font-size="8" fill="#67e8f9">@bookedai/shared (Types)</text>
+    <rect x="310" y="5" width="180" height="22" rx="4" fill="#1e293b" stroke="#475569"/>
+    <text x="400" y="20" text-anchor="middle" font-size="8" fill="#67e8f9">@bookedai/db (PostgreSQL)</text>
+    <rect x="500" y="5" width="190" height="22" rx="4" fill="#1e293b" stroke="#475569"/>
+    <text x="595" y="20" text-anchor="middle" font-size="8" fill="#67e8f9">@bookedai/google (All GCP APIs)</text>
+
+    <text x="20" y="38" font-size="8" fill="#64748b">Docker Compose | pnpm Workspace | Monorepo | GCE australia-southeast1 | Compliance: Australian Privacy Act + GST 10% + WCAG 2.2 AA</text>
+  </g>
+
+  <!-- Decorative elements -->
+  <circle cx="50" cy="50" r="80" fill="#3b82f6" opacity="0.03"/>
+  <circle cx="1150" cy="850" r="100" fill="#7c3aed" opacity="0.03"/>
+</svg>

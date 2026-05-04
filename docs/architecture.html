@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookedAI Platform - System Architecture</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; }
+.container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+h1 { font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.5rem; margin: 2rem 0 1rem; color: #93c5fd; border-bottom: 1px solid #334155; padding-bottom: 0.5rem; }
+h3 { font-size: 1.1rem; color: #a5b4fc; margin: 1.5rem 0 0.5rem; }
+.subtitle { text-align: center; color: #94a3b8; margin-bottom: 3rem; font-size: 1.1rem; }
+.card { background: #1e293b; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #334155; }
+.card:hover { border-color: #60a5fa; transition: border-color 0.3s; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+.badge-blue { background: #1e40af; color: #93c5fd; }
+.badge-green { background: #166534; color: #86efac; }
+.badge-purple { background: #581c87; color: #d8b4fe; }
+.badge-orange { background: #9a3412; color: #fdba74; }
+.badge-red { background: #991b1b; color: #fca5a5; }
+.badge-cyan { background: #164e63; color: #67e8f9; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th { background: #334155; padding: 10px 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
+td { padding: 10px 12px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
+tr:hover td { background: #1e293b; }
+.mermaid { background: #f8fafc; border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+.flow-box { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+.flow-item { background: #1e293b; border: 1px solid #475569; border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; }
+.flow-arrow { color: #60a5fa; font-size: 1.2rem; }
+.status-up { color: #4ade80; }
+.status-internal { color: #fbbf24; }
+.port { font-family: monospace; color: #67e8f9; }
+.tech { font-family: monospace; font-size: 0.8rem; color: #a5b4fc; }
+.section-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+.infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+.infra-item { background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 1rem; text-align: center; }
+.infra-item h4 { color: #60a5fa; font-size: 0.9rem; margin-bottom: 0.25rem; }
+.infra-item p { color: #94a3b8; font-size: 0.8rem; }
+@media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .container { padding: 1rem; } h1 { font-size: 1.8rem; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>BookedAI Platform Architecture</h1>
+<p class="subtitle">Turn customer intent into revenue — automatically<br>
+<span class="badge badge-blue">Server: 34.40.164.84</span>
+<span class="badge badge-green">Region: australia-southeast1</span>
+<span class="badge badge-purple">Updated: 2026-05-04</span>
+</p>
+
+<!-- STACK ARCHITECTURE IMAGE -->
+<h2><span class="section-icon">🎨</span>Stack Architecture (Visual)</h2>
+<div class="card" style="padding: 0; overflow: hidden; background: #0f172a;">
+<img src="stack-architecture.svg" alt="BookedAI Stack Architecture" style="width: 100%; height: auto; display: block;"/>
+</div>
+
+<!-- OVERALL ARCHITECTURE -->
+<h2><span class="section-icon">🏗️</span>System Overview (Interactive)</h2>
+<div class="mermaid">
+graph TB
+    subgraph CF["☁️ Cloudflare (DNS + CDN + DDoS Protection)"]
+        D1[g.bookedai.au]
+        D2[admin.g.bookedai.au]
+        D3[booking.g.bookedai.au]
+        D4[app.g.bookedai.au]
+        D5[api.g.bookedai.au]
+        D6[longcare.au]
+    end
+
+    subgraph NX["🔒 Nginx (SSL + Reverse Proxy)"]
+        N1[":443 → :3000"]
+        N2[":443 → :3004"]
+        N3[":443 → :3002"]
+        N4[":443 → :3003"]
+        N5[":443 → :8180"]
+    end
+
+    subgraph DC["🐳 Docker Compose"]
+        subgraph FE["Frontend (Next.js 15)"]
+            F1["web-g-bookedai\n:3000"]
+            F2["web-longcare\n:3001"]
+            F3["booking-web\n:3002"]
+            F4["user-app\n:3003"]
+            F5["admin-app\n:3004"]
+        end
+
+        subgraph BE["Backend (Express 5 + tsx)"]
+            B1["API\n:8080"]
+            B2["Agent\n:8081"]
+            B3["Notification\n:8082"]
+            B4["Drive-Sync\n:8083"]
+            B5["Payment"]
+            B6["Learning-Agent"]
+            B7["Marketing-Agent"]
+            B8["Accounting-Sync"]
+        end
+
+        subgraph DB["Infrastructure"]
+            PG["PostgreSQL 16\n:5432"]
+            RD["Redis 7\n:6379"]
+        end
+    end
+
+    subgraph GCP["☁️ Google Cloud Platform"]
+        G1[Gemini 2.0 Flash]
+        G2[Firebase Auth]
+        G3[Cloud Pub/Sub]
+        G4[Gmail + Calendar + Meet]
+        G5[Drive + Docs]
+        G6[BigQuery + GA4]
+    end
+
+    subgraph EXT["External Services"]
+        E1[Stripe]
+        E2[OpenAI OAuth]
+        E3[Xero]
+    end
+
+    D1 --> N1 --> F1
+    D2 --> N2 --> F5
+    D3 --> N3 --> F3
+    D4 --> N4 --> F4
+    D5 --> N5 --> B1
+
+    F1 & F2 & F3 & F4 & F5 --> B1
+    B1 --> PG & RD
+    B1 --> B2 & B3 & B4
+    B1 --> G2 & G3
+    B2 --> G1
+    B3 --> G4
+    B4 --> G5
+    B1 --> E1 & E2
+    B8 --> E3
+    B1 --> G6
+</div>
+
+<!-- DOMAIN MAP -->
+<h2><span class="section-icon">🌐</span>Domain & Port Mapping</h2>
+<div class="card">
+<table>
+<thead><tr><th>Domain</th><th>Service</th><th>Port</th><th>Stack</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><strong>g.bookedai.au</strong></td><td>web-g-bookedai</td><td class="port">3000</td><td class="tech">Next.js 15 + i18n</td><td class="status-up">● Live</td></tr>
+<tr><td><strong>admin.g.bookedai.au</strong></td><td>admin-app</td><td class="port">3004</td><td class="tech">Next.js 15</td><td class="status-up">● Live</td></tr>
+<tr><td><strong>booking.g.bookedai.au</strong></td><td>booking-web</td><td class="port">3002</td><td class="tech">Next.js 15 + Stripe</td><td class="status-up">● Live</td></tr>
+<tr><td><strong>app.g.bookedai.au</strong></td><td>user-app</td><td class="port">3003</td><td class="tech">Next.js 15</td><td class="status-up">● Live</td></tr>
+<tr><td><strong>api.g.bookedai.au</strong></td><td>api</td><td class="port">8180→8080</td><td class="tech">Express 5 + Dual Auth</td><td class="status-up">● Live</td></tr>
+<tr><td><strong>longcare.au</strong></td><td>web-longcare</td><td class="port">3001</td><td class="tech">Next.js 15 + SEO</td><td class="status-up">● Live</td></tr>
+<tr><td>agent (internal)</td><td>agent</td><td class="port">8081</td><td class="tech">Express 5 + Gemini</td><td class="status-internal">● Internal</td></tr>
+<tr><td>notification (internal)</td><td>notification</td><td class="port">8082</td><td class="tech">Gmail API + FCM</td><td class="status-internal">● Internal</td></tr>
+<tr><td>drive-sync (internal)</td><td>drive-sync</td><td class="port">8083</td><td class="tech">Google Drive API</td><td class="status-internal">● Internal</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- AUTHENTICATION -->
+<h2><span class="section-icon">🔐</span>Dual Authentication System</h2>
+<div class="grid-2">
+<div class="card">
+<h3>Primary: Firebase Auth (Google Sign-In)</h3>
+<div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant FB as Firebase
+    participant API as API Server
+    participant DB as PostgreSQL
+
+    U->>F: Click "Sign in with Google"
+    F->>FB: signInWithPopup(GoogleAuthProvider)
+    FB-->>F: ID Token
+    F->>API: Bearer {idToken}
+    API->>FB: verifyIdToken(token)
+    FB-->>API: {uid, email, name}
+    API->>DB: SELECT by google_sub
+    alt New user
+        API->>DB: INSERT user (role: customer)
+    end
+    API-->>F: Auth payload
+    F->>F: Store token, redirect
+</div>
+</div>
+<div class="card">
+<h3>Fallback: OpenAI OAuth (ChatGPT Sign-In)</h3>
+<div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant API as API Server
+    participant OAI as OpenAI Auth
+    participant DB as PostgreSQL
+
+    U->>F: Click "Sign in with ChatGPT"
+    F->>API: GET /auth/openai/login
+    API->>OAI: Redirect (client_id, scope)
+    OAI-->>U: OpenAI login page
+    U->>OAI: Authenticate
+    OAI->>API: Callback (code, state)
+    API->>OAI: Exchange code → token
+    OAI-->>API: access_token + user info
+    API->>DB: Find/Create by openai_sub
+    API->>API: Sign JWT (7 days)
+    API->>F: Redirect with token
+    F->>F: Store JWT, redirect
+</div>
+</div>
+</div>
+
+<!-- BOOKING FLOW -->
+<h2><span class="section-icon">📅</span>Booking Truth Engine</h2>
+<div class="card">
+<div class="mermaid">
+stateDiagram-v2
+    [*] --> DRAFT: User initiates
+    DRAFT --> HOLD: AI recommends slot
+    HOLD --> PENDING_PAYMENT: User confirms
+    HOLD --> DRAFT: Timeout (10min)\nCloud Scheduler
+    PENDING_PAYMENT --> CONFIRMED: Stripe/Bank payment
+    PENDING_PAYMENT --> DRAFT: Payment failed
+    CONFIRMED --> RESCHEDULED: User reschedules
+    CONFIRMED --> CANCELLED: User cancels
+    CONFIRMED --> REFUNDED: Admin refunds
+    CONFIRMED --> NO_SHOW: Missed session
+    RESCHEDULED --> CONFIRMED: New slot confirmed
+
+    note right of CONFIRMED
+        Truth Engine actions:
+        ✓ Calendar event created
+        ✓ Google Meet link generated
+        ✓ Gmail notification sent
+        ✓ Pub/Sub event fired
+        ✓ Audit log recorded
+    end note
+</div>
+</div>
+
+<!-- EVENT BUS -->
+<h2><span class="section-icon">📡</span>Event Bus (Cloud Pub/Sub)</h2>
+<div class="card">
+<div class="mermaid">
+graph LR
+    subgraph Publishers
+        API[API Service]
+        PAY[Payment]
+        LEARN[Learning Agent]
+        MKT[Marketing Agent]
+    end
+
+    subgraph Topics
+        T1[booking.created]
+        T2[booking.paid]
+        T3[booking.cancelled]
+        T4[payment.succeeded]
+        T5[payment.failed]
+        T6[session.completed]
+        T7[learning.notes.created]
+        T8[marketing.content.approved]
+        T9[accounting.sync.failed]
+    end
+
+    subgraph Subscribers
+        NOTIFY[Notification Service]
+        ACCT[Accounting Sync]
+        ANALYTICS[BigQuery/GA4]
+        DRIVE[Drive Sync]
+    end
+
+    API --> T1 & T2 & T3
+    PAY --> T4 & T5
+    LEARN --> T6 & T7
+    MKT --> T8
+
+    T1 & T2 & T3 --> NOTIFY
+    T4 & T5 --> ACCT
+    T2 & T4 & T6 --> ANALYTICS
+    T7 --> DRIVE
+    T9 --> NOTIFY
+</div>
+</div>
+
+<!-- DATABASE -->
+<h2><span class="section-icon">🗄️</span>Database Schema</h2>
+<div class="card">
+<div class="mermaid">
+erDiagram
+    TENANTS ||--o{ USERS : has
+    TENANTS ||--o{ SERVICES : offers
+    USERS ||--o{ BOOKINGS : makes
+    SERVICES ||--o{ AVAILABILITY_SLOTS : has
+    BOOKINGS ||--|| PAYMENTS : requires
+    BOOKINGS ||--o{ CALENDAR_EVENTS : creates
+    USERS ||--o{ LEARNING_SESSIONS : attends
+    LEARNING_SESSIONS ||--o{ LEARNING_NOTES : generates
+
+    TENANTS {
+        uuid id PK
+        text domain
+        text name
+        jsonb settings
+    }
+    USERS {
+        uuid id PK
+        uuid tenant_id FK
+        text email
+        text google_sub
+        text openai_sub
+        text auth_provider
+        text role
+        text display_name
+        text language
+    }
+    BOOKINGS {
+        uuid id PK
+        uuid user_id FK
+        uuid service_id FK
+        text status
+        timestamptz start_time
+        timestamptz end_time
+        integer version
+    }
+    PAYMENTS {
+        uuid id PK
+        uuid booking_id FK
+        integer amount_cents
+        text currency
+        text stripe_payment_id
+        text method
+        text status
+    }
+    SERVICES {
+        uuid id PK
+        uuid tenant_id FK
+        text name
+        integer price_cents
+        integer duration_minutes
+        boolean active
+    }
+</div>
+</div>
+
+<!-- API ROUTES -->
+<h2><span class="section-icon">🔌</span>API Endpoints</h2>
+<div class="card">
+<table>
+<thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-green">GET</span></td><td>/health</td><td>—</td><td>Health check + DB connectivity</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/auth/providers</td><td>—</td><td>Available auth methods</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/auth/openai/login</td><td>—</td><td>Initiate OpenAI OAuth flow</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/auth/openai/callback</td><td>—</td><td>OAuth callback handler</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/chat</td><td>—</td><td>AI chat (Gemini via agent)</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/services</td><td>—</td><td>List active services</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/services/search</td><td>—</td><td>Search services</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/booking/hold</td><td><span class="badge badge-orange">Auth</span></td><td>Hold slot (10min auto-expiry)</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/booking/confirm</td><td><span class="badge badge-orange">Auth</span></td><td>Confirm + Calendar + Meet + Gmail</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/booking/cancel</td><td><span class="badge badge-orange">Auth</span></td><td>Cancel + release slot</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/booking/reschedule</td><td><span class="badge badge-orange">Auth</span></td><td>Reschedule + Calendar update</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/payment/checkout</td><td><span class="badge badge-orange">Auth</span></td><td>Stripe Checkout / bank transfer</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/webhooks/stripe</td><td><span class="badge badge-red">Sig</span></td><td>Stripe webhook events</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/learning/session-summary</td><td><span class="badge badge-orange">Auth</span></td><td>Gemini summary + Docs notes</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/learning/history</td><td><span class="badge badge-orange">Auth</span></td><td>User's learning sessions</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/marketing/campaigns</td><td><span class="badge badge-purple">Admin</span></td><td>Create campaign</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/events/booking/:id</td><td>SSE</td><td>Real-time booking status</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- SECURITY -->
+<h2><span class="section-icon">🛡️</span>Security Layers</h2>
+<div class="card">
+<div class="infra-grid">
+<div class="infra-item"><h4>Cloudflare</h4><p>DDoS protection<br>WAF rules<br>Proxy mode</p></div>
+<div class="infra-item"><h4>SSL/TLS</h4><p>Let's Encrypt<br>Auto-renew<br>HTTPS only</p></div>
+<div class="infra-item"><h4>Helmet</h4><p>CSP headers<br>HSTS<br>X-Frame-Options</p></div>
+<div class="infra-item"><h4>CORS</h4><p>Whitelist origins<br>Credentials: true</p></div>
+<div class="infra-item"><h4>Rate Limit</h4><p>100 req/15min<br>Per IP</p></div>
+<div class="infra-item"><h4>Zod</h4><p>Input validation<br>Schema-first</p></div>
+<div class="infra-item"><h4>Auth</h4><p>Firebase + JWT<br>Role-based</p></div>
+<div class="infra-item"><h4>Stripe</h4><p>Webhook signature<br>Verification</p></div>
+</div>
+</div>
+
+<!-- TECH STACK -->
+<h2><span class="section-icon">⚙️</span>Technology Stack</h2>
+<div class="grid">
+<div class="card">
+<h3>Frontend</h3>
+<ul style="list-style:none; padding:0;">
+<li>▸ Next.js 15 (5 applications)</li>
+<li>▸ React 19</li>
+<li>▸ next-intl (en/vi/zh)</li>
+<li>▸ Tailwind CSS</li>
+<li>▸ Firebase SDK (auth)</li>
+<li>▸ Stripe.js (payments)</li>
+</ul>
+</div>
+<div class="card">
+<h3>Backend</h3>
+<ul style="list-style:none; padding:0;">
+<li>▸ Express 5 (7 microservices)</li>
+<li>▸ TypeScript + tsx runtime</li>
+<li>▸ Firebase Admin SDK</li>
+<li>▸ jsonwebtoken (JWT)</li>
+<li>▸ Zod (validation)</li>
+<li>▸ Pino (logging)</li>
+</ul>
+</div>
+<div class="card">
+<h3>AI & Google</h3>
+<ul style="list-style:none; padding:0;">
+<li>▸ Gemini 2.0 Flash</li>
+<li>▸ Google Calendar + Meet</li>
+<li>▸ Gmail API</li>
+<li>▸ Google Drive + Docs</li>
+<li>▸ Cloud Pub/Sub</li>
+<li>▸ BigQuery + GA4</li>
+</ul>
+</div>
+<div class="card">
+<h3>Infrastructure</h3>
+<ul style="list-style:none; padding:0;">
+<li>▸ Docker Compose</li>
+<li>▸ PostgreSQL 16</li>
+<li>▸ Redis 7</li>
+<li>▸ Nginx + Certbot</li>
+<li>▸ Cloudflare DNS</li>
+<li>▸ GCE (production)</li>
+</ul>
+</div>
+</div>
+
+<!-- MONOREPO STRUCTURE -->
+<h2><span class="section-icon">📁</span>Monorepo Structure</h2>
+<div class="card">
+<div class="mermaid">
+graph TD
+    ROOT["g.bookedai.au/"]
+
+    subgraph apps["apps/ (5 Next.js apps)"]
+        A1["web-g-bookedai"]
+        A2["web-longcare"]
+        A3["booking-web"]
+        A4["user-app"]
+        A5["admin-app"]
+    end
+
+    subgraph services["services/ (7 Express microservices)"]
+        S1["api"]
+        S2["agent"]
+        S3["notification"]
+        S4["drive-sync"]
+        S5["payment"]
+        S6["learning-agent"]
+        S7["marketing-agent"]
+        S8["accounting-sync"]
+    end
+
+    subgraph packages["packages/ (3 shared libraries)"]
+        P1["@bookedai/shared\n(types, enums)"]
+        P2["@bookedai/db\n(PostgreSQL, migrations)"]
+        P3["@bookedai/google\n(all Google APIs)"]
+    end
+
+    ROOT --> apps & services & packages
+    A1 & A2 & A3 & A4 & A5 --> P1
+    S1 & S2 & S3 & S4 --> P1 & P2 & P3
+</div>
+</div>
+
+<!-- DEPLOYMENT FLOW -->
+<h2><span class="section-icon">🚀</span>Deployment Pipeline</h2>
+<div class="card">
+<div class="mermaid">
+graph LR
+    DEV["pnpm dev\n(local)"] --> BUILD["docker compose\nbuild"]
+    BUILD --> UP["docker compose\nup -d"]
+    UP --> NGINX["Nginx\nreverse proxy"]
+    NGINX --> CF["Cloudflare\nDNS + CDN"]
+    CF --> USERS["Users\n(HTTPS)"]
+
+    style DEV fill:#1e40af
+    style BUILD fill:#7c3aed
+    style UP fill:#059669
+    style NGINX fill:#d97706
+    style CF fill:#dc2626
+    style USERS fill:#0891b2
+</div>
+</div>
+
+<div style="text-align:center; margin-top:3rem; padding:2rem; color:#64748b; font-size:0.85rem;">
+<p>BookedAI Platform &copy; 2026 | AI Revenue Engine for Australian Businesses</p>
+<p>First Tenant: longcare.au — AI Mentor & Learning</p>
+</div>
+
+</div>
+
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+        primaryColor: '#3b82f6',
+        primaryTextColor: '#f1f5f9',
+        primaryBorderColor: '#60a5fa',
+        lineColor: '#64748b',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#0f172a',
+        background: '#f8fafc',
+        mainBkg: '#1e293b',
+        nodeBorder: '#475569',
+        clusterBkg: '#1e293b',
+        titleColor: '#e2e8f0',
+        edgeLabelBackground: '#1e293b'
+    },
+    flowchart: { curve: 'basis' },
+    sequence: { mirrorActors: false }
+});
+</script>
+</body>
+</html>
