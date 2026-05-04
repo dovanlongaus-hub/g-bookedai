@@ -384,33 +384,66 @@ export default function BookingPage() {
               }}
             >
               <h3 style={{ marginBottom: '1rem', color: 'var(--accent)', fontSize: '1.1rem' }}>
-                Bank Transfer Instructions
+                Bank Transfer / PayID
               </h3>
+
+              {/* QR Code */}
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ background: '#fff', display: 'inline-block', padding: '12px', borderRadius: '12px' }}>
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+                      `BSB: 062517\nAccount: 11404999\nPayID: 0481993178\nName: Longcare AU\nAmount: ${selectedService ? (selectedService.price_cents / 100).toFixed(2) : '0'} AUD\nRef: BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`
+                    )}`}
+                    alt="Payment QR Code"
+                    width={200}
+                    height={200}
+                    style={{ display: 'block' }}
+                  />
+                </div>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
+                  Scan QR code with your banking app
+                </p>
+              </div>
+
               <div style={{ display: 'grid', gap: '0.6rem', fontSize: '0.95rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>PayID</span>
-                  <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>ceo@longcare.au</span>
+                  <span style={{ color: 'var(--text-muted)' }}>PayID (Mobile)</span>
+                  <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>0481 993 178</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>BSB</span>
+                  <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>062-517</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Account Number</span>
+                  <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>1140 4999</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Account Name</span>
                   <span style={{ fontWeight: 600 }}>Longcare AU</span>
                 </div>
+                <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '0.25rem 0' }} />
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Reference</span>
-                  <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>BOOK-DEMO</span>
+                  <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>BOOK-{Date.now().toString(36).toUpperCase().slice(-6)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Amount</span>
-                  <span style={{ fontWeight: 'bold', color: 'var(--accent)' }}>
+                  <span style={{ fontWeight: 'bold', color: 'var(--accent)', fontSize: '1.1rem' }}>
                     {selectedService
                       ? `${formatPrice(selectedService.price_cents, selectedService.currency)} AUD`
                       : '—'}
                   </span>
                 </div>
               </div>
+
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '1rem', textAlign: 'center' }}>
+                After transferring, click below. We will confirm within 24 hours.
+              </p>
+
               <button
                 className="btn-primary"
-                style={{ marginTop: '1.5rem', background: 'var(--accent)' }}
+                style={{ marginTop: '1rem', background: 'var(--accent)' }}
                 onClick={() => setStep('success')}
               >
                 I have completed the transfer
