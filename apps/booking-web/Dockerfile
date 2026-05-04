@@ -25,5 +25,6 @@ COPY --from=build /app/apps/booking-web/public ./apps/booking-web/public
 WORKDIR /app/apps/booking-web
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 EXPOSE 3000
 CMD ["node", "server.js"]

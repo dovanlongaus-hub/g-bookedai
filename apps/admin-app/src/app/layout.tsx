@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Analytics } from '../components/analytics';
+import { ChatWidget } from '../components/chat-widget';
 
 export const metadata: Metadata = {
   title: 'Admin — Longcare',
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <Analytics />
         {children}
+        <ChatWidget />
       </body>
     </html>
   );

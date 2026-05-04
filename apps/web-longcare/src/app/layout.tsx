@@ -4,6 +4,7 @@ import { Outfit } from 'next/font/google';
 import { LocalBusinessSchema } from '../components/schema-markup';
 import { Analytics } from '../components/analytics';
 import { Nav } from '../components/nav';
+import { ChatWidget } from '../components/chat-widget';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -85,6 +86,7 @@ export default function RootLayout({
         <Analytics />
         <LocalBusinessSchema />
         {children}
+        <ChatWidget />
       </body>
     </html>
   );
