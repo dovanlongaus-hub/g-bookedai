@@ -4,6 +4,8 @@ import { logger } from './lib/logger.js';
 import { syncAllToDrive } from './reports/sync-all.js';
 import { syncRoadmapToDrive } from './reports/roadmap-sync.js';
 import { generateProgressSnapshot } from './reports/progress-report.js';
+import { syncDocsToDrive, syncChangeLogToSheets, syncMetricsToSheets } from './reports/docs-sync.js';
+import { syncToNotebookLM } from './reports/notebooklm-sync.js';
 import { initDriveFolders } from './lib/drive-structure.js';
 import { closePool } from '@bookedai/db';
 
@@ -56,6 +58,81 @@ app.post('/init-folders', async (_req, res) => {
     const folders = await initDriveFolders();
     const folderList = Array.from(folders.entries()).map(([path, id]) => ({ path, id }));
     res.json({ success: true, data: { folders: folderList } });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Sync project docs (PRD, Roadmap, Architecture) to Google Drive
+app.post('/sync/docs', async (_req, res) => {
+  logger.info('Document sync triggered');
+  try {
+    const result = await syncDocsToDrive();
+    res.json({ success: true, data: result });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Sync Change Request log to Google Sheets
+app.post('/sync/changelog', async (_req, res) => {
+  try {
+    const result = await syncChangeLogToSheets();
+    res.json({ success: true, data: result });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Sync CEO metrics dashboard to Google Sheets
+app.post('/sync/metrics', async (_req, res) => {
+  try {
+    const snapshot = await generateProgressSnapshot();
+    const result = await syncMetricsToSheets(snapshot);
+    res.json({ success: true, data: result });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Sync knowledge base to NotebookLM-optimized Google Doc
+app.post('/sync/notebooklm', async (_req, res) => {
+  logger.info('NotebookLM sync triggered');
+  try {
+    const result = await syncToNotebookLM();
+    res.json({ success: true, data: result });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Full sync: ALL docs + metrics + changelog + notebooklm
+app.post('/sync/everything', async (_req, res) => {
+  logger.info('Full everything sync triggered');
+  try {
+    const [allResult, docsResult, clResult, nlmResult] = await Promise.allSettled([
+      syncAllToDrive(),
+      syncDocsToDrive(),
+      syncChangeLogToSheets(),
+      syncToNotebookLM(),
+    ]);
+
+    const files: { name: string; link: string }[] = [];
+    const errors: string[] = [];
+
+    if (allResult.status === 'fulfilled') files.push(...allResult.value.driveFiles);
+    else errors.push(`sync-all: ${allResult.reason}`);
+
+    if (docsResult.status === 'fulfilled') files.push(...docsResult.value.files);
+    else errors.push(`docs: ${docsResult.reason}`);
+
+    if (clResult.status === 'fulfilled' && clResult.value) files.push(clResult.value);
+    else if (clResult.status === 'rejected') errors.push(`changelog: ${clResult.reason}`);
+
+    if (nlmResult.status === 'fulfilled' && nlmResult.value) files.push(nlmResult.value);
+    else if (nlmResult.status === 'rejected') errors.push(`notebooklm: ${nlmResult.reason}`);
+
+    res.json({ success: errors.length === 0, data: { files, errors } });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }

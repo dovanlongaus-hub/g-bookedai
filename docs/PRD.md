@@ -370,6 +370,10 @@ Radius:        12px / 20px
 | CR-027 | 2026-05-03 | Availability slots seeding | MEDIUM | DONE |
 | CR-028 | 2026-05-03 | Mobile responsive + search + PWA | HIGH | IN PROGRESS |
 | CR-029 | 2026-05-03 | E2E Playwright tests | MEDIUM | DONE |
+| CR-030 | 2026-05-04 | Google Drive auto-sync (docs, changelog, metrics, NotebookLM) | HIGH | DONE |
+| CR-031 | 2026-05-04 | Cron: daily sync 8AM AEST, weekly Monday 9AM AEST | HIGH | DONE |
+| CR-032 | 2026-05-04 | NotebookLM knowledge base doc (PRD+Roadmap+Architecture combined) | HIGH | DONE |
+| CR-033 | 2026-05-04 | Google Sheets CEO dashboard + Change Request tracker | HIGH | DONE |
 
 ---
 

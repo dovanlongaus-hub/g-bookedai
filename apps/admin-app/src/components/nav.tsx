@@ -7,6 +7,7 @@ export function AdminNav() {
     { href: '/emails', label: 'Emails' },
     { href: '/bookings', label: 'Bookings' },
     { href: '/health', label: 'Health' },
+    { href: '/webhooks', label: 'Webhooks' },
   ];
 
   return (

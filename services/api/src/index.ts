@@ -20,6 +20,8 @@ import { healthRouter } from './routes/health.js';
 import { authRouter } from './routes/auth.js';
 import { sseRouter } from './routes/sse.js';
 import { partnersRouter } from './routes/partners.js';
+import { exportRouter } from './routes/export.js';
+import { referralRouter } from './routes/referral.js';
 import { closePool } from '@bookedai/db';
 
 const env = getEnv();
@@ -76,6 +78,8 @@ app.use('/whatsapp', whatsappRouter);
 app.use('/cron', cronRouter);
 app.use('/events', sseRouter);
 app.use('/partners', partnersRouter);
+app.use('/export', exportRouter);
+app.use('/referral', referralRouter);
 
 // Error handling
 app.use(notFoundHandler);

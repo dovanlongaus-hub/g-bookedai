@@ -172,6 +172,13 @@ export default function AdminDashboard() {
         </div>
       </section>
 
+      {/* Export */}
+      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+        <a href="/api/export/bookings.csv" className="btn btn-outline" style={{ margin: 0, padding: '0.5rem 1rem', fontSize: '0.8rem' }}>Export Bookings CSV</a>
+        <a href="/api/export/revenue.csv" className="btn btn-outline" style={{ margin: 0, padding: '0.5rem 1rem', fontSize: '0.8rem' }}>Export Revenue CSV</a>
+        <a href="/api/export/users.csv" className="btn btn-outline" style={{ margin: 0, padding: '0.5rem 1rem', fontSize: '0.8rem' }}>Export Users CSV</a>
+      </div>
+
       {/* Revenue Chart Placeholder */}
       <section className="section">
         <h2>Revenue Trend</h2>

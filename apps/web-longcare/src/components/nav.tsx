@@ -10,6 +10,7 @@ export function Nav() {
     { href: '/services', label: 'Services' },
     { href: '/pricing', label: 'Pricing' },
     { href: '/how-it-works', label: 'How it Works' },
+    { href: '/courses', label: 'Courses' },
     { href: '/mentors', label: 'Mentors' },
     { href: '/faq', label: 'FAQ' },
     { href: '/about', label: 'About' },
