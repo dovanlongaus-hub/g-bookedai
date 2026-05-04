@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { RevenueChart } from '../components/revenue-chart';
 
 export default function AdminDashboard() {
   const [apiHealth, setApiHealth] = useState<any>(null);
@@ -174,10 +175,7 @@ export default function AdminDashboard() {
       {/* Revenue Chart Placeholder */}
       <section className="section">
         <h2>Revenue Trend</h2>
-        <div className="chart-placeholder">
-          <span>&#x1f4ca;</span>
-          Revenue chart will render here — connect to BigQuery + Looker Studio
-        </div>
+        <RevenueChart />
       </section>
 
       {/* Recent Bookings */}

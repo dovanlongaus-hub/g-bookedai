@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { AvailabilityCalendar } from '../components/availability-calendar';
 
 type Step = 'select' | 'datetime' | 'contact' | 'payment' | 'success';
 
@@ -11,8 +12,6 @@ interface Service {
   price_cents: number;
   currency: string;
 }
-
-const TIME_SLOTS = ['09:00 AM', '10:30 AM', '01:00 PM', '03:30 PM', '05:00 PM'];
 
 function formatPrice(cents: number, currency: string): string {
   const dollars = (cents / 100).toFixed(2);
@@ -261,48 +260,11 @@ export default function BookingPage() {
           <p style={{ color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
             All times are in your local timezone.
           </p>
-          <div
-            style={{
-              background: 'rgba(79, 70, 229, 0.08)',
-              border: '1px solid rgba(79, 70, 229, 0.2)',
-              borderRadius: '8px',
-              padding: '0.75rem 1rem',
-              marginBottom: '1.5rem',
-              fontSize: '0.85rem',
-              color: '#a5b4fc',
-            }}
-          >
-            Demo mode — Connect Google Calendar for real availability
-          </div>
 
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '1rem',
-            }}
-          >
-            <button className="btn-secondary" style={{ width: 'auto', margin: 0 }}>
-              &lt; Previous Week
-            </button>
-            <span style={{ fontWeight: 600 }}>This Week</span>
-            <button className="btn-secondary" style={{ width: 'auto', margin: 0 }}>
-              Next Week &gt;
-            </button>
-          </div>
-
-          <div className="time-grid">
-            {TIME_SLOTS.map((time) => (
-              <div
-                key={time}
-                className={`time-slot ${selectedTime === time ? 'selected' : ''}`}
-                onClick={() => { setSelectedTime(time); trackEvent('select_time_slot', { time_slot: time }); }}
-              >
-                {time}
-              </div>
-            ))}
-          </div>
+          <AvailabilityCalendar
+            onSelectSlot={(date, time) => setSelectedTime(`${date} at ${time}`)}
+            selectedSlot={selectedTime ? { date: selectedTime.split(' at ')[0], time: selectedTime.split(' at ')[1] } : undefined}
+          />
 
           <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
             <button className="btn-secondary" onClick={() => setStep('select')}>

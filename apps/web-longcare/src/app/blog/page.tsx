@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '../../components/breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'Blog — Longcare AU',
@@ -35,6 +36,7 @@ const posts = [
 export default function BlogPage() {
   return (
     <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+      <Breadcrumbs items={[{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog' }]} />
       <h1 className="hero-title" style={{ fontSize: '3rem' }}>Blog</h1>
       <p className="hero-subtitle">
         Insights, tips, and guides to help you make the most of AI in your work and business.

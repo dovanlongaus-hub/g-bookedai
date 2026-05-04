@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ThemeToggle } from './theme-toggle';
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -35,6 +36,17 @@ export function Nav() {
               <a key={l.href} href={l.href} style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.85rem' }}>{l.label}</a>
             ))}
             <a href="https://g.longcare.au" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.85rem' }}>AI Chat</a>
+            <button
+              onClick={() => {
+                const el = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+                if (el) { el.value = el.value === 'vi' ? 'en' : 'vi'; el.dispatchEvent(new Event('change')); }
+                else { window.open('https://translate.google.com/translate?sl=en&tl=vi&u=' + window.location.href, '_blank'); }
+              }}
+              style={{ background: 'none', border: '1px solid rgba(255,255,255,0.15)', color: '#9ba1a6', padding: '3px 8px', borderRadius: 4, fontSize: '0.75rem', cursor: 'pointer' }}
+            >
+              VI
+            </button>
+            <ThemeToggle />
             <a href="/search" style={{ color: '#9ba1a6', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             </a>

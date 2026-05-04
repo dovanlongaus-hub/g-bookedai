@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '../../components/breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'Pricing — AI Mentoring | Longcare AU',
@@ -114,6 +115,7 @@ const learningPlans = [
 export default function PricingPage() {
   return (
     <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+      <Breadcrumbs items={[{ name: 'Home', url: '/' }, { name: 'Pricing', url: '/pricing' }]} />
       {/* Hero */}
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
         <h1 className="hero-title" style={{ fontSize: '3rem' }}>Simple, Transparent Pricing</h1>

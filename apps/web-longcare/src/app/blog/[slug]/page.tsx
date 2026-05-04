@@ -157,8 +157,25 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   const post = POSTS[slug];
   if (!post) notFound();
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    datePublished: '2026-05-04',
+    dateModified: '2026-05-04',
+    author: { '@type': 'Person', name: 'Dr. Long Do' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Longcare AU',
+      url: 'https://longcare.au',
+    },
+    description: post.content.slice(0, 160).replace(/[#*\n]/g, ''),
+    mainEntityOfPage: `https://longcare.au/blog/${slug}`,
+  };
+
   return (
     <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem', maxWidth: 760 }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <a href="/blog" style={{ color: 'var(--accent)', textDecoration: 'none', fontSize: '0.85rem' }}>&lt; Back to Blog</a>
       <h1 className="hero-title" style={{ fontSize: '2.5rem', marginTop: '1.5rem' }}>{post.title}</h1>
       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: '1rem', marginBottom: '2rem' }}>

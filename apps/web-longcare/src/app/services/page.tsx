@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '../../components/breadcrumbs';
 
 export const metadata: Metadata = {
   title: 'AI Mentoring Services — Longcare AU',
@@ -16,6 +17,30 @@ const SERVICES = [
 export default function ServicesPage() {
   return (
     <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: SERVICES.map((s, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          item: {
+            '@type': 'Service',
+            name: s.name,
+            description: s.description,
+            offers: {
+              '@type': 'Offer',
+              price: s.price.replace('$', '').replace(',', '').replace('From ', ''),
+              priceCurrency: 'AUD',
+            },
+            provider: {
+              '@type': 'Organization',
+              name: 'Longcare AU',
+              url: 'https://longcare.au',
+            },
+          },
+        })),
+      }) }} />
+      <Breadcrumbs items={[{ name: 'Home', url: '/' }, { name: 'Services', url: '/services' }]} />
       <h1 className="hero-title" style={{ fontSize: '3rem' }}>Our Services</h1>
       <p className="hero-subtitle">Choose the right AI mentoring path for your goals</p>
 
