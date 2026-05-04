@@ -55,8 +55,8 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8090';
-      const res = await fetch(`${apiUrl}/chat`, {
+      // Use local API proxy to avoid CORS/mixed-content issues
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, language: lang }),
