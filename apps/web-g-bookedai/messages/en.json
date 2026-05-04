@@ -1,0 +1,19 @@
+{
+  "common": {
+    "appName": "bookedai.au",
+    "slogan": "Turn customer intent into revenue — automatically",
+    "send": "Send",
+    "loading": "Thinking...",
+    "placeholder": "How can I help you today?",
+    "you": "You",
+    "ai": "AI",
+    "error": "Sorry, something went wrong. Please try again."
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "booking": "Book a Session",
+    "dashboard": "Dashboard",
+    "login": "Sign In"
+  }
+}

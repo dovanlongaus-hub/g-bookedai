@@ -1,0 +1,19 @@
+{
+  "common": {
+    "appName": "bookedai.au",
+    "slogan": "Chuyển đổi ý định khách hàng thành doanh thu — tự động",
+    "send": "Gửi",
+    "loading": "Đang suy nghĩ...",
+    "placeholder": "Tôi có thể giúp gì cho bạn?",
+    "you": "Bạn",
+    "ai": "AI",
+    "error": "Xin lỗi, đã xảy ra lỗi. Vui lòng thử lại."
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "services": "Dịch vụ",
+    "booking": "Đặt lịch",
+    "dashboard": "Bảng điều khiển",
+    "login": "Đăng nhập"
+  }
+}

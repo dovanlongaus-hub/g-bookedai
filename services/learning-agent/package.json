@@ -1,0 +1,22 @@
+{
+  "name": "@bookedai/learning-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal learning agent — Notes, Q&A, CTA generation",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bookedai/google": "workspace:*",
+    "@bookedai/shared": "workspace:*",
+    "@google/generative-ai": "^0.24.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}

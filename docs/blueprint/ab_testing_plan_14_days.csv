@@ -1,0 +1,5 @@
+ID,Test,Variant A,Variant B,Primary Metric,Start Day,Status
+AB-001,CTA wording,Book Now,Start AI Today,booking_start,Day 8,Not Started
+AB-002,Trial price,$29,$49,payment_success,Day 8,Not Started
+AB-003,Landing hero,AI Mentor,Learn AI in 1 hour,service_click,Day 9,Not Started
+AB-004,Package upsell,5 sessions $450,10 sessions $850,upsell_click,Day 12,Not Started

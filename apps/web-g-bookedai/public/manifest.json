@@ -1,0 +1,13 @@
+{
+  "name": "bookedai.au — AI Revenue Engine",
+  "short_name": "BookedAI",
+  "description": "Turn customer intent into revenue — automatically",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0070f3",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

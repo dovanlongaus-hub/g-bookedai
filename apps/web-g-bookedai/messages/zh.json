@@ -1,0 +1,19 @@
+{
+  "common": {
+    "appName": "bookedai.au",
+    "slogan": "将客户意向自动转化为收入",
+    "send": "发送",
+    "loading": "思考中...",
+    "placeholder": "我今天能帮您什么？",
+    "you": "您",
+    "ai": "AI",
+    "error": "抱歉，出了点问题。请再试一次。"
+  },
+  "nav": {
+    "home": "首页",
+    "services": "服务",
+    "booking": "预约",
+    "dashboard": "仪表板",
+    "login": "登录"
+  }
+}

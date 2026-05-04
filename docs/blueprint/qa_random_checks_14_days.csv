@@ -1,0 +1,7 @@
+Cadence,Check,Description,Owner
+Daily,Booking audit,Check 3 random bookings for status/payment/calendar consistency,Ops/QA
+Daily,Payment audit,Check failed/pending payments vs bookings,Finance/QA
+Daily,Email audit,Check confirmation and CTA links,Marketing/QA
+Weekly,Transcript audit,Check summaries and Q&A quality,Learning/QA
+Weekly,Campaign audit,Check UTM links and conversion mapping,Growth/QA
+Weekly,Accounting audit,Check Stripe/Xero/DB reconciliation,Finance/QA

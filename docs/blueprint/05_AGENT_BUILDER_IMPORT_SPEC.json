@@ -1,0 +1,81 @@
+{
+  "project": "bookedai-longcare-google-agent",
+  "positioning": "bookedai.au AI Revenue Engine Platform",
+  "slogan": "Turn customer intent into revenue \u2014 automatically",
+  "entry_domain": "g.bookedai.au",
+  "tenant": "longcare.au",
+  "agents": [
+    {
+      "name": "RevenueOrchestratorAgent",
+      "model": "gemini",
+      "tools": [
+        "searchServices",
+        "checkAvailability",
+        "createBookingHold",
+        "createPaymentLink",
+        "recommendNextCTA"
+      ]
+    },
+    {
+      "name": "BookingTruthAgent",
+      "model": "gemini",
+      "tools": [
+        "checkAvailability",
+        "holdSlot",
+        "confirmBooking",
+        "cancelBooking",
+        "rescheduleBooking"
+      ]
+    },
+    {
+      "name": "LearningAgent",
+      "model": "gemini",
+      "tools": [
+        "createSessionSummary",
+        "extractQA",
+        "createGoogleDocNotes",
+        "recommendNextCourse"
+      ]
+    },
+    {
+      "name": "MarketingAgent",
+      "model": "gemini",
+      "tools": [
+        "generateCampaign",
+        "generatePost",
+        "generateVideoScript",
+        "createUTMLink",
+        "submitForApproval"
+      ]
+    },
+    {
+      "name": "AccountingAgent",
+      "model": "gemini",
+      "tools": [
+        "createInvoice",
+        "recordPayment",
+        "reconcilePayments",
+        "generateGSTReport"
+      ]
+    },
+    {
+      "name": "RDAgent",
+      "model": "gemini",
+      "tools": [
+        "scanTrends",
+        "compareModels",
+        "recommendCourseUpdate",
+        "recommendPlatformUpgrade"
+      ]
+    }
+  ],
+  "human_approval_required": [
+    "publish_social_post",
+    "send_marketing_email",
+    "change_price",
+    "confirm_bank_transfer",
+    "issue_refund",
+    "upgrade_model_in_production"
+  ],
+  "truth_policy": "AI can recommend. Only database/payment/calendar verified actions can confirm."
+}

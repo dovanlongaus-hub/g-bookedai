@@ -1,0 +1,32 @@
+{
+  "name": "bookedai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "bookedai.au — AI Revenue Engine Platform",
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "dev:api": "pnpm --filter @bookedai/api dev",
+    "dev:agent": "pnpm --filter @bookedai/agent dev",
+    "dev:web": "pnpm --filter @bookedai/web-g dev",
+    "dev:longcare": "pnpm --filter @bookedai/web-longcare dev",
+    "dev:booking": "pnpm --filter @bookedai/booking-web dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r run test",
+    "db:migrate": "pnpm --filter @bookedai/db migrate",
+    "db:seed": "pnpm --filter @bookedai/db seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "drive:sync": "pnpm --filter @bookedai/drive-sync sync",
+    "drive:daily": "pnpm --filter @bookedai/drive-sync report:daily",
+    "drive:weekly": "pnpm --filter @bookedai/drive-sync report:weekly",
+    "clean": "pnpm -r run clean"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.8"
+  }
+}

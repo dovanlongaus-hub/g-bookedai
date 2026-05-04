@@ -1,0 +1,57 @@
+openapi: 3.0.3
+info:
+  title: bookedai.au / longcare.au API Contract
+  version: 0.1.0
+servers:
+  - url: https://api.g.bookedai.au
+paths:
+  /chat:
+    post:
+      summary: Send user message to Gemini Revenue Orchestrator
+  /services/search:
+    post:
+      summary: Search Longcare/bookedai services
+  /booking/hold:
+    post:
+      summary: Hold a real slot temporarily
+  /booking/confirm:
+    post:
+      summary: Confirm booking after payment success
+  /booking/cancel:
+    post:
+      summary: Cancel booking and evaluate refund policy
+  /booking/reschedule:
+    post:
+      summary: Reschedule booking after checking availability
+  /payment/checkout:
+    post:
+      summary: Create Stripe checkout or bank-transfer payment instruction
+  /webhooks/stripe:
+    post:
+      summary: Stripe webhook handler
+  /learning/session-summary:
+    post:
+      summary: Generate transcript summary, Q&A, improvement plan, next CTA
+  /marketing/campaigns:
+    post:
+      summary: Generate marketing campaign draft
+  /marketing/approve:
+    post:
+      summary: Approve content for publishing
+  /accounting/sync:
+    post:
+      summary: Sync invoice/payment to Xero
+  /users/me:
+    get:
+      summary: Get current authenticated user profile (Cross-domain Auth session)
+  /services:
+    get:
+      summary: List available services and courses
+  /availability-slots:
+    get:
+      summary: Fetch available slots for a given service_id and date
+components:
+  schemas:
+    BookingStatus:
+      type: string
+      enum: [DRAFT, HOLD, PENDING_PAYMENT, CONFIRMED, RESCHEDULED, CANCELLED, REFUNDED, NO_SHOW]

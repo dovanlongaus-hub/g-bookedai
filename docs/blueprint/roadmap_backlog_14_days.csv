@@ -1,0 +1,72 @@
+Day,Week,Theme,Task_ID,Task,Owner,Priority,Status,Deliverable
+1,1,Foundation & Google project setup,D01-01,Confirm domains and DNS plan,TBD,Must,Not Started,Cloud project ready
+1,1,Foundation & Google project setup,D01-02,Create/confirm Google Cloud project under ceo@longcare.au,TBD,Must,Not Started,Cloud project ready
+1,1,Foundation & Google project setup,D01-03,"Enable Gemini/Vertex AI, Cloud Run, Artifact Registry, Firestore, Cloud SQL, Secret Manager",TBD,Must,Not Started,Cloud project ready
+1,1,Foundation & Google project setup,D01-04,Create Git repo structure,TBD,Must,Not Started,Cloud project ready
+1,1,Foundation & Google project setup,D01-05,Create Docker baseline,TBD,Must,Not Started,Cloud project ready
+1,1,Foundation & Google project setup,D01-06,Create tracking sheet and issue labels,TBD,Must,Not Started,Cloud project ready
+2,1,Landing + booking UX,D02-01,Build longcare.au service landing plan,TBD,Must,Not Started,Landing copy ready
+2,1,Landing + booking UX,D02-02,Build book.longcare.au booking wireframe,TBD,Must,Not Started,Landing copy ready
+2,1,Landing + booking UX,D02-03,Create pricing components,TBD,Must,Not Started,Landing copy ready
+2,1,Landing + booking UX,D02-04,Create CTA inventory,TBD,Must,Not Started,Landing copy ready
+2,1,Landing + booking UX,D02-05,Define booking statuses and rules,TBD,Must,Not Started,Landing copy ready
+3,1,Payment & billing core,D03-01,Configure Stripe products/prices,TBD,Must,Not Started,Payment flow ready for implementation
+3,1,Payment & billing core,D03-02,Create card payment flow spec,TBD,Must,Not Started,Payment flow ready for implementation
+3,1,Payment & billing core,D03-03,Create bank transfer / PayID instructions,TBD,Must,Not Started,Payment flow ready for implementation
+3,1,Payment & billing core,D03-04,Define payment webhook events,TBD,Must,Not Started,Payment flow ready for implementation
+3,1,Payment & billing core,D03-05,Define refund/cancel rules,TBD,Must,Not Started,Payment flow ready for implementation
+4,1,"Google Calendar, Meet, Gmail",D04-01,Enable Calendar API and Gmail API,TBD,Must,Not Started,Calendar/Meet/Gmail plan complete
+4,1,"Google Calendar, Meet, Gmail",D04-02,Define booking→calendar event mapping,TBD,Must,Not Started,Calendar/Meet/Gmail plan complete
+4,1,"Google Calendar, Meet, Gmail",D04-03,Define Meet link creation,TBD,Must,Not Started,Calendar/Meet/Gmail plan complete
+4,1,"Google Calendar, Meet, Gmail",D04-04,Define confirmation email templates,TBD,Must,Not Started,Calendar/Meet/Gmail plan complete
+4,1,"Google Calendar, Meet, Gmail",D04-05,Create reminder email templates,TBD,Must,Not Started,Calendar/Meet/Gmail plan complete
+5,1,Google Login + dashboards,D05-01,Implement Google Sign-In requirements,TBD,Must,Not Started,Dashboard UX ready
+5,1,Google Login + dashboards,D05-02,Define user roles,TBD,Must,Not Started,Dashboard UX ready
+5,1,Google Login + dashboards,D05-03,Design app.longcare.au dashboard,TBD,Must,Not Started,Dashboard UX ready
+5,1,Google Login + dashboards,D05-04,Design admin.longcare.au dashboard,TBD,Must,Not Started,Dashboard UX ready
+5,1,Google Login + dashboards,D05-05,Add CTA next booking areas,TBD,Must,Not Started,Dashboard UX ready
+6,1,Learning Engine MVP,D06-01,Define transcript/notes pipeline,TBD,Must,Not Started,Learning agent prompt pack ready
+6,1,Learning Engine MVP,D06-02,Create Gemini prompts for summary/Q&A/improvement,TBD,Must,Not Started,Learning agent prompt pack ready
+6,1,Learning Engine MVP,D06-03,Design Google Docs note template,TBD,Must,Not Started,Learning agent prompt pack ready
+6,1,Learning Engine MVP,D06-04,Define user learning history model,TBD,Must,Not Started,Learning agent prompt pack ready
+6,1,Learning Engine MVP,D06-05,Define next course recommendation logic,TBD,Must,Not Started,Learning agent prompt pack ready
+7,1,End-to-end MVP QA,D07-01,Run E2E design review,TBD,Must,Not Started,Week 1 MVP sign-off
+7,1,End-to-end MVP QA,D07-02,Check booking→payment→Meet→email→dashboard flow,TBD,Must,Not Started,Week 1 MVP sign-off
+7,1,End-to-end MVP QA,D07-03,Create smoke test checklist,TBD,Must,Not Started,Week 1 MVP sign-off
+7,1,End-to-end MVP QA,D07-04,Fix gaps,TBD,Must,Not Started,Week 1 MVP sign-off
+7,1,End-to-end MVP QA,D07-05,Prepare launch checklist,TBD,Must,Not Started,Week 1 MVP sign-off
+8,2,Google Ads + GA4/GTM,D08-01,Create GA4 property plan,TBD,Must,Not Started,Ads plan ready
+8,2,Google Ads + GA4/GTM,D08-02,Create GTM events,TBD,Must,Not Started,Ads plan ready
+8,2,Google Ads + GA4/GTM,D08-03,Create Google Ads campaign draft,TBD,Must,Not Started,Ads plan ready
+8,2,Google Ads + GA4/GTM,D08-04,Define conversion events,TBD,Must,Not Started,Ads plan ready
+8,2,Google Ads + GA4/GTM,D08-05,Create UTM naming convention,TBD,Must,Not Started,Ads plan ready
+9,2,SEO pages + Search Console,D09-01,Create services.longcare.au SEO URL plan,TBD,Must,Not Started,SEO plan ready
+9,2,SEO pages + Search Console,D09-02,Write first 3 SEO page briefs,TBD,Must,Not Started,SEO plan ready
+9,2,SEO pages + Search Console,D09-03,Define schema markup,TBD,Must,Not Started,SEO plan ready
+9,2,SEO pages + Search Console,D09-04,Prepare Search Console verification checklist,TBD,Must,Not Started,SEO plan ready
+9,2,SEO pages + Search Console,D09-05,Google Business Profile checklist,TBD,Must,Not Started,SEO plan ready
+10,2,Marketing Agent MVP,D10-01,Create campaign generator prompt,TBD,Must,Not Started,Marketing Agent spec ready
+10,2,Marketing Agent MVP,D10-02,Create content writer prompt,TBD,Must,Not Started,Marketing Agent spec ready
+10,2,Marketing Agent MVP,D10-03,Create approval workflow,TBD,Must,Not Started,Marketing Agent spec ready
+10,2,Marketing Agent MVP,D10-04,Create social publishing queue model,TBD,Must,Not Started,Marketing Agent spec ready
+10,2,Marketing Agent MVP,D10-05,Create first campaign pack,TBD,Must,Not Started,Marketing Agent spec ready
+11,2,AI content: text/image/video,D11-01,Create Track A curriculum,TBD,Must,Not Started,Course content MVP ready
+11,2,AI content: text/image/video,D11-02,Create Lesson 1 script,TBD,Must,Not Started,Course content MVP ready
+11,2,AI content: text/image/video,D11-03,Create image/video prompt templates,TBD,Must,Not Started,Course content MVP ready
+11,2,AI content: text/image/video,D11-04,Define paywall preview/full content rules,TBD,Must,Not Started,Course content MVP ready
+11,2,AI content: text/image/video,D11-05,Define video asset storage plan,TBD,Must,Not Started,Course content MVP ready
+12,2,"Accounting, Xero, GST",D12-01,Define chart of accounts,TBD,Must,Not Started,Accounting design ready
+12,2,"Accounting, Xero, GST",D12-02,Define GST treatment,TBD,Must,Not Started,Accounting design ready
+12,2,"Accounting, Xero, GST",D12-03,Create Xero sync mapping,TBD,Must,Not Started,Accounting design ready
+12,2,"Accounting, Xero, GST",D12-04,Create invoice/payment/reconciliation workflow,TBD,Must,Not Started,Accounting design ready
+12,2,"Accounting, Xero, GST",D12-05,Create monthly BAS-ready reporting checklist,TBD,Must,Not Started,Accounting design ready
+13,2,R&D + company AI ops,D13-01,Define R&D agent tasks,TBD,Must,Not Started,R&D loop ready
+13,2,R&D + company AI ops,D13-02,Create weekly AI update report template,TBD,Must,Not Started,R&D loop ready
+13,2,R&D + company AI ops,D13-03,Create model upgrade decision rules,TBD,Must,Not Started,R&D loop ready
+13,2,R&D + company AI ops,D13-04,Create executive weekly report,TBD,Must,Not Started,R&D loop ready
+13,2,R&D + company AI ops,D13-05,Create HR role/task assignment model,TBD,Must,Not Started,R&D loop ready
+14,2,Final UAT + launch,D14-01,Run UAT scenarios,TBD,Must,Not Started,Launch-ready package
+14,2,Final UAT + launch,D14-02,Run random QA checks,TBD,Must,Not Started,Launch-ready package
+14,2,Final UAT + launch,D14-03,Finalize release checklist,TBD,Must,Not Started,Launch-ready package
+14,2,Final UAT + launch,D14-04,Prepare launch content,TBD,Must,Not Started,Launch-ready package
+14,2,Final UAT + launch,D14-05,Prepare next 30-day backlog,TBD,Must,Not Started,Launch-ready package

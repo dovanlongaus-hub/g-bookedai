@@ -1,0 +1,9 @@
+ID,Scenario,Precondition,Steps,Expected Result,Status
+UAT-001,New user Google login,User has Google account,Login with Google,User lands dashboard,Not Started
+UAT-002,Book $29 trial,Service active,Select slot and pay card,Booking confirmed + Meet link,Not Started
+UAT-003,Bank transfer payment,Bank details configured,Select bank transfer,Booking pending payment with reference,Not Started
+UAT-004,Admin confirms bank transfer,Pending booking exists,Mark paid,Booking confirmed + email sent,Not Started
+UAT-005,Cancel booking,Confirmed booking exists,Cancel >24h,Refund policy shown and status cancelled,Not Started
+UAT-006,Session summary,Session completed,Generate summary,Dashboard shows summary + CTA,Not Started
+UAT-007,Marketing agent draft,Service exists,Generate campaign,Draft content with UTM + CTA,Not Started
+UAT-008,Xero sync mapping,Payment exists,Create invoice mapping,Invoice payload valid,Not Started
