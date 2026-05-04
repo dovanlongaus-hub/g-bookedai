@@ -282,7 +282,7 @@ Radius:        12px / 20px
 | Webhooks | Stripe signature verification | DONE |
 | DDoS | Cloudflare (proxied for g.bookedai.au) | DONE |
 | SSL | Let's Encrypt (auto-renew) | DONE |
-| API Key system | Not yet | TODO |
+| API Key system | X-API-Key header / query param, tenant lookup | DONE |
 | 2FA | Not yet | TODO |
 
 ---
@@ -352,15 +352,24 @@ Radius:        12px / 20px
 | CR-009 | 2026-05-04 | Integrate Google Translate (EN/VI) for full-page translation | HIGH | DONE |
 | CR-010 | 2026-05-04 | Redesign landing page to premium dark theme (Linear/Vercel style) | HIGH | DONE |
 | CR-011 | 2026-05-04 | Fix Tailwind v4 compilation (add @source directive) | CRITICAL | DONE |
-| CR-012 | — | Stripe production products configuration | CRITICAL | PENDING |
-| CR-013 | — | Google service account (Calendar/Gmail/Drive) | CRITICAL | PENDING |
-| CR-014 | — | Email templates (confirmation/reminder/cancel) | HIGH | PENDING |
-| CR-015 | — | Agent orchestrator (multi-turn, intent detection, tool-use) | HIGH | PENDING |
-| CR-016 | — | GA4 + GTM analytics setup | HIGH | PENDING |
-| CR-017 | — | CI/CD pipeline (Cloud Build → Cloud Run) | HIGH | PENDING |
+| CR-012 | 2026-05-03 | Stripe production products configuration (5 products live) | CRITICAL | DONE |
+| CR-013 | 2026-05-03 | Google service account (Calendar/Gmail/Drive) — code ready, needs OAuth approval | CRITICAL | PARTIAL |
+| CR-014 | 2026-05-03 | Email templates (confirmation/reminder/cancel) | HIGH | DONE |
+| CR-015 | 2026-05-03 | Agent orchestrator (multi-turn, intent detection, tool-use) | HIGH | DONE |
+| CR-016 | 2026-05-03 | GA4 + GTM analytics setup (G-CKG4YQ57VV + G-2L68DR1GD4) | HIGH | DONE |
+| CR-017 | 2026-05-03 | CI/CD pipeline (Cloud Build + GitHub Actions) | HIGH | DONE |
 | CR-018 | — | Xero accounting sync | MEDIUM | PENDING |
 | CR-019 | — | SMS notifications (Twilio) | MEDIUM | PENDING |
-| CR-020 | — | OpenAPI 3.1 spec + developer docs | MEDIUM | PENDING |
+| CR-020 | 2026-05-03 | OpenAPI 3.1 spec + developer docs | MEDIUM | DONE |
+| CR-021 | 2026-05-03 | WhatsApp auto-reply | HIGH | DONE |
+| CR-022 | 2026-05-03 | Multi-tenant admin | HIGH | DONE |
+| CR-023 | 2026-05-03 | Blog posts (3 articles) | MEDIUM | DONE |
+| CR-024 | 2026-05-03 | User profile + notifications | HIGH | DONE |
+| CR-025 | 2026-05-03 | Booking management | HIGH | DONE |
+| CR-026 | 2026-05-03 | Partner signup API | MEDIUM | DONE |
+| CR-027 | 2026-05-03 | Availability slots seeding | MEDIUM | DONE |
+| CR-028 | 2026-05-03 | Mobile responsive + search + PWA | HIGH | IN PROGRESS |
+| CR-029 | 2026-05-03 | E2E Playwright tests | MEDIUM | DONE |
 
 ---
 
