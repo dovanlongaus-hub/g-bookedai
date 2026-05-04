@@ -5,53 +5,47 @@ import { Analytics } from '../components/analytics';
 
 const outfit = Outfit({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
   variable: '--font-outfit',
 });
 
 export const metadata: Metadata = {
-  title: 'BookedAI — AI Revenue Engine | Turn Intent into Revenue',
+  title: 'bookedai.au — The AI Revenue Engine',
   description:
-    'BookedAI is the AI-powered revenue engine that converts customer intent into confirmed bookings, payments, and growth — automatically.',
+    'bookedai.au is the AI-powered revenue engine that converts customer intent into confirmed bookings, payments, and growth — automatically. Built for Australian service businesses.',
   metadataBase: new URL('https://g.bookedai.au'),
   keywords: [
+    'bookedai.au',
     'AI booking',
     'revenue automation',
     'AI mentoring',
     'smart scheduling',
     'AI business automation',
-    'BookedAI',
+    'Australian SaaS',
   ],
-  authors: [{ name: 'BookedAI' }],
+  authors: [{ name: 'bookedai.au' }],
   openGraph: {
-    title: 'BookedAI — AI Revenue Engine',
+    title: 'bookedai.au — The AI Revenue Engine',
     description:
       'Turn customer intent into revenue — automatically. AI Chat, Smart Booking, Learning Engine & Marketing in one platform.',
     url: 'https://g.bookedai.au',
-    siteName: 'BookedAI',
+    siteName: 'bookedai.au',
     locale: 'en_AU',
     type: 'website',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'BookedAI — AI Revenue Engine',
-      },
-    ],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'bookedai.au — The AI Revenue Engine' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BookedAI — AI Revenue Engine',
+    title: 'bookedai.au — The AI Revenue Engine',
     description: 'Turn customer intent into revenue — automatically.',
     images: ['/og-image.png'],
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    icon: '/favicon.svg',
+    apple: '/logo-icon.svg',
   },
-  themeColor: '#050510',
+  themeColor: '#0d9488',
   manifest: '/manifest.json',
 };
 
@@ -61,8 +55,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${outfit.variable} dark`}>
-      <body className="font-body antialiased bg-dark-bg text-text-main">
+    <html lang="en" className={outfit.variable}>
+      <body className="antialiased" style={{ fontFamily: 'var(--font-outfit), system-ui, sans-serif' }}>
         <Analytics />
         {children}
       </body>

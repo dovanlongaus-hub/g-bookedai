@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 100" fill="none">
+  <defs>
+    <linearGradient id="barGradW" x1="0%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#0d9488"/>
+      <stop offset="50%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <linearGradient id="arrowGradW" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8, 12)">
+    <rect x="0" y="48" width="14" height="28" rx="4" fill="url(#barGradW)"/>
+    <rect x="20" y="32" width="14" height="44" rx="4" fill="url(#barGradW)"/>
+    <rect x="40" y="12" width="14" height="64" rx="4" fill="url(#barGradW)"/>
+    <path d="M 8 58 L 28 40 L 50 16" stroke="url(#arrowGradW)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <polygon points="46,8 58,14 48,22" fill="url(#arrowGradW)"/>
+  </g>
+  <text x="82" y="52" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="38" font-weight="800" fill="white" letter-spacing="-0.5">Booked</text>
+  <text x="248" y="52" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="38" font-weight="800" fill="white" letter-spacing="-0.5">AI</text>
+  <text x="292" y="52" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="38" font-weight="800" fill="#2dd4bf" letter-spacing="-0.5">.au</text>
+  <text x="82" y="74" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="16" font-weight="500" fill="rgba(255,255,255,0.7)" letter-spacing="0.5">The AI Revenue Engine</text>
+</svg>

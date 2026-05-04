@@ -414,105 +414,56 @@ export default function BookingPage() {
               </div>
 
               {bankCurrency === 'AUD' && (
-                <>
+                <div style={{ textAlign: 'center' }}>
                   <h3 style={{ marginBottom: '1rem', color: 'var(--accent)', fontSize: '1.05rem' }}>
-                    Australian Bank Transfer / PayID
+                    Scan to Pay (AUD)
                   </h3>
-
-                  {/* AUD QR Code */}
-                  <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                    <div style={{ background: '#fff', display: 'inline-block', padding: '12px', borderRadius: '12px' }}>
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                          `BSB: 062517\nAccount: 11404999\nPayID: 0481993178\nName: Van Long DO\nAmount: ${selectedService ? (selectedService.price_cents / 100).toFixed(2) : '0'} AUD\nRef: BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`
-                        )}`}
-                        alt="AUD Payment QR"
-                        width={180}
-                        height={180}
-                        style={{ display: 'block' }}
-                      />
-                    </div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
-                      Scan with Australian banking app
-                    </p>
+                  <div style={{ background: '#fff', display: 'inline-block', padding: '16px', borderRadius: '16px' }}>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
+                        `BSB: 062517\nAccount: 11404999\nPayID: 0481993178\nName: Van Long DO\nAmount: ${selectedService ? (selectedService.price_cents / 100).toFixed(2) : '0'} AUD\nRef: BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`
+                      )}`}
+                      alt="Scan to Pay AUD"
+                      width={220}
+                      height={220}
+                      style={{ display: 'block' }}
+                    />
                   </div>
-
-                  <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.9rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>PayID (Mobile)</span>
-                      <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>0481 993 178</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>BSB</span>
-                      <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>062-517</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Account Number</span>
-                      <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>1140 4999</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Account Name</span>
-                      <span style={{ fontWeight: 600 }}>Van Long DO</span>
-                    </div>
-                    <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '0.25rem 0' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Amount</span>
-                      <span style={{ fontWeight: 'bold', color: 'var(--accent)', fontSize: '1.1rem' }}>
-                        {selectedService ? `${formatPrice(selectedService.price_cents, selectedService.currency)} AUD` : '—'}
-                      </span>
-                    </div>
-                  </div>
-                </>
+                  <p style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '1.3rem', marginTop: '1rem' }}>
+                    {selectedService ? `${formatPrice(selectedService.price_cents, selectedService.currency)} AUD` : '—'}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
+                    Open your banking app and scan this QR code
+                  </p>
+                </div>
               )}
 
               {bankCurrency === 'VND' && (
-                <>
+                <div style={{ textAlign: 'center' }}>
                   <h3 style={{ marginBottom: '1rem', color: 'var(--accent)', fontSize: '1.05rem' }}>
-                    Chuyển khoản Vietcombank (VND)
+                    Quét mã thanh toán (VND)
                   </h3>
-
-                  {/* VND QR Code */}
-                  <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                    <div style={{ background: '#fff', display: 'inline-block', padding: '12px', borderRadius: '12px' }}>
-                      <img
-                        src={`https://img.vietqr.io/image/VCB-0071000985789-compact.png?amount=${selectedService ? selectedService.price_cents * 60 : 0}&addInfo=BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}&accountName=DO%20VAN%20LONG`}
-                        alt="VND Vietcombank QR"
-                        width={200}
-                        height={200}
-                        style={{ display: 'block' }}
-                      />
-                    </div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
-                      Quét mã QR bằng app ngân hàng Việt Nam
-                    </p>
+                  <div style={{ background: '#fff', display: 'inline-block', padding: '16px', borderRadius: '16px' }}>
+                    <img
+                      src={`https://img.vietqr.io/image/VCB-0071000985789-compact2.png?amount=${selectedService ? selectedService.price_cents * 60 : 0}&addInfo=BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}&accountName=DO%20VAN%20LONG`}
+                      alt="Quét mã thanh toán VND"
+                      width={220}
+                      height={220}
+                      style={{ display: 'block' }}
+                    />
                   </div>
-
-                  <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.9rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Ngân hàng</span>
-                      <span style={{ fontWeight: 600 }}>Vietcombank (VCB)</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Số tài khoản</span>
-                      <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>0071000985789</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Chủ tài khoản</span>
-                      <span style={{ fontWeight: 600 }}>DO VAN LONG</span>
-                    </div>
-                    <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '0.25rem 0' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Số tiền (tham khảo)</span>
-                      <span style={{ fontWeight: 'bold', color: 'var(--accent)', fontSize: '1.1rem' }}>
-                        {selectedService ? `${(selectedService.price_cents * 60).toLocaleString()} VND` : '—'}
-                      </span>
-                    </div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontStyle: 'italic' }}>
-                      * Tỷ giá tham khảo: 1 AUD ≈ 6,000 VND. Liên hệ xác nhận tỷ giá chính xác.
-                    </p>
-                  </div>
-                </>
+                  <p style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '1.3rem', marginTop: '1rem' }}>
+                    {selectedService ? `${(selectedService.price_cents * 60).toLocaleString()} VND` : '—'}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                    Tham khảo: 1 AUD ≈ 6,000 VND
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
+                    Mở app ngân hàng và quét mã QR
+                  </p>
+                </div>
               )}
+
 
               <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '1rem', textAlign: 'center' }}>
                 After transferring, click below. We will confirm within 24 hours.

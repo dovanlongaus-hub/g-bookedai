@@ -10,9 +10,9 @@ interface Message {
 }
 
 const WELCOME: Record<Language, string> = {
-  en: "Hello! I'm the BookedAI assistant. I can help you find AI mentoring services, book sessions, or answer questions about our programs. What can I help you with?",
-  vi: "Xin chào! Tôi là trợ lý BookedAI. Tôi có thể giúp bạn tìm dịch vụ mentoring AI, đặt lịch, hoặc trả lời câu hỏi về chương trình. Tôi có thể giúp gì cho bạn?",
-  zh: "你好！我是BookedAI助手。我可以帮您找到AI辅导服务、预约课程或回答有关我们项目的问题。有什么可以帮您的？",
+  en: "Hello! I'm the bookedai.au assistant. I can help you find AI mentoring services, book sessions, or answer questions about our programs. What can I help you with?",
+  vi: "Xin chào! Tôi là trợ lý bookedai.au. Tôi có thể giúp bạn tìm dịch vụ mentoring AI, đặt lịch, hoặc trả lời câu hỏi. Tôi có thể giúp gì cho bạn?",
+  zh: "你好！我是bookedai.au助手。我可以帮您找到AI辅导服务、预约课程或回答问题。有什么可以帮您的？",
 };
 
 const SUGGESTIONS: Record<Language, string[]> = {
@@ -22,62 +22,10 @@ const SUGGESTIONS: Record<Language, string[]> = {
 };
 
 const PLACEHOLDERS: Record<Language, string> = {
-  en: 'How can I help you today?',
-  vi: 'Tôi có thể giúp gì cho bạn?',
-  zh: '我今天能帮您什么？',
+  en: 'Ask me anything about our services...',
+  vi: 'Hỏi tôi bất cứ điều gì...',
+  zh: '问我关于我们服务的任何问题...',
 };
-
-const FEATURES = [
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-      </svg>
-    ),
-    title: 'AI Chat',
-    description: 'Natural conversations that understand intent, recommend services, and guide customers to booking.',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    ),
-    title: 'Smart Booking',
-    description: 'Real-time availability, automated holds, Stripe payments, and Google Calendar + Meet integration.',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-      </svg>
-    ),
-    title: 'Learning Engine',
-    description: 'AI-generated session summaries, progress tracking, and personalised next-step recommendations.',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-      </svg>
-    ),
-    title: 'Marketing AI',
-    description: '8-channel content generation with UTM tracking, approval workflows, and revenue attribution.',
-  },
-];
-
-const STEPS = [
-  { number: '01', title: 'Customer Chats', description: 'AI understands intent and recommends the perfect service match.' },
-  { number: '02', title: 'Instant Booking', description: 'Seamless payment, calendar sync, and meeting link — all automated.' },
-  { number: '03', title: 'Revenue Grows', description: 'Learning engine re-engages, marketing AI attracts, revenue compounds.' },
-];
-
-const STATS = [
-  { value: '95%', label: 'Booking Conversion' },
-  { value: '<3s', label: 'AI Response Time' },
-  { value: '24/7', label: 'Always Available' },
-  { value: '3x', label: 'Revenue Growth' },
-];
 
 export default function Home() {
   const [lang, setLang] = useState<Language>('en');
@@ -101,12 +49,10 @@ export default function Home() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!query.trim() || loading) return;
-
     const userMessage = query.trim();
     setQuery('');
     setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
     setLoading(true);
-
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -117,330 +63,331 @@ export default function Home() {
       const reply = data?.data?.reply || data?.data?.error || 'Sorry, something went wrong.';
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
     } catch {
-      const errorMsg = lang === 'vi' ? 'Xin lỗi, đã xảy ra lỗi.' : lang === 'zh' ? '抱歉，出了点问题。' : 'Sorry, something went wrong.';
-      setMessages((prev) => [...prev, { role: 'assistant', content: errorMsg }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Sorry, something went wrong.' }]);
     } finally {
       setLoading(false);
     }
   }
 
-  function handleSuggestion(text: string) {
-    setQuery(text);
-    setChatOpen(true);
-  }
-
   return (
-    <div className="min-h-screen bg-[#050510] text-[#f8f9fa] font-body overflow-x-hidden">
-      {/* Animated gradient background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_0%,rgba(99,102,241,0.15)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_80%,rgba(34,211,238,0.08)_0%,transparent_50%)]" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#6366f1]/5 rounded-full blur-[120px] animate-pulse" />
-      </div>
+    <div className="min-h-screen bg-white text-[#0f2942]" style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}>
 
-      {/* Navigation */}
-      <nav className="relative z-50 flex items-center justify-between px-6 lg:px-12 py-5 max-w-7xl mx-auto">
-        <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="BookedAI" className="h-8 w-8" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-          <span className="text-xl font-bold bg-gradient-to-r from-white to-[#818cf8] bg-clip-text text-transparent">
-            BookedAI
-          </span>
-        </div>
-        <div className="hidden md:flex items-center gap-8 text-sm text-[#8b92a5]">
-          <a href="#features" className="hover:text-white transition-colors">Features</a>
-          <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
-          <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-          <div className="flex gap-1 ml-4">
-            <button onClick={() => switchLang('en')} className={`px-2 py-1 rounded text-xs ${lang === 'en' ? 'text-[#6366f1] bg-[#6366f1]/10' : 'hover:text-white'}`}>EN</button>
-            <button onClick={() => switchLang('vi')} className={`px-2 py-1 rounded text-xs ${lang === 'vi' ? 'text-[#6366f1] bg-[#6366f1]/10' : 'hover:text-white'}`}>VI</button>
-            <button onClick={() => switchLang('zh')} className={`px-2 py-1 rounded text-xs ${lang === 'zh' ? 'text-[#6366f1] bg-[#6366f1]/10' : 'hover:text-white'}`}>ZH</button>
-          </div>
-        </div>
-        <a
-          href="https://book.longcare.au"
-          className="hidden md:inline-flex px-5 py-2.5 bg-[#6366f1] hover:bg-[#818cf8] rounded-xl text-sm font-semibold transition-all hover:shadow-glow-primary"
-        >
-          Book Now
-        </a>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-24 lg:pt-24 lg:pb-32">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] text-sm text-[#8b92a5]">
-              <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-              AI Revenue Engine — Live
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-              Turn customer intent into{' '}
-              <span className="bg-gradient-to-r from-[#6366f1] to-[#22d3ee] bg-clip-text text-transparent">
-                revenue
-              </span>
-            </h1>
-            <p className="text-lg text-[#cbd5e1] max-w-lg leading-relaxed">
-              BookedAI is the intelligent platform that converts conversations into confirmed bookings,
-              payments, and sustained growth — powered by AI, automated end-to-end.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => setChatOpen(true)}
-                className="px-8 py-4 bg-[#6366f1] hover:bg-[#818cf8] rounded-2xl font-semibold text-base transition-all hover:shadow-glow-primary hover:-translate-y-0.5"
-              >
-                Chat with AI
-              </button>
-              <a
-                href="#how-it-works"
-                className="px-8 py-4 border border-white/10 hover:border-white/20 rounded-2xl font-medium text-base text-center transition-all hover:bg-white/[0.03]"
-              >
-                See How It Works
-              </a>
-            </div>
-            {/* Quick suggestions */}
-            <div className="flex flex-wrap gap-2 pt-2">
-              {SUGGESTIONS[lang].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => handleSuggestion(s)}
-                  className="px-3 py-1.5 text-xs rounded-full border border-white/10 text-[#8b92a5] hover:border-[#22d3ee]/50 hover:text-[#22d3ee] transition-all bg-white/[0.02]"
-                >
-                  {s}
+      {/* Nav */}
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 py-4">
+          <a href="/" className="flex items-center gap-3">
+            <img src="/logo-icon.svg" alt="" className="h-9 w-9" />
+            <span className="text-xl font-extrabold tracking-tight">
+              <span className="text-[#0f2942]">bookedai</span>
+              <span className="text-[#0d9488]">.au</span>
+            </span>
+          </a>
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-[#627d98]">
+            <a href="#features" className="hover:text-[#0f2942] transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-[#0f2942] transition-colors">How It Works</a>
+            <a href="#pricing" className="hover:text-[#0f2942] transition-colors">Pricing</a>
+            <div className="flex gap-1 ml-2 border border-gray-200 rounded-lg overflow-hidden">
+              {(['en', 'vi', 'zh'] as Language[]).map((l) => (
+                <button key={l} onClick={() => switchLang(l)}
+                  className={`px-2.5 py-1 text-xs font-semibold uppercase ${lang === l ? 'bg-[#0d9488] text-white' : 'text-[#627d98] hover:bg-gray-50'}`}>
+                  {l}
                 </button>
               ))}
             </div>
           </div>
+          <a href="https://booking.g.bookedai.au" className="hidden md:inline-flex px-5 py-2.5 bg-[#0d9488] hover:bg-[#0f766e] text-white rounded-xl text-sm font-semibold transition-all shadow-md hover:shadow-lg">
+            Book a Session
+          </a>
+        </div>
+      </nav>
 
-          {/* Hero Chat Preview */}
-          <div className="relative animate-slide-up">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#6366f1]/20 to-[#22d3ee]/10 rounded-3xl blur-xl" />
-            <div className="relative bg-[#0a0a1a]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl">
-              <div className="flex items-center gap-2 mb-4 pb-4 border-b border-white/[0.06]">
-                <div className="w-3 h-3 rounded-full bg-[#ef4444]" />
-                <div className="w-3 h-3 rounded-full bg-[#f59e0b]" />
-                <div className="w-3 h-3 rounded-full bg-[#22c55e]" />
-                <span className="ml-auto text-xs text-[#8b92a5]">AI Assistant</span>
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#f0fdfa] via-white to-[#f0f4f8]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#0d9488]/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#2dd4bf]/5 rounded-full blur-[80px]" />
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-24 lg:pt-24 lg:pb-32">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#f0fdfa] border border-[#99f6e4] text-sm font-medium text-[#0d9488]">
+                <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
+                The AI Revenue Engine
               </div>
-              <div className="space-y-3 max-h-[280px] overflow-y-auto">
-                {messages.slice(-4).map((msg, i) => (
-                  <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div
-                      className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                        msg.role === 'user'
-                          ? 'bg-[#6366f1] text-white rounded-br-md'
-                          : 'bg-white/[0.06] border border-white/[0.08] rounded-bl-md'
-                      }`}
-                    >
-                      {msg.content}
-                    </div>
-                  </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] tracking-tight">
+                Turn customer intent into{' '}
+                <span className="bg-gradient-to-r from-[#0d9488] to-[#2dd4bf] bg-clip-text text-transparent">
+                  revenue
+                </span>
+                {' '}— automatically
+              </h1>
+              <p className="text-lg text-[#627d98] max-w-lg leading-relaxed">
+                bookedai.au is the intelligent platform that converts conversations into confirmed bookings,
+                payments, and sustained growth — powered by AI, automated end-to-end.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button onClick={() => setChatOpen(true)}
+                  className="px-8 py-4 bg-gradient-to-r from-[#0d9488] to-[#14b8a6] hover:from-[#0f766e] hover:to-[#0d9488] text-white rounded-2xl font-semibold text-base transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                  Chat with AI Assistant
+                </button>
+                <a href="#how-it-works"
+                  className="px-8 py-4 border-2 border-[#d9e2ec] hover:border-[#0d9488] text-[#334e68] rounded-2xl font-semibold text-base text-center transition-all hover:text-[#0d9488]">
+                  See How It Works
+                </a>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {SUGGESTIONS[lang].map((s) => (
+                  <button key={s} onClick={() => { setQuery(s); setChatOpen(true); }}
+                    className="px-3 py-1.5 text-xs rounded-full border border-[#d9e2ec] text-[#627d98] hover:border-[#0d9488] hover:text-[#0d9488] transition-all bg-white">
+                    {s}
+                  </button>
                 ))}
-                {loading && (
-                  <div className="flex justify-start">
-                    <div className="bg-white/[0.06] border border-white/[0.08] rounded-2xl rounded-bl-md px-4 py-3">
-                      <div className="flex gap-1">
-                        <span className="w-2 h-2 bg-[#8b92a5] rounded-full animate-bounce" />
-                        <span className="w-2 h-2 bg-[#8b92a5] rounded-full animate-bounce [animation-delay:0.2s]" />
-                        <span className="w-2 h-2 bg-[#8b92a5] rounded-full animate-bounce [animation-delay:0.4s]" />
+              </div>
+            </div>
+
+            {/* Chat Preview */}
+            <div className="relative">
+              <div className="absolute -inset-4 bg-gradient-to-br from-[#0d9488]/10 to-[#2dd4bf]/10 rounded-3xl blur-2xl" />
+              <div className="relative bg-white border border-gray-200 rounded-3xl p-6 shadow-2xl shadow-[#0d9488]/10">
+                <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-100">
+                  <img src="/logo-icon.svg" alt="" className="w-6 h-6" />
+                  <span className="text-sm font-semibold text-[#0f2942]">bookedai.au</span>
+                  <span className="ml-auto text-xs text-[#627d98] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />Online
+                  </span>
+                </div>
+                <div className="space-y-3 max-h-[280px] overflow-y-auto">
+                  {messages.slice(-4).map((msg, i) => (
+                    <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                        msg.role === 'user'
+                          ? 'bg-[#0d9488] text-white rounded-br-md'
+                          : 'bg-[#f0fdfa] text-[#0f2942] border border-[#ccfbf1] rounded-bl-md'
+                      }`}>
+                        {msg.content}
                       </div>
                     </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
+                  ))}
+                  {loading && (
+                    <div className="flex justify-start">
+                      <div className="bg-[#f0fdfa] border border-[#ccfbf1] rounded-2xl rounded-bl-md px-4 py-3">
+                        <div className="flex gap-1">
+                          <span className="w-2 h-2 bg-[#0d9488] rounded-full animate-bounce" />
+                          <span className="w-2 h-2 bg-[#0d9488] rounded-full animate-bounce [animation-delay:0.2s]" />
+                          <span className="w-2 h-2 bg-[#0d9488] rounded-full animate-bounce [animation-delay:0.4s]" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+                <form onSubmit={handleSubmit} className="mt-4 flex gap-2">
+                  <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} onFocus={() => setChatOpen(true)}
+                    placeholder={PLACEHOLDERS[lang]}
+                    className="flex-1 bg-[#f8fafb] border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0d9488] focus:ring-2 focus:ring-[#0d9488]/10 transition-all placeholder:text-[#9fb3c8]" />
+                  <button type="submit" disabled={loading || !query.trim()}
+                    className="px-5 py-3 bg-[#0d9488] hover:bg-[#0f766e] text-white rounded-xl text-sm font-semibold transition-all disabled:opacity-40">
+                    Send
+                  </button>
+                </form>
               </div>
-              <form onSubmit={handleSubmit} className="mt-4 flex gap-2">
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onFocus={() => setChatOpen(true)}
-                  placeholder={PLACEHOLDERS[lang]}
-                  className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#6366f1]/50 transition-colors placeholder:text-[#8b92a5]"
-                />
-                <button
-                  type="submit"
-                  disabled={loading || !query.trim()}
-                  className="px-5 py-3 bg-[#6366f1] hover:bg-[#818cf8] rounded-xl text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  Send
-                </button>
-              </form>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {STATS.map((stat) => (
-            <div
-              key={stat.label}
-              className="text-center p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm"
-            >
-              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#6366f1] to-[#22d3ee] bg-clip-text text-transparent">
-                {stat.value}
+      {/* Stats */}
+      <section className="bg-[#0f2942] py-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: '95%', label: 'Booking Conversion' },
+              { value: '<3s', label: 'AI Response Time' },
+              { value: '24/7', label: 'Always Available' },
+              { value: '3x', label: 'Revenue Growth' },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-[#2dd4bf] to-[#4ade80] bg-clip-text text-transparent">
+                  {stat.value}
+                </div>
+                <div className="mt-2 text-sm text-[#9fb3c8]">{stat.label}</div>
               </div>
-              <div className="mt-2 text-sm text-[#8b92a5]">{stat.label}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Everything you need to{' '}
-            <span className="bg-gradient-to-r from-[#6366f1] to-[#22d3ee] bg-clip-text text-transparent">
-              automate revenue
-            </span>
-          </h2>
-          <p className="text-[#8b92a5] text-lg max-w-2xl mx-auto">
-            From first conversation to recurring revenue, BookedAI handles the entire customer journey with AI precision.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          {FEATURES.map((feature) => (
-            <div
-              key={feature.title}
-              className="group p-8 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-[#6366f1]/20 transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#6366f1]/10 flex items-center justify-center text-[#6366f1] group-hover:bg-[#6366f1]/20 transition-colors mb-5">
-                {feature.icon}
+      {/* Features */}
+      <section id="features" className="py-24 bg-[#f8fafb]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-[#0f2942]">
+              Everything you need to{' '}
+              <span className="bg-gradient-to-r from-[#0d9488] to-[#2dd4bf] bg-clip-text text-transparent">grow revenue</span>
+            </h2>
+            <p className="text-[#627d98] text-lg max-w-2xl mx-auto">
+              From first conversation to recurring revenue, bookedai.au handles the entire customer journey with AI precision.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              { icon: '💬', title: 'AI Chat Assistant', desc: 'Natural conversations that understand intent, recommend services, and guide customers to booking — in English, Vietnamese, and Chinese.' },
+              { icon: '📅', title: 'Smart Booking Engine', desc: 'Real-time availability, automated 10-minute holds, Stripe payments, and Google Calendar + Meet integration.' },
+              { icon: '🧠', title: 'Learning Engine', desc: 'AI-generated session summaries, progress tracking, Google Docs notes, and personalised next-step recommendations.' },
+              { icon: '📈', title: 'Marketing AI', desc: '8-channel content generation with UTM tracking, approval workflows, and revenue attribution powered by Gemini.' },
+            ].map((f) => (
+              <div key={f.title} className="group p-8 bg-white rounded-2xl border border-gray-100 hover:border-[#0d9488]/30 hover:shadow-xl hover:shadow-[#0d9488]/5 transition-all duration-300">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#f0fdfa] to-[#ccfbf1] flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
+                  {f.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-[#0f2942]">{f.title}</h3>
+                <p className="text-[#627d98] leading-relaxed">{f.desc}</p>
               </div>
-              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-[#8b92a5] leading-relaxed">{feature.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Three steps to{' '}
-            <span className="bg-gradient-to-r from-[#6366f1] to-[#22d3ee] bg-clip-text text-transparent">
-              automated growth
-            </span>
-          </h2>
-          <p className="text-[#8b92a5] text-lg max-w-2xl mx-auto">
-            AI recommends, Truth Engine confirms, Payment proves, Analytics optimises.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-8">
-          {STEPS.map((step, i) => (
-            <div key={step.number} className="relative">
-              {i < STEPS.length - 1 && (
-                <div className="hidden md:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-[#6366f1]/30 to-transparent -translate-x-4" />
-              )}
-              <div className="p-8 rounded-2xl border border-white/[0.06] bg-white/[0.02] h-full">
-                <span className="text-5xl font-bold text-[#6366f1]/20">{step.number}</span>
-                <h3 className="text-xl font-semibold mt-4 mb-3">{step.title}</h3>
-                <p className="text-[#8b92a5] leading-relaxed">{step.description}</p>
+      <section id="how-it-works" className="py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
+              Three steps to <span className="bg-gradient-to-r from-[#0d9488] to-[#2dd4bf] bg-clip-text text-transparent">automated growth</span>
+            </h2>
+            <p className="text-[#627d98] text-lg max-w-2xl mx-auto">
+              AI recommends, Truth Engine confirms, Payment proves, Analytics optimises.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { n: '01', title: 'Customer Chats', desc: 'AI understands intent and recommends the perfect service match for your customer.', color: 'from-[#0d9488] to-[#14b8a6]' },
+              { n: '02', title: 'Instant Booking', desc: 'Seamless payment, calendar sync, and Google Meet link — all created automatically.', color: 'from-[#14b8a6] to-[#2dd4bf]' },
+              { n: '03', title: 'Revenue Grows', desc: 'Learning engine re-engages, marketing AI attracts new clients, revenue compounds.', color: 'from-[#2dd4bf] to-[#4ade80]' },
+            ].map((step, i) => (
+              <div key={step.n} className="relative">
+                {i < 2 && <div className="hidden md:block absolute top-14 left-full w-full h-0.5 bg-gradient-to-r from-[#0d9488]/20 to-transparent -translate-x-6 z-0" />}
+                <div className="relative bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center text-white font-extrabold text-lg mb-5`}>
+                    {step.n}
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                  <p className="text-[#627d98] leading-relaxed">{step.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Pricing Preview */}
-      <section id="pricing" className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Simple, transparent pricing
-          </h2>
-          <p className="text-[#8b92a5] text-lg max-w-2xl mx-auto">
-            Start free. Scale as you grow. All prices include GST.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          {[
-            { name: 'Starter', price: 'Free', desc: 'For individuals getting started', features: ['AI Chat Assistant', 'Up to 5 bookings/month', 'Email notifications'] },
-            { name: 'Pro', price: '$49/mo', desc: 'For growing professionals', features: ['Everything in Starter', 'Unlimited bookings', 'Learning Engine', 'Google Calendar sync', 'Priority support'], highlighted: true },
-            { name: 'Business', price: '$149/mo', desc: 'For teams and enterprises', features: ['Everything in Pro', 'Marketing AI (8 channels)', 'Custom branding', 'API access', 'Dedicated support'] },
-          ].map((plan) => (
-            <div
-              key={plan.name}
-              className={`p-8 rounded-2xl border h-full flex flex-col ${
-                plan.highlighted
-                  ? 'border-[#6366f1]/40 bg-[#6366f1]/5 shadow-glow-primary'
-                  : 'border-white/[0.06] bg-white/[0.02]'
-              }`}
-            >
-              {plan.highlighted && (
-                <span className="inline-block w-fit px-3 py-1 text-xs font-medium bg-[#6366f1]/20 text-[#818cf8] rounded-full mb-4">
-                  Most Popular
-                </span>
-              )}
-              <h3 className="text-xl font-semibold">{plan.name}</h3>
-              <div className="mt-2 mb-1">
-                <span className="text-3xl font-bold">{plan.price}</span>
+      {/* Pricing */}
+      <section id="pricing" className="py-24 bg-[#f8fafb]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4">Simple, transparent pricing</h2>
+            <p className="text-[#627d98] text-lg max-w-2xl mx-auto">Start with a free session. Scale as you grow. All prices include GST.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {[
+              { name: 'AI Starter', price: '$29', period: 'per session', desc: '30-minute intro session', features: ['AI Chat Assistant', '1-on-1 with AI Mentor', 'Session summary + notes', 'Google Meet link'], highlighted: false },
+              { name: 'AI Mentor', price: '$99', period: 'per session', desc: '1-hour deep dive session', features: ['Everything in Starter', '60-min session', 'Learning path recommendations', 'Google Docs lesson notes', 'Priority scheduling'], highlighted: true },
+              { name: '5-Session Package', price: '$450', period: 'package', desc: 'Serious growth commitment', features: ['Everything in AI Mentor', '5 x 1-hour sessions', 'Progress dashboard', 'Marketing AI access', 'Dedicated support'], highlighted: false },
+            ].map((plan) => (
+              <div key={plan.name} className={`p-8 rounded-2xl border h-full flex flex-col bg-white ${
+                plan.highlighted ? 'border-[#0d9488] shadow-xl shadow-[#0d9488]/10 ring-2 ring-[#0d9488]/20 relative' : 'border-gray-200'
+              }`}>
+                {plan.highlighted && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 text-xs font-bold bg-gradient-to-r from-[#0d9488] to-[#2dd4bf] text-white rounded-full">
+                    Most Popular
+                  </span>
+                )}
+                <h3 className="text-xl font-bold text-[#0f2942]">{plan.name}</h3>
+                <div className="mt-3 mb-1">
+                  <span className="text-4xl font-extrabold text-[#0f2942]">{plan.price}</span>
+                  <span className="text-sm text-[#627d98] ml-2">{plan.period}</span>
+                </div>
+                <p className="text-sm text-[#627d98] mb-6">{plan.desc}</p>
+                <ul className="space-y-3 mb-8 flex-1">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm text-[#334e68]">
+                      <svg className="w-4 h-4 text-[#0d9488] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <a href="https://booking.g.bookedai.au"
+                  className={`block text-center px-6 py-3.5 rounded-xl font-semibold text-sm transition-all ${
+                    plan.highlighted
+                      ? 'bg-gradient-to-r from-[#0d9488] to-[#14b8a6] text-white hover:shadow-lg hover:shadow-[#0d9488]/20 hover:-translate-y-0.5'
+                      : 'border-2 border-gray-200 text-[#334e68] hover:border-[#0d9488] hover:text-[#0d9488]'
+                  }`}>
+                  Get Started
+                </a>
               </div>
-              <p className="text-sm text-[#8b92a5] mb-6">{plan.desc}</p>
-              <ul className="space-y-3 mb-8 flex-1">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-[#cbd5e1]">
-                    <svg className="w-4 h-4 text-[#22d3ee] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="https://book.longcare.au"
-                className={`block text-center px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
-                  plan.highlighted
-                    ? 'bg-[#6366f1] hover:bg-[#818cf8] text-white hover:shadow-glow-primary'
-                    : 'border border-white/10 hover:border-white/20 text-white hover:bg-white/[0.04]'
-                }`}
-              >
-                Get Started
-              </a>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-24 bg-gradient-to-br from-[#0f2942] to-[#1a3a5c]">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">
+            Ready to turn intent into revenue?
+          </h2>
+          <p className="text-lg text-[#9fb3c8] mb-10 max-w-2xl mx-auto">
+            Join Australian businesses using bookedai.au to automate their booking, payment, and growth — powered by AI.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="https://booking.g.bookedai.au"
+              className="px-10 py-4 bg-gradient-to-r from-[#0d9488] to-[#2dd4bf] text-white rounded-2xl font-semibold text-lg hover:shadow-2xl hover:shadow-[#0d9488]/30 transition-all hover:-translate-y-1">
+              Book Your First Session
+            </a>
+            <button onClick={() => setChatOpen(true)}
+              className="px-10 py-4 border-2 border-white/20 text-white rounded-2xl font-semibold text-lg hover:border-[#2dd4bf] hover:text-[#2dd4bf] transition-all">
+              Chat with AI
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/[0.06] mt-24">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#6366f1]/40 to-transparent" />
+      <footer className="bg-[#091e33] text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#6366f1] to-[#22d3ee] flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">B</span>
-                </div>
-                <span className="text-lg font-bold">BookedAI</span>
+                <img src="/logo-icon.svg" alt="" className="w-8 h-8" />
+                <span className="text-lg font-extrabold">bookedai<span className="text-[#2dd4bf]">.au</span></span>
               </div>
-              <p className="text-sm text-[#8b92a5] max-w-sm leading-relaxed">
-                Turn customer intent into revenue — automatically. The AI-powered platform for service businesses in Australia.
+              <p className="text-sm text-[#829ab1] max-w-sm leading-relaxed">
+                The AI Revenue Engine — turn customer intent into revenue, automatically. Built for Australian service businesses.
               </p>
             </div>
             <div>
-              <h4 className="text-sm font-semibold mb-4 uppercase tracking-wide">Platform</h4>
-              <ul className="space-y-3 text-sm text-[#8b92a5]">
-                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="https://longcare.au" className="hover:text-white transition-colors">Longcare</a></li>
+              <h4 className="text-sm font-semibold mb-4 uppercase tracking-wider text-[#627d98]">Platform</h4>
+              <ul className="space-y-3 text-sm text-[#829ab1]">
+                <li><a href="#features" className="hover:text-[#2dd4bf] transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-[#2dd4bf] transition-colors">Pricing</a></li>
+                <li><a href="https://longcare.au" className="hover:text-[#2dd4bf] transition-colors">longcare.au</a></li>
+                <li><a href="https://admin.g.bookedai.au" className="hover:text-[#2dd4bf] transition-colors">Admin Portal</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-sm font-semibold mb-4 uppercase tracking-wide">Legal</h4>
-              <ul className="space-y-3 text-sm text-[#8b92a5]">
-                <li><a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="/terms" className="hover:text-white transition-colors">Terms of Service</a></li>
-                <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
+              <h4 className="text-sm font-semibold mb-4 uppercase tracking-wider text-[#627d98]">Legal</h4>
+              <ul className="space-y-3 text-sm text-[#829ab1]">
+                <li><a href="/privacy" className="hover:text-[#2dd4bf] transition-colors">Privacy Policy</a></li>
+                <li><a href="/terms" className="hover:text-[#2dd4bf] transition-colors">Terms of Service</a></li>
+                <li><a href="mailto:support@bookedai.au" className="hover:text-[#2dd4bf] transition-colors">Contact Us</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-[#8b92a5]">
-              &copy; {new Date().getFullYear()} BookedAI. All rights reserved. ABN registered in Australia.
-            </p>
-            <div className="flex gap-4 text-xs text-[#8b92a5]">
+          <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-[#627d98]">&copy; {new Date().getFullYear()} bookedai.au — All rights reserved. ABN registered in Australia.</p>
+            <div className="flex gap-4 text-xs text-[#627d98]">
               <span>Melbourne, Australia</span>
               <span>|</span>
               <span>support@bookedai.au</span>
@@ -449,13 +396,10 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Floating Chat Button (mobile) */}
+      {/* Floating Chat (mobile) */}
       {!chatOpen && (
-        <button
-          onClick={() => setChatOpen(true)}
-          className="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#6366f1] rounded-full flex items-center justify-center shadow-glow-primary hover:bg-[#818cf8] transition-all"
-          aria-label="Open chat"
-        >
+        <button onClick={() => setChatOpen(true)} aria-label="Open chat"
+          className="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-[#0d9488] to-[#14b8a6] rounded-full flex items-center justify-center shadow-xl shadow-[#0d9488]/30 hover:shadow-2xl transition-all">
           <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
           </svg>
