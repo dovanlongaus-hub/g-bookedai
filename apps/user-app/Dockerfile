@@ -13,6 +13,8 @@ RUN pnpm install --no-frozen-lockfile --filter @bookedai/user-app...
 COPY packages/ ./packages/
 COPY apps/user-app/ ./apps/user-app/
 ENV NEXT_TELEMETRY_DISABLED=1
+ARG NEXT_PUBLIC_API_URL=https://api.g.bookedai.au
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 RUN cd apps/user-app && pnpm build
 
 FROM base AS runtime

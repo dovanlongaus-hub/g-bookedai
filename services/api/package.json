@@ -13,15 +13,16 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@bookedai/shared": "workspace:*",
     "@bookedai/db": "workspace:*",
     "@bookedai/google": "workspace:*",
+    "@bookedai/shared": "workspace:*",
     "@google-cloud/pubsub": "^4.9.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
     "firebase-admin": "^13.0.0",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
     "stripe": "^17.7.0",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "tsx": "^4.19.0",
     "typescript": "^5.8.0",
     "vitest": "^3.1.0"

@@ -6,7 +6,7 @@ services:
       dockerfile: apps/web-g-bookedai/Dockerfile
     ports: ['3000:3000']
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - NEXT_PUBLIC_API_URL=https://api.g.bookedai.au
       - NEXT_PUBLIC_GA4_ID=${GA4_MEASUREMENT_ID}
       - NEXT_PUBLIC_GTM_ID=${GTM_ID}
     depends_on: [api]
@@ -52,7 +52,7 @@ services:
     build:
       context: .
       dockerfile: services/api/Dockerfile
-    ports: ['8080:8080']
+    ports: ['8180:8080']
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://bookedai:localpass@postgres:5432/longcare
@@ -64,7 +64,7 @@ services:
       - JWT_SECRET=${JWT_SECRET:-dev-secret-change-in-production}
       - BANK_TRANSFER_PAYID=${BANK_TRANSFER_PAYID:-ceo@longcare.au}
       - BANK_TRANSFER_ACCOUNT_NAME=${BANK_TRANSFER_ACCOUNT_NAME:-Longcare AU}
-      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004,https://g.bookedai.au,https://admin.g.bookedai.au,https://booking.g.bookedai.au,https://app.g.bookedai.au,https://api.g.bookedai.au
     depends_on:
       postgres:
         condition: service_healthy

@@ -34,6 +34,14 @@ const envSchema = z.object({
   CLOUD_TASKS_LOCATION: z.string().default('australia-southeast1'),
   CLOUD_TASKS_QUEUE: z.string().default('bookedai-default'),
 
+  // OpenAI OAuth (fallback auth)
+  OPENAI_CLIENT_ID: z.string().optional(),
+  OPENAI_CLIENT_SECRET: z.string().optional(),
+  OPENAI_REDIRECT_URI: z.string().default('https://api.g.bookedai.au/auth/openai/callback'),
+
+  // JWT for session (fallback when Firebase unavailable)
+  JWT_SECRET: z.string().default('dev-secret-change-in-production'),
+
   // CORS
   ALLOWED_ORIGINS: z.string().default('http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004'),
 });

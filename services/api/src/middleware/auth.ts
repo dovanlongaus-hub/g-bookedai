@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import admin from 'firebase-admin';
+import jwt from 'jsonwebtoken';
 import { getEnv } from '../lib/env.js';
 import type { UserRole } from '@bookedai/shared';
 import { query } from '@bookedai/db';
@@ -10,6 +11,7 @@ export interface AuthPayload {
   email: string;
   role: UserRole;
   firebaseUid: string;
+  provider?: 'firebase' | 'openai';
 }
 
 declare global {
@@ -17,6 +19,32 @@ declare global {
     interface Request {
       auth?: AuthPayload;
     }
+  }
+}
+
+// Verify JWT token (for OpenAI OAuth fallback sessions)
+function verifyJwtToken(token: string): Omit<AuthPayload, 'provider'> | null {
+  try {
+    const env = getEnv();
+    const payload = jwt.verify(token, env.JWT_SECRET) as {
+      userId: string;
+      tenantId: string;
+      email: string;
+      role: UserRole;
+      provider: string;
+    };
+    if (payload.provider === 'openai') {
+      return {
+        userId: payload.userId,
+        tenantId: payload.tenantId,
+        email: payload.email,
+        role: payload.role,
+        firebaseUid: '', // not applicable for OpenAI auth
+      };
+    }
+    return null;
+  } catch {
+    return null;
   }
 }
 
@@ -36,9 +64,19 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
     return;
   }
 
+  const token = header.slice(7);
+
+  // Try JWT (OpenAI OAuth fallback) first - it's faster to verify locally
+  const jwtResult = verifyJwtToken(token);
+  if (jwtResult) {
+    req.auth = { ...jwtResult, provider: 'openai' };
+    next();
+    return;
+  }
+
+  // Fallback to Firebase Auth (primary)
   try {
     ensureFirebaseInit();
-    const token = header.slice(7);
     const decodedToken = await admin.auth().verifyIdToken(token);
 
     // Look up user in our database by Firebase UID (google_sub field)
@@ -68,6 +106,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
         email: user.email,
         role: user.role as UserRole,
         firebaseUid: decodedToken.uid,
+        provider: 'firebase',
       };
     } else {
       const user = result.rows[0];
@@ -77,6 +116,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
         email: user.email,
         role: user.role as UserRole,
         firebaseUid: decodedToken.uid,
+        provider: 'firebase',
       };
     }
 

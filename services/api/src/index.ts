@@ -15,6 +15,7 @@ import { learningRouter } from './routes/learning.js';
 import { marketingRouter } from './routes/marketing.js';
 import { webhookRouter } from './routes/webhooks.js';
 import { healthRouter } from './routes/health.js';
+import { authRouter } from './routes/auth.js';
 import { sseRouter } from './routes/sse.js';
 import { closePool } from '@bookedai/db';
 
@@ -57,6 +58,7 @@ app.use('/webhooks', webhookRouter);
 app.use(express.json({ limit: '1mb' }));
 
 // Routes
+app.use('/auth', authRouter);
 app.use('/health', healthRouter);
 app.use('/chat', chatRouter);
 app.use('/services', servicesRouter);
