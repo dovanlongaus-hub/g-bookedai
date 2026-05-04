@@ -370,8 +370,19 @@ export default function BookingPage() {
             style={{ margin: 0 }}
             onClick={() => setPaymentMode('bank')}
           >
-            Bank Transfer / PayID
+            Bank Transfer / PayID / QR
           </button>
+
+          <button
+            className="btn-secondary"
+            style={{ margin: 0, marginTop: '0.75rem', border: '1px dashed rgba(255,255,255,0.15)', color: 'var(--accent)' }}
+            onClick={() => setStep('success')}
+          >
+            Book Now, Pay Later
+          </button>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '0.5rem' }}>
+            Confirm your booking now and arrange payment before the session
+          </p>
 
           {/* Bank transfer instructions */}
           {paymentMode === 'bank' && (
@@ -549,46 +560,81 @@ export default function BookingPage() {
           >
             ✓
           </div>
-          <h2 style={{ marginBottom: '1rem', fontSize: '1.75rem' }}>Booking Confirmed!</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '1.05rem' }}>
-            Check your email for Google Meet link.
+          <h2 style={{ marginBottom: '0.5rem', fontSize: '1.75rem' }}>Booking Confirmed!</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1rem' }}>
+            Your session has been scheduled. Details below.
           </p>
-          <div
-            style={{
-              background: 'rgba(255,255,255,0.02)',
-              padding: '1.25rem',
-              borderRadius: '12px',
-              marginTop: '1.5rem',
-              marginBottom: '2rem',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '0.5rem',
-              }}
-            >
+
+          {/* Booking Summary */}
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1.25rem', borderRadius: '12px', marginBottom: '1.5rem', textAlign: 'left' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Service</span>
               <span style={{ fontWeight: 600 }}>{selectedService?.name}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: 'var(--text-muted)' }}>Time</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Date & Time</span>
               <span style={{ fontWeight: 600 }}>{selectedTime}</span>
             </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Amount</span>
+              <span style={{ fontWeight: 'bold', color: 'var(--accent)' }}>
+                {selectedService ? formatPrice(selectedService.price_cents, selectedService.currency) + ' AUD' : '—'}
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Booking Ref</span>
+              <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>BOOK-{Date.now().toString(36).toUpperCase().slice(-6)}</span>
+            </div>
           </div>
-          <button
-            className="btn-secondary"
-            onClick={() => {
-              setStep('select');
-              setSelectedServiceId(null);
-              setSelectedTime(null);
-              setPaymentMode('none');
-              setStripeError(null);
-            }}
-          >
-            Book Another Session
-          </button>
+
+          {/* Google Meet */}
+          <div style={{ background: 'rgba(66, 133, 244, 0.08)', border: '1px solid rgba(66, 133, 244, 0.2)', borderRadius: '12px', padding: '1.25rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="14" height="16" rx="2" fill="#4285F4"/><path d="M16 8l6-3v14l-6-3V8z" fill="#34A853"/><rect x="5" y="9" width="8" height="6" rx="1" fill="white" opacity="0.9"/></svg>
+              <span style={{ fontWeight: 600, fontSize: '1.05rem' }}>Google Meet</span>
+            </div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+              Your session will be via Google Meet. Link will be sent to your email.
+            </p>
+            <a
+              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent((selectedService?.name || 'AI Session') + ' — Longcare AU')}&dates=${(() => { const d = new Date(); d.setDate(d.getDate() + 3); const start = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; d.setHours(d.getHours() + 1); const end = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; return start + '/' + end; })()}&details=${encodeURIComponent('Booking with Longcare AU\\nService: ' + (selectedService?.name || '') + '\\nJoin via Google Meet\\n\\nhttps://longcare.au')}&location=Google+Meet`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', margin: 0, padding: '0.75rem 1.5rem', width: 'auto', background: '#4285F4' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="white" strokeWidth="2" fill="none"/><path d="M3 9h18M9 4v18" stroke="white" strokeWidth="2"/></svg>
+              Add to Google Calendar
+            </a>
+          </div>
+
+          {/* Payment reminder for Pay Later */}
+          <div style={{ background: 'rgba(245, 158, 11, 0.06)', border: '1px solid rgba(245, 158, 11, 0.15)', borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem' }}>
+            <p style={{ color: '#fcd34d', fontSize: '0.85rem' }}>
+              Please complete payment before your session. You can pay via Stripe, bank transfer, or PayID.
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <a href="https://app.longcare.au" className="btn-primary" style={{ margin: 0, width: 'auto', padding: '0.75rem 1.5rem' }}>
+              View Dashboard
+            </a>
+            <button
+              className="btn-secondary"
+              style={{ margin: 0, width: 'auto', padding: '0.75rem 1.5rem' }}
+              onClick={() => {
+                setStep('select');
+                setSelectedServiceId(null);
+                setSelectedTime(null);
+                setPaymentMode('none');
+                setStripeError(null);
+                setBankCurrency('AUD');
+              }}
+            >
+              Book Another Session
+            </button>
+          </div>
         </div>
       )}
     </main>
