@@ -21,6 +21,12 @@ export function ChatWidget() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const trackEvent = (name: string, params?: Record<string, any>) => {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', name, params);
+    }
+  };
+
   // Detect language from browser
   useEffect(() => {
     const browserLang = navigator.language?.toLowerCase() || '';
@@ -47,6 +53,7 @@ export function ChatWidget() {
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setLoading(true);
+    trackEvent('send_chat_message', { language: lang });
 
     try {
       // Call the bookedai chat API via nginx proxy
@@ -68,7 +75,7 @@ export function ChatWidget() {
   if (!open) {
     return (
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => { setOpen(true); trackEvent('open_chat'); }}
         aria-label="Chat with AI"
         style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
@@ -151,7 +158,7 @@ export function ChatWidget() {
             ? ['Xem dịch vụ', 'Đặt lịch', 'Bảng giá']
             : ['View services', 'Book a session', 'Pricing']
           ).map(s => (
-            <button key={s} onClick={() => setInput(s)} style={{
+            <button key={s} onClick={() => { setInput(s); trackEvent('click_suggestion', { suggestion: s }); }} style={{
               background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
               color: '#aaa', padding: '4px 10px', borderRadius: 16, fontSize: '0.75rem', cursor: 'pointer',
             }}>{s}</button>

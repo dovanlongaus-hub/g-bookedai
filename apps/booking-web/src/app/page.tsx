@@ -46,6 +46,12 @@ export default function BookingPage() {
 
   const selectedService = services.find((s) => s.id === selectedServiceId) || null;
 
+  const trackEvent = (name: string, params?: Record<string, any>) => {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', name, params);
+    }
+  };
+
   // Fetch services on mount
   useEffect(() => {
     async function fetchServices() {
@@ -84,7 +90,10 @@ export default function BookingPage() {
   const handleNext = () => {
     if (step === 'select' && selectedServiceId) setStep('datetime');
     else if (step === 'datetime' && selectedTime) setStep('contact');
-    else if (step === 'contact' && contactName && contactEmail) setStep('payment');
+    else if (step === 'contact' && contactName && contactEmail) {
+      trackEvent('add_contact_info', { has_phone: !!contactPhone });
+      setStep('payment');
+    }
   };
 
   const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
@@ -93,6 +102,7 @@ export default function BookingPage() {
   const handleStripeCheckout = async () => {
     setStripeLoading(true);
     setStripeError(null);
+    trackEvent('begin_checkout', { service_name: selectedService?.name, value: selectedService ? selectedService.price_cents / 100 : 0, currency: 'AUD' });
     try {
       const res = await fetch('/api/payment/guest-checkout', {
         method: 'POST',
@@ -214,7 +224,7 @@ export default function BookingPage() {
               <div
                 key={s.id}
                 className={`option-card ${selectedServiceId === s.id ? 'selected' : ''}`}
-                onClick={() => setSelectedServiceId(s.id)}
+                onClick={() => { setSelectedServiceId(s.id); trackEvent('view_service', { service_name: s.name, price: s.price_cents / 100, currency: 'AUD' }); }}
               >
                 <div>
                   <div className="option-title">{s.name}</div>
@@ -287,7 +297,7 @@ export default function BookingPage() {
               <div
                 key={time}
                 className={`time-slot ${selectedTime === time ? 'selected' : ''}`}
-                onClick={() => setSelectedTime(time)}
+                onClick={() => { setSelectedTime(time); trackEvent('select_time_slot', { time_slot: time }); }}
               >
                 {time}
               </div>
@@ -460,7 +470,7 @@ export default function BookingPage() {
           <button
             className="btn-secondary"
             style={{ margin: 0 }}
-            onClick={() => setPaymentMode('bank')}
+            onClick={() => { trackEvent('add_payment_info', { method: bankCurrency === 'AUD' ? 'bank_aud' : 'bank_vnd' }); setPaymentMode('bank'); }}
           >
             Bank Transfer / PayID / QR
           </button>
@@ -468,7 +478,7 @@ export default function BookingPage() {
           <button
             className="btn-secondary"
             style={{ margin: 0, marginTop: '0.75rem', border: '1px dashed rgba(255,255,255,0.15)', color: 'var(--accent)' }}
-            onClick={() => setStep('success')}
+            onClick={() => { trackEvent('purchase', { method: 'pay_later', service_name: selectedService?.name, value: selectedService ? selectedService.price_cents / 100 : 0 }); setStep('success'); }}
           >
             Book Now, Pay Later
           </button>

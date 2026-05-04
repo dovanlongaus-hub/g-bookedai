@@ -5,6 +5,12 @@ import { useState } from 'react';
 export default function Home() {
   const [formData, setFormData] = useState({ business: '', email: '', phone: '' });
 
+  const trackEvent = (name: string, params?: Record<string, any>) => {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', name, params);
+    }
+  };
+
   return (
     <div>
       {/* Nav */}
@@ -41,7 +47,7 @@ export default function Home() {
           One platform that handles your entire revenue pipeline — from first contact to repeat booking.
         </p>
         <div className="hero-actions">
-          <a href="#signup" className="btn btn-primary btn-lg">Start Free</a>
+          <a href="#signup" className="btn btn-primary btn-lg" onClick={() => trackEvent('start_trial')}>Start Free</a>
           <a href="https://longcare.au" className="btn btn-secondary btn-lg">Watch Demo</a>
         </div>
         <p className="hero-meta">No credit card required &middot; 14-day trial &middot; Cancel anytime</p>
@@ -298,7 +304,7 @@ export default function Home() {
                 <li><span className="check">&#10003;</span> Analytics dashboard</li>
                 <li><span className="check">&#10003;</span> Priority support</li>
               </ul>
-              <a href="#signup" className="btn btn-primary btn-full" style={{ marginTop: 24 }}>Start 14-Day Trial</a>
+              <a href="#signup" className="btn btn-primary btn-full" style={{ marginTop: 24 }} onClick={() => trackEvent('start_trial')}>Start 14-Day Trial</a>
             </div>
 
             {/* Enterprise */}
@@ -317,7 +323,7 @@ export default function Home() {
                 <li><span className="check">&#10003;</span> SLA guarantee</li>
                 <li><span className="check">&#10003;</span> Commission model option</li>
               </ul>
-              <a href="mailto:ceo@longcare.au?subject=BookedAI Enterprise" className="btn btn-secondary btn-full" style={{ marginTop: 24 }}>Contact Sales</a>
+              <a href="mailto:ceo@longcare.au?subject=BookedAI Enterprise" className="btn btn-secondary btn-full" style={{ marginTop: 24 }} onClick={() => trackEvent('contact_sales')}>Contact Sales</a>
             </div>
           </div>
 
@@ -382,7 +388,7 @@ export default function Home() {
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
-            <button className="btn btn-primary btn-full btn-lg">Start Free Trial</button>
+            <button className="btn btn-primary btn-full btn-lg" onClick={() => { trackEvent('sign_up', { method: 'form' }); trackEvent('start_trial'); }}>Start Free Trial</button>
             <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: 12 }}>
               14-day free trial &middot; No credit card &middot; Cancel anytime
             </p>
