@@ -27,6 +27,7 @@ export function Nav() {
             borderRadius: 24, fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none',
             transition: 'transform 0.2s',
           }}>Book Now</a>
+          <a href="https://g.bookedai.au" style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none', fontSize: '0.7rem', marginLeft: '0.5rem' }}>Powered by BookedAI</a>
         </div>
       </div>
     </nav>

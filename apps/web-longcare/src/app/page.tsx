@@ -159,6 +159,19 @@ export default function Home() {
       </section>
     </div>
 
+    {/* BookedAI Platform CTA */}
+    <section style={{ maxWidth: 800, margin: '0 auto', padding: '3rem 2rem', textAlign: 'center' }}>
+      <div style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(34,211,238,0.05))', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 20, padding: '3rem 2rem' }}>
+        <p style={{ color: '#818cf8', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>THIS WEBSITE IS POWERED BY</p>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem' }}>BookedAI — AI Revenue Engine</h2>
+        <p style={{ color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto 1.5rem', fontSize: '0.95rem' }}>
+          Automate your service business with AI chat, booking, payments, meetings, and customer care. Just like Longcare does.
+        </p>
+        <a href="https://g.bookedai.au" className="btn btn-primary" style={{ marginRight: '1rem' }}>Get BookedAI for Your Business</a>
+        <a href="https://g.bookedai.au#pricing" className="btn btn-outline">See Pricing</a>
+      </div>
+    </section>
+
     {/* Footer */}
     <footer>
       <div className="footer-content">
@@ -177,7 +190,10 @@ export default function Home() {
           <h4>Get in Touch</h4>
           <a href="mailto:ceo@longcare.au">ceo@longcare.au</a>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '1rem' }}>
-            Powered by <a href="https://bookedai.au" style={{ color: 'var(--accent)', textDecoration: 'none' }}>bookedai.au</a>
+            Powered by <a href="https://g.bookedai.au" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>BookedAI</a> — AI Revenue Engine
+          </p>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+            Want this for your business? <a href="https://g.bookedai.au" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Get BookedAI →</a>
           </p>
         </div>
       </div>
