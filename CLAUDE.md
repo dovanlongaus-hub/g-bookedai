@@ -25,6 +25,7 @@ AI recommends → Truth Engine confirms → Payment proves → Accounting record
 | (internal) | services/learning-agent | - | Gemini + Google Docs |
 | (internal) | services/marketing-agent | - | Gemini + 8-channel content |
 | (internal) | services/accounting-sync | - | Xero SDK |
+| (internal) | services/design-agent | 8084 | Gemini + Brand/UI/Component gen |
 
 ### Google-First Tech Stack
 

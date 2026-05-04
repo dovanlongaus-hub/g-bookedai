@@ -10,7 +10,8 @@ module.exports = {
         DATABASE_URL: 'postgresql://bookedai:localpass@localhost:5432/longcare',
         NODE_ENV: 'production',
         AGENT_SERVICE_URL: 'http://localhost:8091',
-        GEMINI_API_KEY: 'AIzaSyASuzIgHo37aC3RRrYKkn7IFxngKWFtbsw',
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
         ALLOWED_ORIGINS: 'https://longcare.au,https://book.longcare.au,https://app.longcare.au,https://admin.longcare.au,https://g.longcare.au,http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004',
       },
     },
@@ -21,7 +22,7 @@ module.exports = {
       cwd: '/home/dovanlong/g.bookedai.au',
       env: {
         PORT: 8091,
-        GEMINI_API_KEY: 'AIzaSyASuzIgHo37aC3RRrYKkn7IFxngKWFtbsw',
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
       },
     },
     {

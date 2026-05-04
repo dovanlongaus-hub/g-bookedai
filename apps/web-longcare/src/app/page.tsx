@@ -30,6 +30,7 @@ export default function Home() {
       <div className="shape" style={{ top: '40%', right: '5%', width: '400px', height: '400px', background: 'rgba(69, 162, 158, 0.1)' }}></div>
 
       <main className="hero">
+        <img src="/logo.svg" alt="Longcare" style={{ height: 40, marginBottom: '1rem' }} />
         <h1 className="hero-title">Unlock Your AI Potential</h1>
         <p className="hero-subtitle">
           Turn intent into revenue. We provide personalized AI mentoring, learning paths, and system transformations for individuals and SMEs.
@@ -44,6 +45,7 @@ export default function Home() {
         <div className="grid">
           {/* Service 1 */}
           <div className="card">
+            <img src="/icons/starter.svg" alt="" style={{ width: 48, height: 48, marginBottom: '1rem' }} />
             <h3 className="card-title">30-Min AI Starter</h3>
             <div className="card-price">
               <span>$29</span>
@@ -58,6 +60,7 @@ export default function Home() {
           {/* Service 2 */}
           <div className="card" style={{ border: '1px solid var(--accent)' }}>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'var(--accent)', color: '#0b0c10', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderRadius: '12px' }}>POPULAR</div>
+            <img src="/icons/mentor.svg" alt="" style={{ width: 48, height: 48, marginBottom: '1rem' }} />
             <h3 className="card-title">1-Hour AI Mentor</h3>
             <div className="card-price">
               <span>$99</span>
@@ -71,6 +74,7 @@ export default function Home() {
 
           {/* Service 3 */}
           <div className="card">
+            <img src="/icons/package.svg" alt="" style={{ width: 48, height: 48, marginBottom: '1rem' }} />
             <h3 className="card-title">5-Session Package</h3>
             <div className="card-price">
               <span>$450</span>
@@ -149,7 +153,7 @@ export default function Home() {
           <p>Join hundreds of professionals and SMEs who have transformed their workflows with AI mentoring.</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="https://book.longcare.au" className="btn btn-primary">Book Your First Session</a>
-            <a href="https://book.longcare.au/chat" className="btn btn-outline">Chat with AI Assistant</a>
+            <a href="https://g.longcare.au" className="btn btn-outline">Chat with AI Assistant</a>
           </div>
         </div>
       </section>
@@ -164,10 +168,10 @@ export default function Home() {
         </div>
         <div className="footer-links">
           <h4>Quick Links</h4>
-          <a href="#services">Services</a>
-          <a href="#about">About</a>
-          <a href="#faq">FAQ</a>
-          <a href="mailto:ceo@longcare.au">Contact</a>
+          <a href="/services">Services</a>
+          <a href="/about">About</a>
+          <a href="/#faq">FAQ</a>
+          <a href="/contact">Contact</a>
         </div>
         <div className="footer-links">
           <h4>Get in Touch</h4>

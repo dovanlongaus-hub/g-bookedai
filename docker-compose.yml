@@ -80,6 +80,14 @@ services:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on: [api]
 
+  design-agent:
+    build:
+      context: .
+      dockerfile: services/design-agent/Dockerfile
+    ports: ['8084:8080']
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+
   notification:
     build:
       context: .

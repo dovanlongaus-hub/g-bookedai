@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" fill="none">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#66fcf1"/>
+      <stop offset="100%" style="stop-color:#45a29e"/>
+    </linearGradient>
+  </defs>
+  <!-- Icon: abstract brain/circuit -->
+  <circle cx="20" cy="25" r="14" stroke="url(#grad)" stroke-width="2" fill="none"/>
+  <path d="M14 20 Q20 15 26 20 M14 25 Q20 30 26 25 M14 30 Q20 25 26 30" stroke="url(#grad)" stroke-width="1.5" fill="none"/>
+  <circle cx="20" cy="25" r="3" fill="#66fcf1"/>
+  <!-- Text -->
+  <text x="42" y="32" font-family="system-ui, sans-serif" font-size="22" font-weight="700" fill="white">Long</text>
+  <text x="97" y="32" font-family="system-ui, sans-serif" font-size="22" font-weight="700" fill="#66fcf1">care</text>
+</svg>

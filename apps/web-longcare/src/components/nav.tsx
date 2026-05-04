@@ -14,7 +14,7 @@ export function Nav() {
     }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64 }}>
         <a href="/" style={{ color: 'var(--accent, #66fcf1)', fontWeight: 700, fontSize: '1.2rem', textDecoration: 'none' }}>
-          Longcare
+          <img src="/logo.svg" alt="Longcare" style={{ height: 28 }} />
         </a>
 
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>

@@ -33,7 +33,7 @@ export default function ContactPage() {
 
       <div className="card" style={{ marginTop: '2rem' }}>
         <h3 className="card-title">Location</h3>
-        <p style={{ color: 'var(--text-muted)' }}>Melbourne, Victoria, Australia</p>
+        <p style={{ color: 'var(--text-muted)' }}>Sydney, New South Wales, Australia</p>
         <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>All sessions are conducted online via Google Meet</p>
       </div>
     </div>

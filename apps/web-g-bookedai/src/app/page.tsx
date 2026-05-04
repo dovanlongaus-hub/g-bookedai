@@ -79,6 +79,7 @@ export default function Home() {
   return (
     <div className="chat-container">
       <div className="chat-header">
+        <img src="/logo.svg" alt="BookedAI" style={{ height: 36, marginBottom: '0.5rem' }} />
         <h1>bookedai.au</h1>
         <p>{lang === 'vi' ? 'Chuyển đổi ý định thành doanh thu' : lang === 'zh' ? '将意向转化为收入' : 'Turn customer intent into revenue'}</p>
         <div className="lang-switcher">

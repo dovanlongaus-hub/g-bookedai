@@ -1,0 +1,28 @@
+{
+  "name": "@bookedai/design-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI Design Agent - Brand, UI/UX generation, asset creation, design system management",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@bookedai/shared": "workspace:*",
+    "@bookedai/db": "workspace:*",
+    "@bookedai/google": "workspace:*",
+    "@google/generative-ai": "^0.21.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "pino": "^9.6.0",
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}
