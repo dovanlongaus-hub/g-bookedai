@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
-import { Outfit } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Analytics } from '../components/analytics';
 import { ChatWidget } from '../components/chat-widget';
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-outfit',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     icon: '/favicon.svg',
     apple: '/logo-icon.svg',
   },
-  themeColor: '#6366f1',
+  themeColor: '#0070f3',
   manifest: '/manifest.json',
 };
 
@@ -55,8 +55,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={outfit.variable}>
-      <body className="antialiased notranslate" style={{ fontFamily: 'var(--font-outfit), system-ui, sans-serif' }} translate="no">
+    <html lang="en" className={inter.variable}>
+      <body className="antialiased notranslate" style={{ fontFamily: 'var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif' }} translate="no">
         <Analytics />
         <div className="translate" translate="yes">
           {children}

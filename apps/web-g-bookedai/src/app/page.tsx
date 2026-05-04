@@ -3,182 +3,426 @@
 import { useState } from 'react';
 
 export default function Home() {
+  const [formData, setFormData] = useState({ business: '', email: '', phone: '' });
+
   return (
     <div>
       {/* Nav */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        background: 'rgba(5, 5, 16, 0.9)', backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 2rem',
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64 }}>
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-            <img src="/logo.svg" alt="BookedAI" style={{ height: 28 }} />
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="/" className="nav-logo">
+            <div className="nav-logo-mark">B</div>
+            BookedAI
           </a>
-          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-            <a href="#features" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.9rem' }}>Features</a>
-            <a href="#pricing" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.9rem' }}>Pricing</a>
-            <a href="#demo" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.9rem' }}>Demo</a>
-            <a href="https://longcare.au" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.9rem' }}>Case Study</a>
-            <a href="#signup" style={{
-              background: '#6366f1', color: '#fff', padding: '0.5rem 1.25rem',
-              borderRadius: 8, fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none',
-            }}>Get Started</a>
+          <div className="nav-links">
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#how-it-works">Docs</a>
+            <a href="https://longcare.au">Case Study</a>
+            <a href="#signup" className="btn btn-primary">Get Started</a>
           </div>
         </div>
       </nav>
 
+      {/* Gradient line */}
+      <div style={{ paddingTop: 56 }}>
+        <div className="gradient-line" />
+      </div>
+
       {/* Hero */}
-      <section style={{ paddingTop: '8rem', paddingBottom: '4rem', textAlign: 'center', maxWidth: 900, margin: '0 auto', padding: '8rem 2rem 4rem' }}>
-        <div style={{ display: 'inline-block', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 20, padding: '0.3rem 1rem', fontSize: '0.8rem', color: '#818cf8', marginBottom: '1.5rem' }}>
-          AI Revenue Engine for Service Businesses
-        </div>
-        <h1 style={{ fontSize: '3.5rem', fontWeight: 800, lineHeight: 1.1, marginBottom: '1.5rem', background: 'linear-gradient(135deg, #fff 30%, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          Turn Customer Intent<br/>Into Revenue — Automatically
+      <section className="hero">
+        <div className="hero-tag">Enterprise-grade AI platform</div>
+        <h1 className="hero-title">
+          The AI Revenue Engine<br />for Service Businesses
         </h1>
-        <p style={{ color: '#8b92a5', fontSize: '1.2rem', maxWidth: 600, margin: '0 auto 2rem', lineHeight: 1.6 }}>
-          AI-powered platform that handles chat, booking, payment, meetings, and customer care for your service business. Set up in minutes, not months.
+        <p className="hero-subtitle">
+          Automate conversations, booking, payments, meetings, and customer retention.
+          One platform that handles your entire revenue pipeline — from first contact to repeat booking.
         </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="#signup" style={{ background: '#6366f1', color: '#fff', padding: '0.85rem 2rem', borderRadius: 8, fontWeight: 600, textDecoration: 'none', fontSize: '1rem' }}>Start Free Trial</a>
-          <a href="#demo" style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', padding: '0.85rem 2rem', borderRadius: 8, fontWeight: 600, textDecoration: 'none', fontSize: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>See Live Demo →</a>
+        <div className="hero-actions">
+          <a href="#signup" className="btn btn-primary btn-lg">Start Free</a>
+          <a href="https://longcare.au" className="btn btn-secondary btn-lg">Watch Demo</a>
         </div>
-        <p style={{ color: '#666', fontSize: '0.8rem', marginTop: '1rem' }}>No credit card required • 14-day free trial • Cancel anytime</p>
+        <p className="hero-meta">No credit card required &middot; 14-day trial &middot; Cancel anytime</p>
+
+        {/* Trust badges */}
+        <div className="trust-row">
+          <div className="trust-badge">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0L8.5 2.5H11.5L9.5 5L10.5 8L7 6.5L3.5 8L4.5 5L2.5 2.5H5.5L7 0Z"/></svg>
+            Enterprise-grade security
+          </div>
+          <div className="trust-badge">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0L8.5 2.5H11.5L9.5 5L10.5 8L7 6.5L3.5 8L4.5 5L2.5 2.5H5.5L7 0Z"/></svg>
+            99.9% uptime SLA
+          </div>
+          <div className="trust-badge">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0L8.5 2.5H11.5L9.5 5L10.5 8L7 6.5L3.5 8L4.5 5L2.5 2.5H5.5L7 0Z"/></svg>
+            GDPR &amp; Privacy Act compliant
+          </div>
+        </div>
       </section>
 
-      {/* Trusted by / Demo link */}
-      <section id="demo" style={{ textAlign: 'center', padding: '2rem', marginBottom: '2rem' }}>
-        <p style={{ color: '#666', fontSize: '0.85rem', marginBottom: '1rem' }}>LIVE DEMO — See BookedAI powering a real business:</p>
-        <a href="https://longcare.au" style={{ color: '#22d3ee', fontWeight: 600, fontSize: '1rem', textDecoration: 'none' }}>longcare.au — AI Mentoring Platform →</a>
+      {/* Stats */}
+      <section className="section">
+        <div className="container">
+          <div className="stats-row">
+            <div className="stat">
+              <div className="stat-number">500+</div>
+              <div className="stat-label">Sessions processed</div>
+            </div>
+            <div className="stat">
+              <div className="stat-number">99.9%</div>
+              <div className="stat-label">Platform uptime</div>
+            </div>
+            <div className="stat">
+              <div className="stat-number">$50k+</div>
+              <div className="stat-label">Revenue processed</div>
+            </div>
+            <div className="stat">
+              <div className="stat-number">3</div>
+              <div className="stat-label">Languages supported</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Features */}
-      <section id="features" style={{ maxWidth: 1100, margin: '0 auto', padding: '4rem 2rem' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem' }}>Everything Your Business Needs</h2>
-        <p style={{ textAlign: 'center', color: '#8b92a5', marginBottom: '3rem', maxWidth: 600, margin: '0 auto 3rem' }}>One platform replaces 10+ tools. AI handles everything from first contact to repeat booking.</p>
+      <section id="features" className="section section-dark">
+        <div className="container">
+          <div style={{ textAlign: 'center' }}>
+            <h2 className="section-title">Everything you need to grow</h2>
+            <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
+              One platform replaces 10+ tools. AI handles everything from first contact to repeat booking.
+            </p>
+          </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-          {[
-            { icon: '\uD83D\uDCAC', title: 'AI Chat & Voice', desc: 'Multilingual chatbot on your website. Auto-answers questions, recommends services, guides to booking. Supports WhatsApp, voice, and web chat.' },
-            { icon: '\uD83D\uDCC5', title: 'Smart Booking', desc: 'Customers book 24/7. Real-time availability, calendar sync, Google Meet links auto-generated. Hold slots for 10 minutes.' },
-            { icon: '\uD83D\uDCB3', title: 'Payments', desc: 'Stripe card payments, bank transfer QR codes, Pay Later option. Multi-currency (AUD, VND, USD). Automatic invoicing.' },
-            { icon: '\uD83D\uDCE7', title: 'Email & Notifications', desc: 'Booking confirmations, reminders (24h, 1h), follow-ups. Gmail API integration. SMS and WhatsApp notifications.' },
-            { icon: '\uD83C\uDFA5', title: 'Video Meetings', desc: 'Branded meeting rooms (meet.yourdomain.com). Google Meet integration. Calendar invites with one-click join.' },
-            { icon: '\uD83E\uDDE0', title: 'AI Session Notes', desc: 'Auto-generated summaries, Q&A extraction, improvement suggestions. Saved to Google Docs. NotebookLM integration.' },
-            { icon: '\uD83D\uDCCA', title: 'Analytics & Revenue', desc: 'Real-time dashboard. Revenue tracking, booking funnel, customer LTV. GA4 + BigQuery pipeline. Drive Sync reports to CEO.' },
-            { icon: '\uD83D\uDCE2', title: 'Marketing Agent', desc: 'AI generates campaigns for Google Ads, LinkedIn, Facebook, email. UTM tracking. CEO approval workflow.' },
-            { icon: '\uD83D\uDD04', title: 'Customer Retention', desc: 'AI recommends next sessions. No-show follow-ups. Re-booking CTAs. Automated drip sequences.' },
-          ].map((f, i) => (
-            <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '1.5rem' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>{f.icon}</div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem' }}>{f.title}</h3>
-              <p style={{ color: '#8b92a5', fontSize: '0.85rem', lineHeight: 1.6 }}>{f.desc}</p>
+          <div className="feature-grid">
+            {/* AI Conversations */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4V14H4a2 2 0 01-2-2V4zm4 3a1 1 0 100 2h8a1 1 0 100-2H6zm0 3a1 1 0 100 2h4a1 1 0 100-2H6z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">AI Conversations</h3>
+              <p className="feature-desc">
+                Multilingual chatbot on web, WhatsApp, and voice. Auto-answers questions, recommends services, and guides customers to booking.
+              </p>
             </div>
-          ))}
+
+            {/* Smart Booking */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 110-2h1V8a1 1 0 011-1z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">Smart Booking</h3>
+              <p className="feature-desc">
+                24/7 self-service booking with calendar sync, 10-minute hold slots, automated reminders, and real-time availability.
+              </p>
+            </div>
+
+            {/* Payment Processing */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM2 9v5a2 2 0 002 2h12a2 2 0 002-2V9H2zm4 3a1 1 0 011-1h2a1 1 0 110 2H7a1 1 0 01-1-1zm5 0a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">Payment Processing</h3>
+              <p className="feature-desc">
+                Stripe card payments, QR code bank transfers, and multi-currency support. Automatic invoicing with GST compliance.
+              </p>
+            </div>
+
+            {/* Video Meetings */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 6a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm12 .5l4-2v9l-4-2v-5z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">Video Meetings</h3>
+              <p className="feature-desc">
+                Branded meeting rooms on your domain. Google Meet integration with auto-generated join links and calendar invites.
+              </p>
+            </div>
+
+            {/* Email Automation */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v1.2L10 11 2 6.2V5zm0 3.5V15a2 2 0 002 2h12a2 2 0 002-2V8.5l-8 4.8-8-4.8z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">Email Automation</h3>
+              <p className="feature-desc">
+                Booking confirmations, 24h and 1h reminders, follow-ups. Gmail API integration with WhatsApp and SMS notifications.
+              </p>
+            </div>
+
+            {/* AI Session Intelligence */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 2a6 6 0 00-6 6c0 2.2 1.2 4.1 3 5.2V15a1 1 0 001 1h4a1 1 0 001-1v-1.8c1.8-1.1 3-3 3-5.2a6 6 0 00-6-6zm-1 15a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">AI Session Intelligence</h3>
+              <p className="feature-desc">
+                Auto-generated session summaries, Q&A extraction, and improvement suggestions. Saved to Google Docs with NotebookLM integration.
+              </p>
+            </div>
+
+            {/* Revenue Analytics */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 16h16v1H2v-1zm1-1V9h2v6H3zm4 0V5h2v10H7zm4 0V7h2v8h-2zm4 0V3h2v12h-2z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">Revenue Analytics</h3>
+              <p className="feature-desc">
+                Real-time dashboard with revenue tracking, booking funnel, and customer LTV. BigQuery pipeline with Looker Studio reports.
+              </p>
+            </div>
+
+            {/* Marketing Automation */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M18 3a1 1 0 00-1.45-.9L3.1 8.57a1 1 0 00.05 1.83l4.79 1.8 1.8 4.79a1 1 0 001.83.05L18 3.45A1 1 0 0018 3z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">Marketing Automation</h3>
+              <p className="feature-desc">
+                AI generates campaigns across 8 channels. UTM tracking, CEO approval workflow, Google Ads, LinkedIn, Facebook, and email.
+              </p>
+            </div>
+
+            {/* Customer Retention */}
+            <div className="feature-card">
+              <div className="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M4 2a2 2 0 00-2 2v1h16V4a2 2 0 00-2-2H4zm13.7 7.3a1 1 0 00-1.4 0L10 15.6l-2.3-2.3a1 1 0 00-1.4 1.4l3 3a1 1 0 001.4 0l7-7a1 1 0 000-1.4z"/>
+                </svg>
+              </div>
+              <h3 className="feature-title">Customer Retention</h3>
+              <p className="feature-desc">
+                AI recommends next sessions, handles no-show follow-ups, re-booking CTAs, and automated drip sequences to maximise LTV.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* How it works */}
-      <section style={{ maxWidth: 900, margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '3rem' }}>Set Up in 3 Steps</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
-          {[
-            { num: '1', title: 'Connect', desc: 'Add your services, pricing, and availability. Connect your Google Workspace.' },
-            { num: '2', title: 'Customise', desc: 'Brand your chatbot, booking page, and meeting rooms with your domain.' },
-            { num: '3', title: 'Launch', desc: 'Go live. AI handles customer interactions 24/7. You focus on delivery.' },
-          ].map((s, i) => (
-            <div key={i}>
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(99,102,241,0.15)', border: '2px solid #6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', fontSize: '1.2rem', fontWeight: 700, color: '#6366f1' }}>{s.num}</div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem' }}>{s.title}</h3>
-              <p style={{ color: '#8b92a5', fontSize: '0.85rem' }}>{s.desc}</p>
+      <section id="how-it-works" className="section">
+        <div className="container">
+          <div style={{ textAlign: 'center' }}>
+            <h2 className="section-title">Go live in 3 steps</h2>
+            <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
+              From signup to live AI in under 30 minutes. No engineering team required.
+            </p>
+          </div>
+
+          <div className="steps">
+            <div>
+              <div className="step-num">1</div>
+              <h3 className="step-title">Connect your services</h3>
+              <p className="step-desc">
+                Add your services, pricing, and availability. Connect Google Workspace for calendar, email, and docs.
+              </p>
             </div>
-          ))}
+            <div>
+              <div className="step-num">2</div>
+              <h3 className="step-title">Customise your brand</h3>
+              <p className="step-desc">
+                Brand your chatbot, booking page, and meeting rooms. Use your custom domain for a seamless experience.
+              </p>
+            </div>
+            <div>
+              <div className="step-num">3</div>
+              <h3 className="step-title">Launch &amp; grow</h3>
+              <p className="step-desc">
+                Go live instantly. AI handles customer interactions 24/7 while you focus on delivering great service.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section id="pricing" style={{ maxWidth: 1100, margin: '0 auto', padding: '4rem 2rem' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem' }}>Simple, Transparent Pricing</h2>
-        <p style={{ textAlign: 'center', color: '#8b92a5', marginBottom: '3rem' }}>Start free. Scale as you grow. No hidden fees.</p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '2rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>Starter</h3>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800, margin: '1rem 0', color: '#22d3ee' }}>$0<span style={{ fontSize: '1rem', color: '#666', fontWeight: 400 }}>/mo</span></div>
-            <p style={{ color: '#8b92a5', fontSize: '0.85rem', marginBottom: '1.5rem' }}>Perfect for testing. Up to 10 bookings/month.</p>
-            <ul style={{ color: '#aaa', fontSize: '0.85rem', listStyle: 'none', padding: 0 }}>
-              {['AI Chatbot (1 language)', 'Basic booking page', 'Stripe payments', 'Email confirmations', 'Google Meet links', '10 bookings/month'].map(f => <li key={f} style={{ padding: '0.3rem 0' }}>&#10003; {f}</li>)}
-            </ul>
-            <a href="#signup" style={{ display: 'block', textAlign: 'center', marginTop: '1.5rem', padding: '0.75rem', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', textDecoration: 'none', fontWeight: 600 }}>Start Free</a>
+      <section id="pricing" className="section section-dark">
+        <div className="container">
+          <div style={{ textAlign: 'center' }}>
+            <h2 className="section-title">Simple, transparent pricing</h2>
+            <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
+              Start free. Scale as you grow. No hidden fees.
+            </p>
           </div>
 
-          <div style={{ background: 'rgba(99,102,241,0.08)', border: '2px solid #6366f1', borderRadius: 16, padding: '2rem', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#6366f1', color: '#fff', padding: '0.2rem 1rem', borderRadius: 12, fontSize: '0.75rem', fontWeight: 600 }}>MOST POPULAR</div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>Growth</h3>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800, margin: '1rem 0', color: '#6366f1' }}>$99<span style={{ fontSize: '1rem', color: '#666', fontWeight: 400 }}>/mo</span></div>
-            <p style={{ color: '#8b92a5', fontSize: '0.85rem', marginBottom: '1.5rem' }}>For growing businesses. Unlimited bookings.</p>
-            <ul style={{ color: '#aaa', fontSize: '0.85rem', listStyle: 'none', padding: 0 }}>
-              {['AI Chatbot (3 languages)', 'Custom booking domain', 'Stripe + QR payments', 'AI session notes', 'Marketing Agent', 'WhatsApp integration', 'Unlimited bookings', 'Analytics dashboard', 'Priority support'].map(f => <li key={f} style={{ padding: '0.3rem 0' }}>&#10003; {f}</li>)}
-            </ul>
-            <a href="#signup" style={{ display: 'block', textAlign: 'center', marginTop: '1.5rem', padding: '0.75rem', background: '#6366f1', borderRadius: 8, color: '#fff', textDecoration: 'none', fontWeight: 600 }}>Start 14-Day Trial</a>
+          <div className="pricing-grid">
+            {/* Starter */}
+            <div className="pricing-card">
+              <div className="pricing-name">Starter</div>
+              <div className="pricing-price">$0<span>/mo</span></div>
+              <p className="pricing-desc">Perfect for testing. Up to 10 bookings per month.</p>
+              <ul className="pricing-features">
+                <li><span className="check">&#10003;</span> AI Chatbot (1 language)</li>
+                <li><span className="check">&#10003;</span> Basic booking page</li>
+                <li><span className="check">&#10003;</span> Stripe payments</li>
+                <li><span className="check">&#10003;</span> Email confirmations</li>
+                <li><span className="check">&#10003;</span> Google Meet links</li>
+                <li><span className="check">&#10003;</span> 10 bookings/month</li>
+              </ul>
+              <a href="#signup" className="btn btn-secondary btn-full" style={{ marginTop: 24 }}>Start Free</a>
+            </div>
+
+            {/* Growth */}
+            <div className="pricing-card featured">
+              <div className="pricing-badge">Most Popular</div>
+              <div className="pricing-name">Growth</div>
+              <div className="pricing-price">$99<span>/mo</span></div>
+              <p className="pricing-desc">For growing businesses. Unlimited bookings.</p>
+              <ul className="pricing-features">
+                <li><span className="check">&#10003;</span> AI Chatbot (3 languages)</li>
+                <li><span className="check">&#10003;</span> Custom booking domain</li>
+                <li><span className="check">&#10003;</span> Stripe + QR payments</li>
+                <li><span className="check">&#10003;</span> AI session notes</li>
+                <li><span className="check">&#10003;</span> Marketing Agent</li>
+                <li><span className="check">&#10003;</span> WhatsApp integration</li>
+                <li><span className="check">&#10003;</span> Unlimited bookings</li>
+                <li><span className="check">&#10003;</span> Analytics dashboard</li>
+                <li><span className="check">&#10003;</span> Priority support</li>
+              </ul>
+              <a href="#signup" className="btn btn-primary btn-full" style={{ marginTop: 24 }}>Start 14-Day Trial</a>
+            </div>
+
+            {/* Enterprise */}
+            <div className="pricing-card">
+              <div className="pricing-name">Enterprise</div>
+              <div className="pricing-price">Custom</div>
+              <p className="pricing-desc">For large teams. White-label and API access.</p>
+              <ul className="pricing-features">
+                <li><span className="check">&#10003;</span> Everything in Growth</li>
+                <li><span className="check">&#10003;</span> White-label branding</li>
+                <li><span className="check">&#10003;</span> Custom AI training</li>
+                <li><span className="check">&#10003;</span> API access</li>
+                <li><span className="check">&#10003;</span> Multi-location support</li>
+                <li><span className="check">&#10003;</span> Dedicated account manager</li>
+                <li><span className="check">&#10003;</span> Xero/accounting integration</li>
+                <li><span className="check">&#10003;</span> SLA guarantee</li>
+                <li><span className="check">&#10003;</span> Commission model option</li>
+              </ul>
+              <a href="mailto:ceo@longcare.au?subject=BookedAI Enterprise" className="btn btn-secondary btn-full" style={{ marginTop: 24 }}>Contact Sales</a>
+            </div>
           </div>
 
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '2rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>Enterprise</h3>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800, margin: '1rem 0', color: '#22d3ee' }}>Custom</div>
-            <p style={{ color: '#8b92a5', fontSize: '0.85rem', marginBottom: '1.5rem' }}>For large teams. White-label + API access.</p>
-            <ul style={{ color: '#aaa', fontSize: '0.85rem', listStyle: 'none', padding: 0 }}>
-              {['Everything in Growth', 'White-label branding', 'Custom AI training', 'API access', 'Multi-location support', 'Dedicated account manager', 'Xero/accounting integration', 'SLA guarantee', '10% commission model option'].map(f => <li key={f} style={{ padding: '0.3rem 0' }}>&#10003; {f}</li>)}
-            </ul>
-            <a href="mailto:ceo@longcare.au?subject=BookedAI Enterprise" style={{ display: 'block', textAlign: 'center', marginTop: '1.5rem', padding: '0.75rem', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', textDecoration: 'none', fontWeight: 600 }}>Contact Sales</a>
-          </div>
+          <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.8rem', marginTop: 32 }}>
+            All plans include SSL, Cloudflare CDN, 99.9% uptime SLA, and GDPR compliance.
+            <br />Commission model available: 0% monthly fee + 5-10% per transaction.
+          </p>
         </div>
-
-        <p style={{ textAlign: 'center', color: '#666', fontSize: '0.8rem', marginTop: '2rem' }}>
-          All plans include: SSL, Cloudflare CDN, 99.9% uptime, GDPR compliance<br/>
-          Commission model available: 0% monthly fee + 5-10% per transaction
-        </p>
       </section>
 
-      {/* Signup / CTA */}
-      <section id="signup" style={{ maxWidth: 600, margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem' }}>Ready to Automate Your Business?</h2>
-        <p style={{ color: '#8b92a5', marginBottom: '2rem' }}>Join Longcare AU and other SMEs already using BookedAI.</p>
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '2rem' }}>
-          <input type="text" placeholder="Business name" style={{ width: '100%', padding: '0.85rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: '1rem', marginBottom: '0.75rem', outline: 'none', boxSizing: 'border-box' }} />
-          <input type="email" placeholder="Email address" style={{ width: '100%', padding: '0.85rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: '1rem', marginBottom: '0.75rem', outline: 'none', boxSizing: 'border-box' }} />
-          <input type="tel" placeholder="Phone / WhatsApp" style={{ width: '100%', padding: '0.85rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff', fontSize: '1rem', marginBottom: '1rem', outline: 'none', boxSizing: 'border-box' }} />
-          <button style={{ width: '100%', padding: '0.85rem', background: '#6366f1', color: '#fff', border: 'none', borderRadius: 8, fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}>Start Free Trial</button>
-          <p style={{ color: '#666', fontSize: '0.75rem', marginTop: '0.75rem' }}>14-day free trial • No credit card • Cancel anytime</p>
+      {/* Case Study */}
+      <section className="section">
+        <div className="container">
+          <div style={{ textAlign: 'center' }}>
+            <h2 className="section-title">See BookedAI in action</h2>
+            <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
+              Real businesses, real results. See how BookedAI powers end-to-end revenue automation.
+            </p>
+          </div>
+
+          <a href="https://longcare.au" className="case-study-card" style={{ display: 'block' }}>
+            <div className="case-study-label">Live Case Study</div>
+            <h3 className="case-study-title">Longcare AU -- AI Mentoring Platform</h3>
+            <p className="case-study-desc">
+              Longcare AU uses BookedAI to power their entire mentoring business: AI chat in English, Vietnamese, and Mandarin,
+              automated booking and payments, Google Meet sessions with AI-generated notes, and a full marketing pipeline.
+            </p>
+            <span className="case-study-link">Visit longcare.au &rarr;</span>
+          </a>
+        </div>
+      </section>
+
+      {/* CTA / Signup */}
+      <section id="signup" className="section section-dark">
+        <div className="container">
+          <div style={{ textAlign: 'center' }}>
+            <h2 className="section-title">Ready to automate?</h2>
+            <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
+              Join service businesses already using BookedAI to grow revenue on autopilot.
+            </p>
+          </div>
+
+          <div className="signup-form">
+            <input
+              type="text"
+              placeholder="Business name"
+              className="signup-input"
+              value={formData.business}
+              onChange={(e) => setFormData({ ...formData, business: e.target.value })}
+            />
+            <input
+              type="email"
+              placeholder="Email address"
+              className="signup-input"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+            <input
+              type="tel"
+              placeholder="Phone / WhatsApp"
+              className="signup-input"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            />
+            <button className="btn btn-primary btn-full btn-lg">Start Free Trial</button>
+            <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: 12 }}>
+              14-day free trial &middot; No credit card &middot; Cancel anytime
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '3rem 2rem' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '2rem' }}>
+      <footer className="footer">
+        <div className="footer-grid">
           <div>
-            <img src="/logo.svg" alt="BookedAI" style={{ height: 28, marginBottom: '0.75rem' }} />
-            <p style={{ color: '#666', fontSize: '0.85rem' }}>AI Revenue Engine Platform for service businesses.</p>
-            <p style={{ color: '#666', fontSize: '0.8rem', marginTop: '0.5rem' }}>Sydney, Australia</p>
+            <div className="nav-logo" style={{ marginBottom: 4 }}>
+              <div className="nav-logo-mark">B</div>
+              BookedAI
+            </div>
+            <p className="footer-brand-desc">
+              AI Revenue Engine Platform for service businesses.<br />
+              Sydney, Australia.
+            </p>
           </div>
           <div>
-            <h4 style={{ color: '#888', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: 1, marginBottom: '0.75rem' }}>Product</h4>
-            <a href="#features" style={{ display: 'block', color: '#aaa', textDecoration: 'none', fontSize: '0.85rem', marginBottom: '0.4rem' }}>Features</a>
-            <a href="#pricing" style={{ display: 'block', color: '#aaa', textDecoration: 'none', fontSize: '0.85rem', marginBottom: '0.4rem' }}>Pricing</a>
-            <a href="#demo" style={{ display: 'block', color: '#aaa', textDecoration: 'none', fontSize: '0.85rem', marginBottom: '0.4rem' }}>Live Demo</a>
-            <a href="#signup" style={{ display: 'block', color: '#aaa', textDecoration: 'none', fontSize: '0.85rem' }}>Sign Up</a>
+            <h4 className="footer-heading">Product</h4>
+            <a href="#features" className="footer-link">Features</a>
+            <a href="#pricing" className="footer-link">Pricing</a>
+            <a href="#how-it-works" className="footer-link">How It Works</a>
+            <a href="#signup" className="footer-link">Sign Up</a>
           </div>
           <div>
-            <h4 style={{ color: '#888', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: 1, marginBottom: '0.75rem' }}>Case Studies</h4>
-            <a href="https://longcare.au" style={{ display: 'block', color: '#aaa', textDecoration: 'none', fontSize: '0.85rem', marginBottom: '0.4rem' }}>Longcare AU</a>
+            <h4 className="footer-heading">Resources</h4>
+            <a href="https://longcare.au" className="footer-link">Case Study</a>
+            <a href="#features" className="footer-link">Documentation</a>
+            <a href="#pricing" className="footer-link">API Reference</a>
           </div>
           <div>
-            <h4 style={{ color: '#888', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: 1, marginBottom: '0.75rem' }}>Contact</h4>
-            <a href="mailto:ceo@longcare.au" style={{ display: 'block', color: '#aaa', textDecoration: 'none', fontSize: '0.85rem', marginBottom: '0.4rem' }}>ceo@longcare.au</a>
-            <a href="https://wa.me/61481993178" style={{ display: 'block', color: '#25D366', textDecoration: 'none', fontSize: '0.85rem' }}>WhatsApp</a>
+            <h4 className="footer-heading">Contact</h4>
+            <a href="mailto:ceo@longcare.au" className="footer-link">ceo@longcare.au</a>
+            <a href="https://wa.me/61481993178" className="footer-link">WhatsApp</a>
+            <span className="footer-link">Sydney, Australia</span>
           </div>
         </div>
-        <p style={{ textAlign: 'center', color: '#444', fontSize: '0.75rem', marginTop: '2rem' }}>&copy; 2026 BookedAI. All rights reserved.</p>
+        <p className="footer-bottom">&copy; 2026 BookedAI. All rights reserved.</p>
       </footer>
     </div>
   );
