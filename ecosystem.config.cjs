@@ -48,19 +48,21 @@ module.exports = {
       script: 'npx',
       args: 'next dev -p 3000',
       cwd: '/home/dovanlong/g.bookedai.au/apps/web-g-bookedai',
-      env: { API_URL: 'http://localhost:8090' },
+      env: { API_URL: 'http://localhost:8090', NEXT_PUBLIC_GA4_ID: dotenv.GA4_MEASUREMENT_ID || '', NEXT_PUBLIC_GTM_ID: dotenv.GTM_ID || '' },
     },
     {
       name: 'web-longcare',
       script: 'npx',
       args: 'next dev -p 3001',
       cwd: '/home/dovanlong/g.bookedai.au/apps/web-longcare',
+      env: { NEXT_PUBLIC_GA4_ID: dotenv.GA4_MEASUREMENT_ID || '', NEXT_PUBLIC_GTM_ID: dotenv.GTM_ID || '' },
     },
     {
       name: 'booking',
       script: 'npx',
       args: 'next dev -p 3002',
       cwd: '/home/dovanlong/g.bookedai.au/apps/booking-web',
+      env: { NEXT_PUBLIC_GA4_ID: dotenv.GA4_MEASUREMENT_ID || '', NEXT_PUBLIC_GTM_ID: dotenv.GTM_ID || '' },
     },
     {
       name: 'meet',
@@ -73,12 +75,14 @@ module.exports = {
       script: 'npx',
       args: 'next dev -p 3003',
       cwd: '/home/dovanlong/g.bookedai.au/apps/user-app',
+      env: { NEXT_PUBLIC_GA4_ID: dotenv.GA4_MEASUREMENT_ID || '', NEXT_PUBLIC_GTM_ID: dotenv.GTM_ID || '' },
     },
     {
       name: 'admin',
       script: 'npx',
       args: 'next dev -p 3004',
       cwd: '/home/dovanlong/g.bookedai.au/apps/admin-app',
+      env: { NEXT_PUBLIC_GA4_ID: dotenv.GA4_MEASUREMENT_ID || '', NEXT_PUBLIC_GTM_ID: dotenv.GTM_ID || '' },
     },
     {
       name: 'drive-sync',
