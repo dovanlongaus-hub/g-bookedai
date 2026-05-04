@@ -1,8 +1,9 @@
 name: Deploy to Google Cloud Run
 
 on:
-  push:
-    branches: [main]
+  # Auto-deploy disabled — using Cloud Build trigger instead
+  # push:
+  #   branches: [main]
   workflow_dispatch:
     inputs:
       service:
