@@ -21,7 +21,7 @@ export function Nav() {
 
   return (
     <>
-      <nav style={{
+      <nav aria-label="Main navigation" style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
         background: 'rgba(11, 12, 16, 0.85)', backdropFilter: 'blur(12px)',
         borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 1.5rem',
@@ -59,7 +59,7 @@ export function Nav() {
           </div>
 
           {/* Mobile hamburger */}
-          <button className="mobile-menu-btn" onClick={() => setOpen(!open)} style={{
+          <button className="mobile-menu-btn" onClick={() => setOpen(!open)} aria-label="Toggle menu" aria-expanded={open} style={{
             display: 'none', background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 8,
           }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -71,7 +71,7 @@ export function Nav() {
 
       {/* Mobile overlay */}
       {open && (
-        <div className="mobile-overlay" style={{
+        <div className="mobile-overlay" role="dialog" aria-label="Navigation menu" style={{
           position: 'fixed', top: 64, left: 0, right: 0, bottom: 0, zIndex: 99,
           background: 'rgba(11, 12, 16, 0.98)', backdropFilter: 'blur(20px)',
           padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem',

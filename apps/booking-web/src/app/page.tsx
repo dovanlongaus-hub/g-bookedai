@@ -39,9 +39,12 @@ export default function BookingPage() {
   // Exchange rate
   const [audVndRate, setAudVndRate] = useState<number | null>(null);
 
-  // Generated Meet link + booking ref
+  // Generated Meet link + booking ref (fallback if API fails)
   const [bookingRef] = useState(`BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`);
   const meetLink = `https://meet.longcare.au/${bookingRef}`;
+
+  // Saved booking from API
+  const [savedBooking, setSavedBooking] = useState<{ bookingRef: string; meetLink: string } | null>(null);
 
   const selectedService = services.find((s) => s.id === selectedServiceId) || null;
 
@@ -98,6 +101,40 @@ export default function BookingPage() {
   const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
   const contactValid = contactName.trim().length > 0 && isValidEmail(contactEmail);
 
+  const handleBooking = async (paymentMethod: 'pay_later' | 'bank_transfer') => {
+    if (!selectedService || !contactName || !contactEmail) return;
+    try {
+      const res = await fetch('/api/guest-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceId: selectedService.id,
+          slotTime: selectedTime,
+          name: contactName,
+          email: contactEmail,
+          phone: contactPhone,
+          paymentMethod,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSavedBooking({ bookingRef: data.data.bookingRef, meetLink: data.data.meetLink });
+        trackEvent('purchase', { method: paymentMethod, service_name: selectedService.name, value: selectedService.price_cents / 100 });
+
+        // Google Ads conversion
+        if (typeof window !== 'undefined' && (window as any).gtag) {
+          (window as any).gtag('event', 'conversion', {
+            send_to: 'AW-CONVERSION_ID/CONVERSION_LABEL',
+            value: selectedService.price_cents / 100,
+            currency: 'AUD',
+            transaction_id: data.data.bookingRef,
+          });
+        }
+      }
+    } catch {}
+    setStep('success');
+  };
+
   const handleStripeCheckout = async () => {
     setStripeLoading(true);
     setStripeError(null);
@@ -138,7 +175,7 @@ export default function BookingPage() {
       <p className="subtitle">AI recommendations → Booking Truth Engine</p>
 
       {step !== 'success' && (
-        <div className="stepper">
+        <div className="stepper" role="progressbar" aria-valuenow={currentNum} aria-valuemax={4} aria-label={`Step ${currentNum} of 4`}>
           <div className={`step ${currentNum === 1 ? 'active' : currentNum > 1 ? 'completed' : ''}`}>1</div>
           <div className={`step ${currentNum === 2 ? 'active' : currentNum > 2 ? 'completed' : ''}`}>2</div>
           <div className={`step ${currentNum === 3 ? 'active' : currentNum > 3 ? 'completed' : ''}`}>3</div>
@@ -440,7 +477,7 @@ export default function BookingPage() {
           <button
             className="btn-secondary"
             style={{ margin: 0, marginTop: '0.75rem', border: '1px dashed rgba(255,255,255,0.15)', color: 'var(--accent)' }}
-            onClick={() => { trackEvent('purchase', { method: 'pay_later', service_name: selectedService?.name, value: selectedService ? selectedService.price_cents / 100 : 0 }); setStep('success'); }}
+            onClick={() => handleBooking('pay_later')}
           >
             Book Now, Pay Later
           </button>
@@ -536,7 +573,7 @@ export default function BookingPage() {
               <button
                 className="btn-primary"
                 style={{ marginTop: '1rem', background: 'var(--accent)' }}
-                onClick={() => setStep('success')}
+                onClick={() => handleBooking('bank_transfer')}
               >
                 I have completed the transfer
               </button>
@@ -598,7 +635,7 @@ export default function BookingPage() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Booking Ref</span>
-              <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>{bookingRef}</span>
+              <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>{savedBooking?.bookingRef || bookingRef}</span>
             </div>
             {contactName && (
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -626,7 +663,7 @@ export default function BookingPage() {
                 : 'Your session will be via Google Meet.'}
             </p>
             <a
-              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent((selectedService?.name || 'AI Session') + ' — Longcare AU')}&dates=${(() => { const d = new Date(); d.setDate(d.getDate() + 3); const start = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; d.setHours(d.getHours() + 1); const end = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; return start + '/' + end; })()}&details=${encodeURIComponent(`Longcare AU — AI Mentoring Session\n\nService: ${selectedService?.name || ''}\nBooking Ref: ${bookingRef}\nClient: ${contactName}\n\nJoin via Google Meet:\n${meetLink}\n\nContact: ceo@longcare.au\nWhatsApp: +61 455 301 335`)}&location=${encodeURIComponent(meetLink)}`}
+              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent((selectedService?.name || 'AI Session') + ' — Longcare AU')}&dates=${(() => { const d = new Date(); d.setDate(d.getDate() + 3); const start = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; d.setHours(d.getHours() + 1); const end = d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; return start + '/' + end; })()}&details=${encodeURIComponent(`Longcare AU — AI Mentoring Session\n\nService: ${selectedService?.name || ''}\nBooking Ref: ${savedBooking?.bookingRef || bookingRef}\nClient: ${contactName}\n\nJoin via Google Meet:\n${savedBooking?.meetLink || meetLink}\n\nContact: ceo@longcare.au\nWhatsApp: +61 455 301 335`)}&location=${encodeURIComponent(savedBooking?.meetLink || meetLink)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
@@ -641,7 +678,7 @@ export default function BookingPage() {
           {contactPhone && (
             <div style={{ background: 'rgba(37, 211, 102, 0.08)', border: '1px solid rgba(37, 211, 102, 0.2)', borderRadius: '12px', padding: '1rem', marginBottom: '1rem' }}>
               <a
-                href={`https://wa.me/61455301335?text=${encodeURIComponent(`Hi Longcare! I just booked: ${selectedService?.name || 'a session'}\nRef: ${bookingRef}\nName: ${contactName}\nTime: ${selectedTime}`)}`}
+                href={`https://wa.me/61455301335?text=${encodeURIComponent(`Hi Longcare! I just booked: ${selectedService?.name || 'a session'}\nRef: ${savedBooking?.bookingRef || bookingRef}\nName: ${contactName}\nTime: ${selectedTime}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary"
@@ -678,6 +715,7 @@ export default function BookingPage() {
                 setContactName('');
                 setContactEmail('');
                 setContactPhone('');
+                setSavedBooking(null);
               }}
             >
               Book Another Session

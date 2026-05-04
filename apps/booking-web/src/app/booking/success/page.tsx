@@ -1,11 +1,17 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 
 function SuccessContent() {
   const params = useSearchParams();
   const bookingId = params.get('id') || '';
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'purchase', { transaction_id: bookingId, value: 0, currency: 'AUD' });
+    }
+  }, [bookingId]);
 
   return (
     <div className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

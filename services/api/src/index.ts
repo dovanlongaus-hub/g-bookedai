@@ -22,6 +22,7 @@ import { sseRouter } from './routes/sse.js';
 import { partnersRouter } from './routes/partners.js';
 import { exportRouter } from './routes/export.js';
 import { referralRouter } from './routes/referral.js';
+import { guestBookingRouter } from './routes/guest-booking.js';
 import { closePool } from '@bookedai/db';
 
 const env = getEnv();
@@ -80,6 +81,7 @@ app.use('/events', sseRouter);
 app.use('/partners', partnersRouter);
 app.use('/export', exportRouter);
 app.use('/referral', referralRouter);
+app.use('/guest-booking', guestBookingRouter);
 
 // Error handling
 app.use(notFoundHandler);

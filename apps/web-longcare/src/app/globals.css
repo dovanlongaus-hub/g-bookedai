@@ -293,3 +293,8 @@ footer { border-top: 1px solid var(--card-border); padding: 3rem 0; margin-top: 
 [data-theme="light"] footer {
   border-top-color: rgba(0, 0, 0, 0.08);
 }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
