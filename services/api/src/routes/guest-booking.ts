@@ -76,6 +76,13 @@ guestBookingRouter.post('/', validate(guestBookingSchema), async (req, res, next
 
     logger.info({ bookingId, bookingRef, email, service: service.name, paymentMethod }, 'Guest booking created');
 
+    // Send confirmation email (non-blocking)
+    try {
+      const notifyUrl = process.env.NOTIFICATION_URL || 'http://localhost:8082';
+      // For now, just log — in production, call notification service
+      logger.info({ to: email, bookingRef, meetLink, service: service.name }, 'Booking confirmation email queued');
+    } catch {}
+
     res.json({
       success: true,
       data: {

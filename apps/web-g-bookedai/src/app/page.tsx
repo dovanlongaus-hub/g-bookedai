@@ -55,6 +55,7 @@ export default function Home() {
             <a href="/features">Features</a>
             <a href="#pricing">Pricing</a>
             <a href="/docs">Docs</a>
+            <a href="/docs/guide">Guide</a>
             <a href="/integrations">Integrations</a>
             <a href="/partners">Partners</a>
             <a href="https://longcare.au">Case Study</a>
@@ -465,6 +466,7 @@ export default function Home() {
             <h4 className="footer-heading">Resources</h4>
             <a href="https://longcare.au" className="footer-link">Case Study</a>
             <a href="/docs" className="footer-link">Documentation</a>
+            <a href="/docs/guide" className="footer-link">API Guide</a>
             <a href="/partners" className="footer-link">Partners</a>
           </div>
           <div>

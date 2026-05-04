@@ -38,6 +38,7 @@ export default function DocsPage() {
             <a href="/#features">Features</a>
             <a href="/#pricing">Pricing</a>
             <a href="/docs">Docs</a>
+            <a href="/docs/guide">Guide</a>
             <a href="/demo">Demo</a>
             <a href="/#signup" className="btn btn-primary">Get Started</a>
           </div>
@@ -249,6 +250,7 @@ export default function DocsPage() {
             <h4 className="footer-heading">Resources</h4>
             <a href="https://longcare.au" className="footer-link">Case Study</a>
             <a href="/docs" className="footer-link">API Reference</a>
+            <a href="/docs/guide" className="footer-link">API Guide</a>
             <a href="/#signup" className="footer-link">Sign Up</a>
           </div>
           <div>

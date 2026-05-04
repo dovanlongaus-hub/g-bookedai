@@ -23,6 +23,7 @@ import { partnersRouter } from './routes/partners.js';
 import { exportRouter } from './routes/export.js';
 import { referralRouter } from './routes/referral.js';
 import { guestBookingRouter } from './routes/guest-booking.js';
+import { dashboardRouter } from './routes/dashboard.js';
 import { closePool } from '@bookedai/db';
 
 const env = getEnv();
@@ -82,6 +83,7 @@ app.use('/partners', partnersRouter);
 app.use('/export', exportRouter);
 app.use('/referral', referralRouter);
 app.use('/guest-booking', guestBookingRouter);
+app.use('/dashboard', dashboardRouter);
 
 // Error handling
 app.use(notFoundHandler);

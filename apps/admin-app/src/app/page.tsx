@@ -6,12 +6,16 @@ import { RevenueChart } from '../components/revenue-chart';
 export default function AdminDashboard() {
   const [apiHealth, setApiHealth] = useState<any>(null);
   const [serviceCount, setServiceCount] = useState<number | null>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [revenueData, setRevenueData] = useState<any[]>([]);
 
   useEffect(() => {
     fetch('/api/health').then(r => r.json()).then(setApiHealth).catch(() => {});
     fetch('/api/services').then(r => r.json()).then(d => {
       if (d.success) setServiceCount(d.data.length);
     }).catch(() => {});
+    fetch('/api/dashboard/stats').then(r => r.json()).then(d => { if (d.success) setStats(d.data); }).catch(() => {});
+    fetch('/api/dashboard/revenue').then(r => r.json()).then(d => { if (d.success) setRevenueData(d.data); }).catch(() => {});
   }, []);
   const recentBookings = [
     { id: 'BK-1058', user: 'Long D.', service: 'Career Pathway Review', status: 'pending' as const, amount: '$149.00', date: '9 May 2026' },
@@ -91,30 +95,30 @@ export default function AdminDashboard() {
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-label">Revenue Today</div>
-          <div className="stat-value revenue">$1,247</div>
+          <div className="stat-value revenue">${stats ? `$${(stats.revenueToday / 100).toLocaleString('en-AU', { minimumFractionDigits: 2 })}` : '$1,247'}</div>
           <div style={{ color: 'var(--success)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            +18% vs yesterday
+            {stats ? 'Live data' : '+18% vs yesterday'}
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Bookings Today</div>
-          <div className="stat-value bookings">7</div>
+          <div className="stat-label">Total Bookings</div>
+          <div className="stat-value bookings">{stats?.totalBookings ?? 7}</div>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            4 confirmed, 3 pending
+            {stats ? `${stats.confirmedBookings} confirmed, ${stats.pendingBookings} pending` : '4 confirmed, 3 pending'}
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Active Users</div>
-          <div className="stat-value learning">156</div>
+          <div className="stat-label">Total Users</div>
+          <div className="stat-value learning">{stats?.totalUsers ?? 156}</div>
           <div style={{ color: 'var(--accent)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            +12 this week
+            {stats ? 'Live data' : '+12 this week'}
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Pending Payments</div>
-          <div className="stat-value" style={{ color: 'var(--warning)' }}>$447</div>
+          <div className="stat-label">Cancelled</div>
+          <div className="stat-value" style={{ color: 'var(--warning)' }}>{stats?.cancelledBookings ?? 3}</div>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            3 invoices awaiting
+            {stats ? 'Live data' : '3 invoices awaiting'}
           </div>
         </div>
       </div>
@@ -123,11 +127,11 @@ export default function AdminDashboard() {
       <div className="metrics-row">
         <div className="stat-card">
           <div className="stat-label">MTD Revenue</div>
-          <div className="stat-value revenue">$4,832</div>
+          <div className="stat-value revenue">{stats ? `$${(stats.revenueMtd / 100).toLocaleString('en-AU', { minimumFractionDigits: 2 })}` : '$4,832'}</div>
         </div>
         <div className="stat-card">
           <div className="stat-label">MTD Bookings</div>
-          <div className="stat-value bookings">28</div>
+          <div className="stat-value bookings">{stats?.totalBookings ?? 28}</div>
         </div>
         <div className="stat-card">
           <div className="stat-label">Avg Session Value</div>
@@ -153,20 +157,38 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {revenueByService.map((row) => (
-                <tr key={row.service}>
-                  <td>{row.service}</td>
-                  <td className="text-right">{row.bookings}</td>
-                  <td className="text-right" style={{ color: 'var(--success)' }}>{row.revenue}</td>
-                  <td className="text-right text-muted">{row.share}</td>
-                </tr>
-              ))}
-              <tr>
-                <td><strong>Total</strong></td>
-                <td className="text-right"><strong>93</strong></td>
-                <td className="text-right" style={{ color: 'var(--success)' }}><strong>$18,357</strong></td>
-                <td className="text-right text-muted"><strong>100%</strong></td>
-              </tr>
+              {(revenueData.length > 0 ? revenueData : revenueByService).map((row) => {
+                const totalRevRaw = revenueData.length > 0
+                  ? revenueData.reduce((sum: number, r: any) => sum + (r.revenueRaw || 0), 0)
+                  : 1;
+                const share = revenueData.length > 0 && totalRevRaw > 0
+                  ? `${Math.round(((row as any).revenueRaw / totalRevRaw) * 100)}%`
+                  : (row as any).share;
+                return (
+                  <tr key={row.service}>
+                    <td>{row.service}</td>
+                    <td className="text-right">{row.bookings}</td>
+                    <td className="text-right" style={{ color: 'var(--success)' }}>{row.revenue}</td>
+                    <td className="text-right text-muted">{share}</td>
+                  </tr>
+                );
+              })}
+              {(() => {
+                const totals = revenueData.length > 0
+                  ? {
+                      bookings: revenueData.reduce((s: number, r: any) => s + r.bookings, 0),
+                      revenue: `$${(revenueData.reduce((s: number, r: any) => s + (r.revenueRaw || 0), 0) / 100).toFixed(2)}`,
+                    }
+                  : { bookings: 93, revenue: '$18,357' };
+                return (
+                  <tr>
+                    <td><strong>Total</strong></td>
+                    <td className="text-right"><strong>{totals.bookings}</strong></td>
+                    <td className="text-right" style={{ color: 'var(--success)' }}><strong>{totals.revenue}</strong></td>
+                    <td className="text-right text-muted"><strong>100%</strong></td>
+                  </tr>
+                );
+              })()}
             </tbody>
           </table>
         </div>
@@ -201,10 +223,10 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {recentBookings.map((booking) => (
+              {(stats?.recentBookings || recentBookings).map((booking: any) => (
                 <tr key={booking.id}>
                   <td style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}>{booking.id}</td>
-                  <td>{booking.user}</td>
+                  <td>{booking.client || booking.user}</td>
                   <td>{booking.service}</td>
                   <td>
                     <span className={`badge ${booking.status}`}>
