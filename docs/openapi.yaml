@@ -1,0 +1,254 @@
+openapi: 3.1.0
+info:
+  title: BookedAI API
+  version: 1.0.0
+  description: AI Revenue Engine API for service businesses
+  contact:
+    email: ceo@longcare.au
+    url: https://g.bookedai.au
+  license:
+    name: Proprietary
+servers:
+  - url: https://api.g.longcare.au
+    description: Production (Longcare AU)
+  - url: http://localhost:8090
+    description: Local development
+
+paths:
+  /health:
+    get:
+      summary: System health check
+      tags: [System]
+      responses:
+        '200':
+          description: System healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, enum: [healthy, degraded] }
+                  service: { type: string }
+                  checks: { type: object }
+                  timestamp: { type: string, format: date-time }
+
+  /services:
+    get:
+      summary: List all active services
+      tags: [Services]
+      responses:
+        '200':
+          description: Services list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+
+  /services/search:
+    post:
+      summary: Search services by query
+      tags: [Services]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string, minLength: 1, maxLength: 500 }
+                tenantId: { type: string, format: uuid }
+                language: { type: string, enum: [en, vi, zh], default: en }
+      responses:
+        '200':
+          description: Search results
+
+  /chat:
+    post:
+      summary: Send message to AI assistant
+      tags: [Chat]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: { type: string, minLength: 1, maxLength: 2000 }
+                sessionId: { type: string, format: uuid }
+                language: { type: string, enum: [en, vi, zh], default: en }
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      reply: { type: string }
+                      actions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type: { type: string }
+                            label: { type: string }
+                            action: { type: string }
+
+  /booking/hold:
+    post:
+      summary: Hold a time slot (10 min)
+      tags: [Booking]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [serviceId, slotId]
+              properties:
+                serviceId: { type: string, format: uuid }
+                slotId: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Slot held
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Slot unavailable
+
+  /booking/confirm:
+    post:
+      summary: Confirm booking after payment
+      tags: [Booking]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [bookingId]
+              properties:
+                bookingId: { type: string, format: uuid }
+                paymentIntentId: { type: string }
+                bankReference: { type: string }
+      responses:
+        '200':
+          description: Booking confirmed
+
+  /booking/cancel:
+    post:
+      summary: Cancel a booking
+      tags: [Booking]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [bookingId]
+              properties:
+                bookingId: { type: string, format: uuid }
+                reason: { type: string, maxLength: 500 }
+
+  /payment/guest-checkout:
+    post:
+      summary: Create Stripe checkout (no auth)
+      tags: [Payment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [serviceId]
+              properties:
+                serviceId: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Checkout URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      checkoutUrl: { type: string, format: uri }
+
+  /webhooks/stripe:
+    post:
+      summary: Stripe webhook handler
+      tags: [Webhooks]
+      description: Receives Stripe events. Signature verified.
+
+  /learning/session-summary:
+    post:
+      summary: Generate AI session summary
+      tags: [Learning]
+      security: [{ bearerAuth: [] }]
+
+  /learning/history:
+    get:
+      summary: Get user learning history
+      tags: [Learning]
+      security: [{ bearerAuth: [] }]
+
+  /marketing/campaigns:
+    post:
+      summary: Create marketing campaign
+      tags: [Marketing]
+      security: [{ bearerAuth: [] }]
+
+components:
+  schemas:
+    Service:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        price_cents: { type: integer }
+        currency: { type: string, default: AUD }
+
+    BookingStatus:
+      type: string
+      enum: [DRAFT, HOLD, PENDING_PAYMENT, CONFIRMED, RESCHEDULED, CANCELLED, REFUNDED, NO_SHOW]
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Firebase Auth ID token or JWT session token
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success: { type: boolean, example: false }
+              error:
+                type: object
+                properties:
+                  code: { type: string, example: UNAUTHORIZED }
+                  message: { type: string }

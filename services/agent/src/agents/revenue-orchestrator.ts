@@ -1,5 +1,7 @@
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { classifyIntent } from './intent-classifier.js';
+import { tools } from './tools.js';
 
 const SYSTEM_PROMPT = `You are the bookedai.au AI Revenue Engine Orchestrator for Longcare AU.
 Your mission is to convert customer intent into real revenue while protecting truth and trust.
@@ -47,6 +49,10 @@ export async function revenueOrchestrator(message: string, sessionId?: string, l
     history.splice(0, history.length - 20);
   }
 
+  // Classify intent for smart routing
+  const intent = classifyIntent(message);
+  console.log(`Intent: ${intent.intent} (${intent.confidence}) entities:`, intent.entities);
+
   const langInstruction = language === 'vi'
     ? '\n\nRespond in Vietnamese.'
     : language === 'zh'
@@ -64,16 +70,16 @@ export async function revenueOrchestrator(message: string, sessionId?: string, l
       try {
         reply = await callOpenAI(openaiKey, history, langInstruction);
       } catch {
-        reply = generateFallbackReply(message, language);
+        reply = await generateFallbackReply(message, language);
       }
     } else if (geminiKey) {
       try {
         reply = await callGemini(geminiKey, history, langInstruction);
       } catch {
-        reply = generateFallbackReply(message, language);
+        reply = await generateFallbackReply(message, language);
       }
     } else {
-      reply = generateFallbackReply(message, language);
+      reply = await generateFallbackReply(message, language);
     }
 
     history.push({ role: 'assistant', content: reply });
@@ -133,8 +139,20 @@ async function callGemini(
   return result.response.text();
 }
 
-function generateFallbackReply(message: string, language?: string): string {
+async function generateFallbackReply(message: string, language?: string): Promise<string> {
   const lower = message.toLowerCase();
+
+  // Use tools for dynamic responses
+  if (lower.includes('service') || lower.includes('what do you offer')) {
+    const result = await tools.searchServices();
+    if (result.success && result.data.length > 0) {
+      const formatted = tools.formatServicesForChat(result.data);
+      const bookLink = tools.generateBookingLink();
+      return language === 'vi'
+        ? `Các dịch vụ mentoring AI của chúng tôi:\n\n${formatted}\n\nĐặt lịch: ${bookLink}`
+        : `Here are our AI mentoring services:\n\n${formatted}\n\nBook now: ${bookLink}`;
+    }
+  }
 
   if (language === 'vi') {
     if (lower.includes('giá') || lower.includes('bảng giá') || lower.includes('pricing')) {
