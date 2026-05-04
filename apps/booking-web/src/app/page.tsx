@@ -40,9 +40,9 @@ export default function BookingPage() {
   // Exchange rate
   const [audVndRate, setAudVndRate] = useState<number | null>(null);
 
-  // Generated Meet link
-  const [meetLink] = useState(`https://meet.google.com/new`);
+  // Generated Meet link + booking ref
   const [bookingRef] = useState(`BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`);
+  const meetLink = `https://meet.longcare.au/${bookingRef}`;
 
   const selectedService = services.find((s) => s.id === selectedServiceId) || null;
 

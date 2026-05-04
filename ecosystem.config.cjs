@@ -62,6 +62,12 @@ module.exports = {
       cwd: '/home/dovanlong/g.bookedai.au/apps/booking-web',
     },
     {
+      name: 'meet',
+      script: 'npx',
+      args: 'next dev -p 3005',
+      cwd: '/home/dovanlong/g.bookedai.au/apps/meet',
+    },
+    {
       name: 'user-app',
       script: 'npx',
       args: 'next dev -p 3003',
