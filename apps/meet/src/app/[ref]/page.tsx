@@ -26,7 +26,7 @@ export default function MeetingRoom() {
   return (
     <div style={{ textAlign: 'center', padding: '2rem', maxWidth: 500, margin: '0 auto' }}>
       {/* Logo */}
-      <img src="https://longcare.au/logo.svg" alt="Longcare" style={{ height: 36, marginBottom: '2rem' }} />
+      <img src="/logo.svg" alt="Longcare" style={{ height: 40, marginBottom: '2rem' }} />
 
       {/* Meeting icon */}
       <div style={{
