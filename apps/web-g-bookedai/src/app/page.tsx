@@ -49,7 +49,7 @@ export default function Home() {
       <nav className="nav">
         <div className="nav-inner">
           <a href="/" className="nav-logo">
-            <img src="/logo-light.png" alt="BookedAI" style={{ height: 32 }} />
+            <img src="/logo-light.png" alt="BookedAI" style={{ height: 36 }} />
           </a>
           <div className="nav-links">
             <a href="/features">Features</a>
@@ -448,7 +448,7 @@ export default function Home() {
         <div className="footer-grid">
           <div>
             <div style={{ marginBottom: 4 }}>
-              <img src="/logo-light.png" alt="BookedAI" style={{ height: 28 }} />
+              <img src="/logo-light.png" alt="BookedAI" style={{ height: 32 }} />
             </div>
             <p className="footer-brand-desc">
               AI Revenue Engine Platform for service businesses.<br />

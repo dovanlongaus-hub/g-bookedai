@@ -26,16 +26,7 @@ export default function MeetingRoom() {
   return (
     <div style={{ textAlign: 'center', padding: '2rem', maxWidth: 500, margin: '0 auto' }}>
       {/* Logo */}
-      <div style={{ marginBottom: '2rem' }}>
-        <svg width="160" height="40" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#66fcf1"/><stop offset="100%" stopColor="#45a29e"/></linearGradient></defs>
-          <circle cx="20" cy="25" r="14" stroke="url(#g)" strokeWidth="2" fill="none"/>
-          <path d="M14 20 Q20 15 26 20 M14 25 Q20 30 26 25 M14 30 Q20 25 26 30" stroke="url(#g)" strokeWidth="1.5" fill="none"/>
-          <circle cx="20" cy="25" r="3" fill="#66fcf1"/>
-          <text x="42" y="32" fontFamily="system-ui" fontSize="22" fontWeight="700" fill="white">Long</text>
-          <text x="97" y="32" fontFamily="system-ui" fontSize="22" fontWeight="700" fill="#66fcf1">care</text>
-        </svg>
-      </div>
+      <img src="https://longcare.au/logo.svg" alt="Longcare" style={{ height: 36, marginBottom: '2rem' }} />
 
       {/* Meeting icon */}
       <div style={{

@@ -8,7 +8,10 @@ export function UserNav() {
       borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 2rem',
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 56 }}>
-        <a href="https://longcare.au" style={{ fontWeight: 700, fontSize: '1rem', color: '#fff', textDecoration: 'none' }}>Longcare</a>
+        <a href="https://longcare.au" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+          <img src="/logo.svg" alt="Longcare" style={{ height: 26 }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          <span style={{ fontWeight: 700, fontSize: '1rem', color: '#fff' }}>Longcare</span>
+        </a>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <a href="/" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.85rem' }}>Dashboard</a>
           <a href="https://book.longcare.au" style={{ color: '#8b92a5', textDecoration: 'none', fontSize: '0.85rem' }}>Book Session</a>

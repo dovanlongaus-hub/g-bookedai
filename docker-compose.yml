@@ -56,9 +56,13 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
+    volumes:
+      - ./credentials:/app/credentials:ro
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://bookedai:localpass@postgres:5432/longcare
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/google-service-account.json
+      - CEO_EMAIL=${CEO_EMAIL:-ceo@longcare.au}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
       - GEMINI_API_KEY=${GEMINI_API_KEY}

@@ -346,6 +346,9 @@ importers:
       firebase-admin:
         specifier: ^13.0.0
         version: 13.8.0
+      googleapis:
+        specifier: ^144.0.0
+        version: 144.0.0
       helmet:
         specifier: ^8.1.0
         version: 8.1.0

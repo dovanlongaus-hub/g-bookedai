@@ -107,39 +107,48 @@ export default function EmailPreviewPage() {
   async function generatePreview(type: string) {
     setLoading(true);
     try {
-      // Try to fetch from API first
-      const res = await fetch(`/api/notifications/email-preview/${type}`, {
-        credentials: 'include',
-      });
+      const res = await fetch(`https://api.g.bookedai.au/health/email-preview/${type}`);
       if (res.ok) {
         const html = await res.text();
         setRenderedHtml(html);
       } else {
-        // Fallback: render client-side using the template function imported dynamically
-        setRenderedHtml(generateClientSidePreview(type));
+        setRenderedHtml(renderClientPreview(type));
       }
     } catch {
-      setRenderedHtml(generateClientSidePreview(type));
+      setRenderedHtml(renderClientPreview(type));
     }
     setLoading(false);
   }
 
-  function generateClientSidePreview(type: string): string {
-    // Return a placeholder if API is not available
-    return `<!DOCTYPE html><html><body style="font-family: sans-serif; padding: 40px; text-align: center; color: #627d98;">
-      <p>API not available. Start the API server to preview templates.</p>
-      <p>Template type: <strong>${type}</strong></p>
-    </body></html>`;
+  function renderClientPreview(type: string): string {
+    // Client-side template rendering with sample data
+    const data = SAMPLE_DATA[type] || {};
+    const d = data;
+    const NAVY = '#0f2942', TEAL = '#0d9488', GRAY = '#f8fafb';
+    const header = `<div style="background:${NAVY};padding:28px 32px;text-align:center"><img src="https://g.bookedai.au/logo-light.png" height="40" alt="bookedai.au"/></div>`;
+    const footer = `<div style="background:${GRAY};padding:24px 32px;text-align:center;font-size:12px;color:#627d98"><p style="margin:0 0 4px;font-weight:500">bookedai.au — The AI Revenue Engine</p><p style="margin:0">Melbourne, Australia | <a href="mailto:ceo@longcare.au" style="color:${TEAL}">ceo@longcare.au</a></p></div>`;
+
+    const bodies: Record<string, string> = {
+      welcome: `<h1 style="color:${NAVY};font-size:26px;margin:0 0 16px">Welcome to bookedai.au!</h1><p style="color:#334e68;line-height:1.7">Hi ${d.userName},</p><p style="color:#334e68;line-height:1.7">You're all set! Book your first AI mentoring session and start your growth journey.</p><a href="https://booking.g.bookedai.au" style="display:inline-block;padding:14px 36px;background:${TEAL};color:#fff;text-decoration:none;border-radius:10px;font-weight:600;margin:24px 0">Book Your First Session</a>`,
+      booking_confirmed: `<span style="display:inline-block;padding:4px 12px;font-size:12px;font-weight:600;color:#fff;background:#10b981;border-radius:20px">CONFIRMED</span><h1 style="color:${NAVY};font-size:26px;margin:12px 0 8px">Session Confirmed</h1><p style="color:#334e68;line-height:1.7">Hi ${d.userName},</p><p style="color:#334e68;line-height:1.7">Your <strong>${d.serviceName}</strong> session has been confirmed.</p><div style="background:${GRAY};border-left:4px solid ${TEAL};border-radius:12px;padding:20px 24px;margin:20px 0"><table style="width:100%"><tr><td style="padding:8px 0;font-size:13px;color:#627d98;width:130px">Date & Time</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.dateTime}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Duration</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.duration}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Reference</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.bookingRef}</td></tr></table></div><a href="https://meet.longcare.au/${d.bookingRef}" style="display:inline-block;padding:14px 36px;background:#4285F4;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;margin:24px 0">Join Google Meet</a>`,
+      reminder_24h: `<span style="display:inline-block;padding:4px 12px;font-size:12px;font-weight:600;color:#fff;background:#f59e0b;border-radius:20px">REMINDER</span><h1 style="color:${NAVY};font-size:26px;margin:12px 0 8px">Your Session is Tomorrow</h1><p style="color:#334e68;line-height:1.7">Hi ${d.userName},</p><p style="color:#334e68;line-height:1.7">Your <strong>${d.serviceName}</strong> session is scheduled for tomorrow.</p><div style="background:${GRAY};border-left:4px solid #f59e0b;border-radius:12px;padding:20px 24px;margin:20px 0"><table style="width:100%"><tr><td style="padding:8px 0;font-size:13px;color:#627d98;width:130px">Date & Time</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.dateTime}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Duration</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.duration}</td></tr></table></div><a href="https://meet.longcare.au/${d.bookingRef}" style="display:inline-block;padding:14px 36px;background:#4285F4;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;margin:24px 0">Join Google Meet</a>`,
+      booking_cancelled: `<span style="display:inline-block;padding:4px 12px;font-size:12px;font-weight:600;color:#fff;background:#ef4444;border-radius:20px">CANCELLED</span><h1 style="color:${NAVY};font-size:26px;margin:12px 0 8px">Booking Cancelled</h1><p style="color:#334e68;line-height:1.7">Hi ${d.userName},</p><p style="color:#334e68;line-height:1.7">Your <strong>${d.serviceName}</strong> booking has been cancelled.</p><div style="background:#fef2f2;border-left:4px solid #ef4444;border-radius:12px;padding:20px 24px;margin:20px 0"><table style="width:100%"><tr><td style="padding:8px 0;font-size:13px;color:#627d98;width:130px">Date</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.dateTime}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Reason</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.reason}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Refund</td><td style="font-size:14px;color:#10b981;font-weight:600">$${d.refundAmount} AUD</td></tr></table></div><a href="https://booking.g.bookedai.au" style="display:inline-block;padding:14px 36px;background:${TEAL};color:#fff;text-decoration:none;border-radius:10px;font-weight:600;margin:24px 0">Book a New Session</a>`,
+      booking_rescheduled: `<span style="display:inline-block;padding:4px 12px;font-size:12px;font-weight:600;color:#fff;background:#f59e0b;border-radius:20px">RESCHEDULED</span><h1 style="color:${NAVY};font-size:26px;margin:12px 0 8px">Session Rescheduled</h1><p style="color:#334e68;line-height:1.7">Hi ${d.userName},</p><p style="color:#334e68;line-height:1.7">Your <strong>${d.serviceName}</strong> session has been moved.</p><div style="background:${GRAY};border-left:4px solid ${TEAL};border-radius:12px;padding:20px 24px;margin:20px 0"><table style="width:100%"><tr><td style="padding:8px 0;font-size:13px;color:#627d98;width:130px">New Time</td><td style="font-size:14px;color:${TEAL};font-weight:600">${d.newDateTime}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Previous</td><td style="font-size:14px;color:#94a3b8;text-decoration:line-through">${d.oldDateTime}</td></tr></table></div><a href="${d.meetLink}" style="display:inline-block;padding:14px 36px;background:#4285F4;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;margin:24px 0">Join Google Meet</a>`,
+      payment_received: `<span style="display:inline-block;padding:4px 12px;font-size:12px;font-weight:600;color:#fff;background:#10b981;border-radius:20px">PAID</span><h1 style="color:${NAVY};font-size:26px;margin:12px 0 8px">Payment Received</h1><p style="color:#334e68;line-height:1.7">Hi ${d.userName},</p><p style="color:#334e68;line-height:1.7">We've received your payment for <strong>${d.serviceName}</strong>.</p><div style="background:${GRAY};border-left:4px solid #10b981;border-radius:12px;padding:20px 24px;margin:20px 0"><table style="width:100%"><tr><td style="padding:8px 0;font-size:13px;color:#627d98;width:130px">Amount</td><td style="font-size:20px;color:${NAVY};font-weight:700">$${d.amount} AUD</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Method</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.paymentMethod}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#627d98">Reference</td><td style="font-size:14px;color:#334e68;font-weight:500">${d.reference}</td></tr></table></div>`,
+      session_summary_ready: `<span style="display:inline-block;padding:4px 12px;font-size:12px;font-weight:600;color:#fff;background:${TEAL};border-radius:20px">SUMMARY READY</span><h1 style="color:${NAVY};font-size:26px;margin:12px 0 8px">Your Session Summary</h1><p style="color:#334e68;line-height:1.7">Hi ${d.userName},</p><p style="color:#334e68;line-height:1.7">Your AI-generated summary for <strong>${d.serviceName}</strong> is ready.</p><div style="background:${GRAY};border-left:4px solid ${TEAL};border-radius:12px;padding:20px 24px;margin:20px 0;font-size:14px;color:#334e68;line-height:1.7;font-style:italic">"${d.summaryPreview}"</div><a href="https://app.g.bookedai.au/learning/${d.sessionId}" style="display:inline-block;padding:14px 36px;background:${TEAL};color:#fff;text-decoration:none;border-radius:10px;font-weight:600;margin:24px 0">View Full Summary</a><a href="https://booking.g.bookedai.au" style="display:inline-block;padding:14px 36px;background:${NAVY};color:#fff;text-decoration:none;border-radius:10px;font-weight:600;margin:8px 0 24px 12px">Book Next Session</a>`,
+    };
+
+    const body = bodies[type] || `<p>Template: ${type}</p>`;
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"/><style>*{box-sizing:border-box}body{margin:0;padding:0;background:#f1f5f9;font-family:'Outfit',Arial,sans-serif}</style></head><body><div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(15,41,66,0.06)">${header}<div style="padding:40px 32px">${body}</div>${footer}</div></body></html>`;
   }
 
   async function handleSendTest() {
     if (!sendTo) return;
     setSendStatus('sending');
     try {
-      const res = await fetch('/api/notifications/test-email', {
+      const res = await fetch(`https://api.g.bookedai.au/health/test-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ type: activeType, to: sendTo }),
       });
       const data = await res.json();
@@ -147,9 +156,9 @@ export default function EmailPreviewPage() {
         setSendStatus('sent');
         setTimeout(() => setSendStatus(null), 3000);
       } else {
-        setSendStatus(`error: ${data.error?.message || 'Failed'}`);
+        setSendStatus(`error: ${data.error || 'Failed'}`);
       }
-    } catch (err) {
+    } catch {
       setSendStatus('error: Network error');
     }
   }
