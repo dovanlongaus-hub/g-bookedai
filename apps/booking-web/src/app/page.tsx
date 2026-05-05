@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AvailabilityCalendar } from '../components/availability-calendar';
+import { StarterIllustration, MentorIllustration, Package5Illustration, Package10Illustration, TransformIllustration } from '../components/service-illustrations';
 
 type Step = 'select' | 'datetime' | 'contact' | 'payment' | 'success';
 
@@ -46,7 +47,58 @@ export default function BookingPage() {
   // Saved booking from API
   const [savedBooking, setSavedBooking] = useState<{ bookingRef: string; meetLink: string } | null>(null);
 
+  const [expandedService, setExpandedService] = useState<string | null>(null);
+
   const selectedService = services.find((s) => s.id === selectedServiceId) || null;
+
+  const SERVICE_META: Record<string, {
+    illustration: React.FC;
+    badge?: string;
+    badgeColor?: string;
+    tagline: string;
+    includes: string[];
+    details: string;
+    originalPrice?: string;
+  }> = {
+    '30-min AI Starter Session': {
+      illustration: StarterIllustration,
+      tagline: 'Perfect first step into AI',
+      includes: ['30-min live Google Meet session', 'AI tool introduction', 'AI-generated session notes', 'Next steps recommendation'],
+      details: 'Ideal for beginners who want to explore AI tools and understand how AI can boost their productivity. Your mentor will introduce key AI concepts and demonstrate practical applications for your specific needs.',
+      originalPrice: '$49',
+    },
+    '1-hour AI Mentor': {
+      illustration: MentorIllustration,
+      badge: 'MOST POPULAR',
+      badgeColor: '#6366f1',
+      tagline: 'Deep-dive personalised mentoring',
+      includes: ['60-min live Google Meet session', 'Custom AI workflow building', 'Prompt engineering practice', 'AI session summary + Q&A', 'Personalised learning path', 'Google Docs notes'],
+      details: 'Our flagship session. Your mentor works with you 1-on-1 to build custom AI solutions for your specific challenges. You\'ll leave with practical workflows you can use immediately.',
+      originalPrice: '$120',
+    },
+    '5-Session Package': {
+      illustration: Package5Illustration,
+      badge: 'BEST VALUE',
+      badgeColor: '#10b981',
+      tagline: 'Structured learning across 5 sessions',
+      includes: ['5 x 60-min sessions', 'Structured curriculum', 'Progress tracking', 'All AI notes & recordings', 'Priority scheduling', 'Email support between sessions'],
+      details: 'A comprehensive learning path covering AI fundamentals to advanced applications. Each session builds on the previous one, with homework and practice exercises.',
+    },
+    '10-Session Package': {
+      illustration: Package10Illustration,
+      tagline: 'Comprehensive AI mastery program',
+      includes: ['10 x 60-min sessions', 'Complete AI curriculum', 'Certificate of completion', 'Lifetime access to notes', 'VIP scheduling', '24/7 WhatsApp support', 'Monthly check-in after completion'],
+      details: 'Our most thorough program. Covers everything from basics to building and deploying AI solutions. Includes a capstone project and certificate.',
+    },
+    'AI Business Transformation Program': {
+      illustration: TransformIllustration,
+      badge: 'PREMIUM',
+      badgeColor: '#ec4899',
+      tagline: 'Transform your entire business with AI',
+      includes: ['Custom duration (10-20 sessions)', 'Full business AI audit', 'Team training (up to 10 people)', 'Custom AI implementation', 'ROI measurement', 'Dedicated account manager', '90-day post-program support'],
+      details: 'For businesses serious about AI transformation. We audit your operations, implement AI workflows, train your team, and measure the impact. Includes ongoing support.',
+    },
+  };
 
   const trackEvent = (name: string, params?: Record<string, any>) => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -256,23 +308,86 @@ export default function BookingPage() {
           )}
 
           {!loading &&
-            services.map((s) => (
-              <div
-                key={s.id}
-                className={`option-card ${selectedServiceId === s.id ? 'selected' : ''}`}
-                onClick={() => { setSelectedServiceId(s.id); trackEvent('view_service', { service_name: s.name, price: s.price_cents / 100, currency: 'AUD' }); }}
-              >
-                <div>
-                  <div className="option-title">{s.name}</div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                    {s.description}
+            services.map((s) => {
+              const meta = SERVICE_META[s.name];
+              const Illustration = meta?.illustration;
+              return (
+                <div
+                  key={s.id}
+                  className={`service-card ${selectedServiceId === s.id ? 'selected' : ''}`}
+                  style={{
+                    display: 'block',
+                    padding: 0,
+                    cursor: 'default',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: selectedServiceId === s.id ? '2px solid var(--primary)' : '1px solid var(--surface-border)',
+                    borderRadius: 16,
+                    overflow: 'hidden',
+                    position: 'relative',
+                    marginBottom: '1.5rem',
+                  }}
+                >
+                  {meta?.badge && (
+                    <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 1, background: meta.badgeColor, color: '#fff', padding: '4px 12px', borderRadius: 12, fontSize: '0.7rem', fontWeight: 700, letterSpacing: 0.5 }}>
+                      {meta.badge}
+                    </div>
+                  )}
+
+                  {Illustration && <Illustration />}
+
+                  <div style={{ padding: '1.25rem' }}>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 600, marginBottom: 4 }}>{s.name}</h3>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 12 }}>{meta?.tagline || s.description}</p>
+
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 16 }}>
+                      <span style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary)' }}>
+                        {formatPrice(s.price_cents, s.currency)}
+                      </span>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>AUD</span>
+                      {meta?.originalPrice && (
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textDecoration: 'line-through' }}>{meta.originalPrice}</span>
+                      )}
+                    </div>
+
+                    <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px' }}>
+                      {meta?.includes.slice(0, 4).map((item, i) => (
+                        <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>&#10003;</span> {item}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {expandedService === s.id && (
+                      <div style={{ marginBottom: 16, padding: '12px 16px', background: 'rgba(255,255,255,0.02)', borderRadius: 8, fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                        <p style={{ marginBottom: 8 }}>{meta?.details}</p>
+                        {meta?.includes.slice(4).map((item, i) => (
+                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '3px 0' }}>
+                            <span style={{ color: 'var(--accent)' }}>&#10003;</span> {item}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button
+                        className="btn-primary"
+                        style={{ flex: 1, margin: 0, padding: '0.75rem' }}
+                        onClick={() => { setSelectedServiceId(s.id); trackEvent('view_service', { service_name: s.name, price: s.price_cents / 100, currency: 'AUD' }); }}
+                      >
+                        {selectedServiceId === s.id ? '\u2713 Selected' : 'Select'}
+                      </button>
+                      <button
+                        className="btn-secondary"
+                        style={{ margin: 0, padding: '0.75rem', width: 'auto', fontSize: '0.8rem' }}
+                        onClick={() => setExpandedService(expandedService === s.id ? null : s.id)}
+                      >
+                        {expandedService === s.id ? 'Less' : 'Details'}
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="option-price">
-                  {formatPrice(s.price_cents, s.currency)}
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
           {!loading && services.length > 0 && (
             <button
