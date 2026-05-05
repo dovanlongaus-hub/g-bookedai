@@ -24,6 +24,8 @@ import { exportRouter } from './routes/export.js';
 import { referralRouter } from './routes/referral.js';
 import { guestBookingRouter } from './routes/guest-booking.js';
 import { dashboardRouter } from './routes/dashboard.js';
+import { notificationsRouter } from './routes/notifications.js';
+import { coursesRouter } from './routes/courses.js';
 import { closePool } from '@bookedai/db';
 
 const env = getEnv();
@@ -84,6 +86,8 @@ app.use('/export', exportRouter);
 app.use('/referral', referralRouter);
 app.use('/guest-booking', guestBookingRouter);
 app.use('/dashboard', dashboardRouter);
+app.use('/notifications', notificationsRouter);
+app.use('/courses', coursesRouter);
 
 // Error handling
 app.use(notFoundHandler);

@@ -105,6 +105,9 @@ services:
       context: .
       dockerfile: services/drive-sync/Dockerfile
     ports: ['8083:8080']
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     volumes:
       - ./credentials:/app/credentials:ro
       - ./docs:/app/docs:ro
@@ -114,7 +117,6 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/google-service-account.json
       - CEO_EMAIL=${CEO_EMAIL:-ceo@longcare.au}
       - DOCS_ROOT=/app/docs
-      - USE_IMPERSONATION=false
     depends_on:
       postgres:
         condition: service_healthy

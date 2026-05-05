@@ -15,6 +15,7 @@
   "dependencies": {
     "@bookedai/db": "workspace:*",
     "@bookedai/google": "workspace:*",
+    "@bookedai/learning-agent": "workspace:*",
     "@bookedai/shared": "workspace:*",
     "@google-cloud/pubsub": "^4.9.0",
     "cors": "^2.8.5",

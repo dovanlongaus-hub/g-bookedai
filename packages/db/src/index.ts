@@ -28,3 +28,5 @@ export async function closePool() {
     pool = null;
   }
 }
+
+export { setTenantContext, withTenant } from './tenant-context.js';

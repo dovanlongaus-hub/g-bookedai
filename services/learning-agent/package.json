@@ -4,6 +4,12 @@
   "private": true,
   "description": "Internal learning agent — Notes, Q&A, CTA generation",
   "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./curriculum": "./src/curriculum.ts",
+    "./quiz": "./src/quiz.ts",
+    "./certificate": "./src/certificate.ts"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

@@ -325,6 +325,9 @@ importers:
       '@bookedai/google':
         specifier: workspace:*
         version: link:../../packages/google
+      '@bookedai/learning-agent':
+        specifier: workspace:*
+        version: link:../learning-agent
       '@bookedai/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -501,9 +504,15 @@ importers:
 
   services/notification:
     dependencies:
+      '@bookedai/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@bookedai/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      firebase-admin:
+        specifier: ^13.0.0
+        version: 13.8.0
       nodemailer:
         specifier: ^6.10.0
         version: 6.10.1

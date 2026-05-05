@@ -202,3 +202,26 @@ authRouter.get('/providers', (_req, res) => {
     },
   });
 });
+
+// Proxy agent auth endpoints (agent runs on internal port 8081)
+const AGENT_URL = process.env.AGENT_URL || 'http://agent:8080';
+
+authRouter.get('/agent/status', async (_req, res) => {
+  try {
+    const r = await fetch(`${AGENT_URL}/auth/status`);
+    const data = await r.json();
+    res.json(data);
+  } catch { res.json({ authenticated: false, source: 'none', error: 'Agent unreachable' }); }
+});
+
+authRouter.post('/agent/store-token', async (req, res) => {
+  try {
+    const r = await fetch(`${AGENT_URL}/auth/openai/store-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body),
+    });
+    const data = await r.json();
+    res.json(data);
+  } catch (err: any) { res.status(500).json({ success: false, error: err.message }); }
+});

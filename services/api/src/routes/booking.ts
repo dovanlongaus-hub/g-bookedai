@@ -24,8 +24,9 @@ bookingRouter.post('/hold', authenticate, validate(holdBookingSchema), async (re
 
     // Check slot availability
     const slotResult = await query(
-      'SELECT * FROM availability_slots WHERE id = $1 AND service_id = $2 AND status = $3',
-      [slotId, serviceId, 'AVAILABLE'],
+      `SELECT * FROM availability_slots WHERE id = $1 AND service_id = $2 AND status = $3
+       AND service_id IN (SELECT id FROM services WHERE tenant_id = $4)`,
+      [slotId, serviceId, 'AVAILABLE', tenantId],
     );
 
     if (slotResult.rows.length === 0) {
@@ -33,7 +34,7 @@ bookingRouter.post('/hold', authenticate, validate(holdBookingSchema), async (re
     }
 
     // Get service price
-    const serviceResult = await query('SELECT * FROM services WHERE id = $1', [serviceId]);
+    const serviceResult = await query('SELECT * FROM services WHERE id = $1 AND tenant_id = $2', [serviceId, tenantId]);
     if (serviceResult.rows.length === 0) {
       throw new AppError(404, 'SERVICE_NOT_FOUND', 'Service not found');
     }
@@ -86,10 +87,12 @@ bookingRouter.post('/confirm', authenticate, validate(confirmBookingSchema), asy
     const { bookingId, paymentIntentId, bankReference } = req.body;
     const userId = req.auth!.userId;
 
-    // Verify booking belongs to user and is in PENDING_PAYMENT status
+    const tenantId = req.auth!.tenantId;
+
+    // Verify booking belongs to user and tenant, and is in PENDING_PAYMENT status
     const bookingResult = await query(
-      'SELECT * FROM bookings WHERE id = $1 AND user_id = $2 AND status IN ($3, $4)',
-      [bookingId, userId, 'PENDING_PAYMENT', 'HOLD'],
+      'SELECT * FROM bookings WHERE id = $1 AND user_id = $2 AND tenant_id = $3 AND status IN ($4, $5)',
+      [bookingId, userId, tenantId, 'PENDING_PAYMENT', 'HOLD'],
     );
 
     if (bookingResult.rows.length === 0) {
@@ -184,9 +187,11 @@ bookingRouter.post('/cancel', authenticate, validate(cancelBookingSchema), async
     const { bookingId, reason } = req.body;
     const userId = req.auth!.userId;
 
+    const tenantId = req.auth!.tenantId;
+
     const bookingResult = await query(
-      'SELECT * FROM bookings WHERE id = $1 AND user_id = $2 AND status NOT IN ($3, $4)',
-      [bookingId, userId, 'CANCELLED', 'REFUNDED'],
+      'SELECT * FROM bookings WHERE id = $1 AND user_id = $2 AND tenant_id = $3 AND status NOT IN ($4, $5)',
+      [bookingId, userId, tenantId, 'CANCELLED', 'REFUNDED'],
     );
 
     if (bookingResult.rows.length === 0) {
@@ -227,9 +232,11 @@ bookingRouter.post('/reschedule', authenticate, validate(rescheduleBookingSchema
     const { bookingId, newSlotId } = req.body;
     const userId = req.auth!.userId;
 
+    const tenantId = req.auth!.tenantId;
+
     const bookingResult = await query(
-      'SELECT * FROM bookings WHERE id = $1 AND user_id = $2 AND status = $3',
-      [bookingId, userId, 'CONFIRMED'],
+      'SELECT * FROM bookings WHERE id = $1 AND user_id = $2 AND tenant_id = $3 AND status = $4',
+      [bookingId, userId, tenantId, 'CONFIRMED'],
     );
 
     if (bookingResult.rows.length === 0) {
@@ -238,10 +245,11 @@ bookingRouter.post('/reschedule', authenticate, validate(rescheduleBookingSchema
 
     const booking = bookingResult.rows[0];
 
-    // Check new slot is available
+    // Check new slot is available and belongs to tenant
     const slotResult = await query(
-      'SELECT * FROM availability_slots WHERE id = $1 AND status = $2',
-      [newSlotId, 'AVAILABLE'],
+      `SELECT * FROM availability_slots WHERE id = $1 AND status = $2
+       AND service_id IN (SELECT id FROM services WHERE tenant_id = $3)`,
+      [newSlotId, 'AVAILABLE', tenantId],
     );
 
     if (slotResult.rows.length === 0) {

@@ -8,11 +8,13 @@ COPY packages/shared/package.json packages/shared/tsconfig.json ./packages/share
 COPY packages/db/package.json packages/db/tsconfig.json ./packages/db/
 COPY packages/google/package.json packages/google/tsconfig.json ./packages/google/
 COPY services/api/package.json services/api/tsconfig.json ./services/api/
+COPY services/learning-agent/package.json ./services/learning-agent/
 RUN pnpm install --no-frozen-lockfile --filter @bookedai/api...
 RUN pnpm add -w tsx
 
 COPY packages/ ./packages/
 COPY services/api/ ./services/api/
+COPY services/learning-agent/ ./services/learning-agent/
 
 FROM build AS runtime
 WORKDIR /app/services/api

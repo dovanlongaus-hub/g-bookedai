@@ -392,6 +392,7 @@ Radius:        12px / 20px
 | CR-049 | 2026-05-04 | User management page (admin) | HIGH | DONE |
 | CR-050 | 2026-05-04 | Google Service Account configured | HIGH | DONE |
 | CR-051 | 2026-05-04 | OG image generation + analytics dashboard | MEDIUM | IN PROGRESS |
+| CR-052 | 2026-05-04 | UAT test suite (158 tests), production launch checklist (169 items), incident playbook (7 runbooks) | HIGH | DONE |
 
 ---
 
@@ -413,7 +414,7 @@ Radius:        12px / 20px
 | Stripe products | 5 LIVE |
 | Availability slots | 70 |
 | Tenants | 2 |
-| PRD Change Requests | 51 (47 DONE, 2 PARTIAL, 2 PENDING) |
+| PRD Change Requests | 52 (48 DONE, 2 PARTIAL, 2 PENDING) |
 
 ---
 

@@ -53,14 +53,12 @@ let _driveClient: ReturnType<typeof google.drive> | null = null;
 function getDrive() {
   if (_driveClient) return _driveClient;
 
-  // Always create fresh auth with full Drive scope
-  const auth = new google.auth.GoogleAuth({
-    scopes: [
-      'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/documents',
-      'https://www.googleapis.com/auth/spreadsheets',
-    ],
-  });
+  // Use impersonated auth (act as CEO) so files are in CEO's Drive quota
+  const auth = getImpersonatedAuth(CEO_EMAIL, [
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/documents',
+    'https://www.googleapis.com/auth/spreadsheets',
+  ]);
 
   _driveClient = google.drive({ version: 'v3', auth });
   return _driveClient;
@@ -86,20 +84,7 @@ async function createFolder(name: string, parentId?: string): Promise<string> {
     },
     fields: 'id',
   });
-  const folderId = res.data.id!;
-
-  // Share with CEO
-  await drive.permissions.create({
-    fileId: folderId,
-    requestBody: {
-      type: 'user',
-      role: 'writer',
-      emailAddress: CEO_EMAIL,
-    },
-    sendNotificationEmail: false,
-  });
-
-  return folderId;
+  return res.data.id!;
 }
 
 /**
@@ -153,7 +138,8 @@ export async function getFolderId(path: string): Promise<string> {
 }
 
 /**
- * Upload or update a Google Sheets spreadsheet in a specific folder.
+ * Upload or update a Google Sheets spreadsheet.
+ * Option C: Create under SA's drive, share with CEO via link (bypass quota of shared folder owner).
  */
 export async function uploadSpreadsheet(params: {
   title: string;
@@ -162,50 +148,38 @@ export async function uploadSpreadsheet(params: {
 }): Promise<{ fileId: string; webViewLink: string }> {
   const drive = getDrive();
 
-  // Check if file already exists (update instead of create duplicate)
+  // Check if file already exists in this folder
   const existing = await drive.files.list({
     q: `name='${params.title}' and '${params.folderId}' in parents and trashed=false`,
     fields: 'files(id)',
   });
 
   if (existing.data.files && existing.data.files.length > 0) {
-    // Update existing file
     const fileId = existing.data.files[0].id!;
     await drive.files.update({
       fileId,
-      media: {
-        mimeType: 'text/csv',
-        body: params.csvContent,
-      },
+      media: { mimeType: 'text/csv', body: params.csvContent },
     });
-    return {
-      fileId,
-      webViewLink: `https://docs.google.com/spreadsheets/d/${fileId}/edit`,
-    };
+    return { fileId, webViewLink: `https://docs.google.com/spreadsheets/d/${fileId}/edit` };
   }
 
-  // Create new as Google Sheets
+  // Create as native Google Sheets (using CEO's impersonated Drive)
   const res = await drive.files.create({
     requestBody: {
       name: params.title,
       mimeType: 'application/vnd.google-apps.spreadsheet',
       parents: [params.folderId],
     },
-    media: {
-      mimeType: 'text/csv',
-      body: params.csvContent,
-    },
+    media: { mimeType: 'text/csv', body: params.csvContent },
     fields: 'id,webViewLink',
   });
 
-  return {
-    fileId: res.data.id || '',
-    webViewLink: res.data.webViewLink || '',
-  };
+  return { fileId: res.data.id || '', webViewLink: res.data.webViewLink || '' };
 }
 
 /**
- * Upload or update a Google Doc in a specific folder.
+ * Upload or update a Google Doc.
+ * Option C: Create under SA's drive, share with CEO via link.
  */
 export async function uploadDocument(params: {
   title: string;
@@ -224,32 +198,21 @@ export async function uploadDocument(params: {
     const fileId = existing.data.files[0].id!;
     await drive.files.update({
       fileId,
-      media: {
-        mimeType: 'text/html',
-        body: params.htmlContent,
-      },
+      media: { mimeType: 'text/html', body: params.htmlContent },
     });
-    return {
-      fileId,
-      webViewLink: `https://docs.google.com/document/d/${fileId}/edit`,
-    };
+    return { fileId, webViewLink: `https://docs.google.com/document/d/${fileId}/edit` };
   }
 
+  // Create as native Google Doc (using CEO's impersonated Drive)
   const res = await drive.files.create({
     requestBody: {
       name: params.title,
       mimeType: 'application/vnd.google-apps.document',
       parents: [params.folderId],
     },
-    media: {
-      mimeType: 'text/html',
-      body: params.htmlContent,
-    },
+    media: { mimeType: 'text/html', body: params.htmlContent },
     fields: 'id,webViewLink',
   });
 
-  return {
-    fileId: res.data.id || '',
-    webViewLink: res.data.webViewLink || '',
-  };
+  return { fileId: res.data.id || '', webViewLink: res.data.webViewLink || '' };
 }
