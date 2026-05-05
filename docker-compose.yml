@@ -53,6 +53,9 @@ services:
       context: .
       dockerfile: services/api/Dockerfile
     ports: ['8180:8080']
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://bookedai:localpass@postgres:5432/longcare
@@ -93,7 +96,15 @@ services:
       context: .
       dockerfile: services/notification/Dockerfile
     ports: ['8082:8080']
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    volumes:
+      - ./credentials:/app/credentials:ro
     environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/google-service-account.json
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT:-auschain-489904}
+      - CEO_EMAIL=${CEO_EMAIL:-ceo@longcare.au}
       - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USER=${SMTP_USER}

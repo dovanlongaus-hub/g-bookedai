@@ -18,15 +18,18 @@ export async function triggerEmail(
   try {
     // Try direct import of notification service (same monorepo)
     try {
-      const { sendNotification } = await import('../../../../notification/src/index.js');
-      await sendNotification({
-        type: type as any,
-        channels: ['email'],
-        recipientEmail: to,
-        data,
-      });
-      logger.info({ type, to }, 'Email sent via direct import');
-      return true;
+      // Dynamic import avoids compile-time path resolution issues
+      const notifModule = await import(/* webpackIgnore: true */ '../../../../notification/src/index.js' as string);
+      if (notifModule?.sendNotification) {
+        await notifModule.sendNotification({
+          type,
+          channels: ['email'],
+          recipientEmail: to,
+          data,
+        });
+        logger.info({ type, to }, 'Email sent via direct import');
+        return true;
+      }
     } catch {
       // Direct import failed, fall back to HTTP
     }

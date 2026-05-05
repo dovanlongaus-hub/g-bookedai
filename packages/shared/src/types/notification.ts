@@ -11,7 +11,8 @@ export type NotificationType =
   | 'session_starting'
   | 'session_summary_ready'
   | 'no_show_followup'
-  | 'marketing_campaign';
+  | 'marketing_campaign'
+  | 'welcome';
 
 export interface NotificationPayload {
   type: NotificationType;

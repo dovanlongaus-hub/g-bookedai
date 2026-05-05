@@ -59,8 +59,8 @@ const SERVICE_META: Record<string, {
     badgeColor: '#10b981',
     icon: '\uD83D\uDCDA',
     tagline: '5-week structured learning journey',
-    duration: '5 \u00D7 60 minutes (weekly)',
-    includes: ['5 \u00D7 60-min sessions (weekly)', 'Structured AI curriculum', 'Progress tracking dashboard', 'All AI notes & session recordings', 'Priority scheduling', 'Email support between sessions', 'Homework & practice exercises'],
+    duration: '5 × 60 minutes (weekly)',
+    includes: ['5 × 60-min sessions (weekly)', 'Structured AI curriculum', 'Progress tracking dashboard', 'All AI notes & session recordings', 'Priority scheduling', 'Email support between sessions', 'Homework & practice exercises'],
     curriculum: ['Week 1: AI Foundations & Your First Workflows', 'Week 2: Prompt Engineering Mastery', 'Week 3: AI for Content & Communication', 'Week 4: Data Analysis & Decision Making with AI', 'Week 5: Building Your AI Toolkit + Final Project'],
     nextCourse: { name: '10-Session Package', reason: 'Continue to advanced topics and earn your certificate' },
     details: 'A comprehensive 5-week program that takes you from AI basics to building practical workflows. Each session builds on the previous, with exercises between sessions to reinforce learning.',
@@ -69,8 +69,8 @@ const SERVICE_META: Record<string, {
     illustration: Package10Illustration,
     icon: '\uD83C\uDFC6',
     tagline: 'Complete AI mastery with certificate',
-    duration: '10 \u00D7 60 minutes',
-    includes: ['10 \u00D7 60-min sessions', 'Complete AI curriculum (beginner \u2192 advanced)', 'Certificate of Completion', 'Lifetime access to all notes & recordings', 'VIP priority scheduling', '24/7 WhatsApp mentor support', 'Monthly check-in for 3 months after completion', 'Capstone project with feedback'],
+    duration: '10 × 60 minutes',
+    includes: ['10 × 60-min sessions', 'Complete AI curriculum (beginner → advanced)', 'Certificate of Completion', 'Lifetime access to all notes & recordings', 'VIP priority scheduling', '24/7 WhatsApp mentor support', 'Monthly check-in for 3 months after completion', 'Capstone project with feedback'],
     curriculum: ['Sessions 1-2: AI Foundations & Tools', 'Sessions 3-4: Prompt Engineering & Automation', 'Sessions 5-6: AI for Business Operations', 'Sessions 7-8: Advanced AI Applications', 'Session 9: Capstone Project Development', 'Session 10: Project Review & Certificate'],
     nextCourse: { name: 'AI Business Transformation', reason: 'Scale AI across your entire team and organisation' },
     details: 'The ultimate AI learning experience. Covers everything from basics to deploying AI solutions in your business. Includes a capstone project where you build a complete AI workflow. Graduates receive a Certificate of Completion.',
@@ -213,7 +213,7 @@ export default function BookingPage() {
     return (
       <main className="container" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
         <div className="glass-panel" style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center', padding: '3rem 2rem' }}>
-          <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2.5rem' }}>\u2713</div>
+          <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2.5rem' }}>✓</div>
           <h1 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Booking Confirmed!</h1>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Your session has been booked. Details below.</p>
 
@@ -340,14 +340,14 @@ export default function BookingPage() {
                     <div style={{ marginBottom: 8 }}>
                       {meta?.includes.slice(0, 3).map((item, i) => (
                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '2px 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                          <span style={{ color: 'var(--accent)', fontSize: '0.7rem' }}>\u2713</span> {item}
+                          <span style={{ color: 'var(--accent)', fontSize: '0.7rem' }}>✓</span> {item}
                         </div>
                       ))}
                     </div>
 
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button className="btn-primary" style={{ flex: 1, margin: 0, padding: '0.6rem', fontSize: '0.85rem' }} onClick={(e) => { e.stopPropagation(); selectService(s.id); }}>
-                        {isSelected ? '\u2713 Selected' : 'Select'}
+                        {isSelected ? '✓ Selected' : 'Select'}
                       </button>
                       <button className="btn-secondary" style={{ margin: 0, padding: '0.6rem', width: 'auto', fontSize: '0.78rem' }} onClick={(e) => { e.stopPropagation(); setExpandedService(isExpanded ? null : s.id); }}>
                         {isExpanded ? '\u25B2' : '\u25BC'} Details
@@ -380,7 +380,7 @@ export default function BookingPage() {
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 16px' }}>
                             {meta?.includes.map((item, i) => (
                               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '3px 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                                <span style={{ color: '#22c55e', fontSize: '0.7rem' }}>\u2713</span> {item}
+                                <span style={{ color: '#22c55e', fontSize: '0.7rem' }}>✓</span> {item}
                               </div>
                             ))}
                           </div>
