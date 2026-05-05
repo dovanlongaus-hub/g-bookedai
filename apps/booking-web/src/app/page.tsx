@@ -105,6 +105,7 @@ export default function BookingPage() {
   const [stripeError, setStripeError] = useState<string | null>(null);
   const [showBankTransfer, setShowBankTransfer] = useState(false);
   const [bookingRef] = useState(`BOOK-${Date.now().toString(36).toUpperCase().slice(-6)}`);
+  const [selectedSlots, setSelectedSlots] = useState<{date:string;time:string}[]>([]);
 
   const timeRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
@@ -114,6 +115,10 @@ export default function BookingPage() {
   const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
   const contactValid = contactName.trim().length > 0 && isValidEmail(contactEmail);
   const meetLink = savedBooking?.meetLink || `https://meet.longcare.au/${savedBooking?.bookingRef || bookingRef}`;
+
+  const isPackage = selectedService?.name.includes('Package') || selectedService?.name.includes('Transformation');
+  const sessionCount = selectedService?.name.includes('10') ? 10 : selectedService?.name.includes('5') ? 5 : selectedService?.name.includes('Transformation') ? 10 : 1;
+  const calendarMode = isPackage ? 'multi' as const : 'single' as const;
 
   const trackEvent = (name: string, params?: Record<string, any>) => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -129,6 +134,8 @@ export default function BookingPage() {
   // Auto-scroll when selecting service
   const selectService = (id: string) => {
     setSelectedServiceId(id);
+    setSelectedSlots([]);
+    setSelectedTime(null);
     const svc = services.find(s => s.id === id);
     if (svc) trackEvent('view_service', { service_name: svc.name, price: svc.price_cents / 100, currency: 'AUD' });
     setTimeout(() => timeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
@@ -156,7 +163,8 @@ export default function BookingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           serviceId: selectedService.id,
-          slotTime: selectedTime,
+          slotTime: isPackage ? selectedSlots.map(s => `${s.date} ${s.time}`).join(' | ') : selectedTime,
+          sessionCount: isPackage ? sessionCount : 1,
           name: contactName,
           email: contactEmail,
           phone: contactPhone,
@@ -413,10 +421,32 @@ export default function BookingPage() {
           </h2>
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
             <AvailabilityCalendar
+              mode={calendarMode}
+              sessionCount={sessionCount}
               onSelectSlot={(date, time) => selectTime(date, time)}
-              selectedSlot={selectedTime ? { date: selectedTime.split(' at ')[0], time: selectedTime.split(' at ')[1] } : undefined}
+              onSelectMultiSlots={(slots) => {
+                setSelectedSlots(slots);
+                if (slots.length > 0) {
+                  setSelectedTime(slots.map(s => `${s.date} ${s.time}`).join(', '));
+                  if (slots.length >= sessionCount) {
+                    setTimeout(() => contactRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+                  }
+                }
+              }}
+              selectedSlot={selectedTime && !isPackage ? { date: selectedTime.split(' at ')[0], time: selectedTime.split(' at ')[1] } : undefined}
+              selectedSlots={selectedSlots}
             />
-            {selectedTime && <p style={{ marginTop: 12, color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>Selected: {selectedTime}</p>}
+            {selectedTime && !isPackage && <p style={{ marginTop: 8, color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>Selected: {selectedTime}</p>}
+            {isPackage && selectedSlots.length > 0 && selectedSlots.length < sessionCount && (
+              <p style={{ marginTop: 8, color: '#f59e0b', fontSize: '0.85rem' }}>
+                {selectedSlots.length}/{sessionCount} sessions selected. Pick {sessionCount - selectedSlots.length} more.
+              </p>
+            )}
+            {isPackage && selectedSlots.length >= sessionCount && (
+              <p style={{ marginTop: 8, color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>
+                All {sessionCount} sessions scheduled ✓
+              </p>
+            )}
           </div>
         </section>
       )}
