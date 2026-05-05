@@ -32,7 +32,7 @@ export default function RootLayout({
           borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}>
           <a href="https://longcare.au" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
-            <img src="/logo.svg" alt="Longcare" style={{ height: 32 }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+            <img src="/logo.svg" alt="Longcare" style={{ height: 32 }} />
             <span style={{ color: '#fff', fontWeight: 700, fontSize: '1.1rem' }}>Longcare</span>
           </a>
           <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
