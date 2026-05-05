@@ -261,6 +261,24 @@ export default function BookingPage() {
             </div>
           )}
 
+          {/* Booking QR Code */}
+          <div style={{ marginBottom: '1rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: 8 }}>Your booking code — scan to manage</p>
+            <div style={{ background: '#fff', display: 'inline-block', padding: 12, borderRadius: 12 }}>
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`https://book.longcare.au/manage/${savedBooking?.bookingRef || bookingRef}`)}`}
+                alt="Booking QR Code"
+                width={160}
+                height={160}
+                style={{ display: 'block' }}
+              />
+            </div>
+            <p style={{ color: 'var(--accent)', fontFamily: 'monospace', fontWeight: 600, fontSize: '1.1rem', marginTop: 8 }}>{savedBooking?.bookingRef || bookingRef}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: 4 }}>
+              <a href={`/manage/${savedBooking?.bookingRef || bookingRef}`} style={{ color: 'var(--accent)', textDecoration: 'none' }}>Change date, cancel, or view details →</a>
+            </p>
+          </div>
+
           {/* Payment reminder */}
           <div style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 8, padding: '0.75rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: '#fcd34d' }}>Please complete payment before your session.</div>
 

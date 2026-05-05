@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { validate } from '../middleware/validate.js';
 import { query } from '@bookedai/db';
 import { logger } from '../lib/logger.js';
+import { triggerEmail } from '../lib/send-email.js';
 import { randomUUID } from 'crypto';
 
 const guestBookingSchema = z.object({
@@ -76,11 +77,16 @@ guestBookingRouter.post('/', validate(guestBookingSchema), async (req, res, next
 
     logger.info({ bookingId, bookingRef, email, service: service.name, paymentMethod }, 'Guest booking created');
 
-    // Send confirmation email (non-blocking)
+    // Send booking_confirmed email to guest (non-blocking)
     try {
-      const notifyUrl = process.env.NOTIFICATION_URL || 'http://localhost:8082';
-      // For now, just log — in production, call notification service
-      logger.info({ to: email, bookingRef, meetLink, service: service.name }, 'Booking confirmation email queued');
+      await triggerEmail('booking_confirmed', email, {
+        userName: name,
+        serviceName: service.name,
+        dateTime: slotTime || 'TBC',
+        duration: `${service.duration_minutes || 60} minutes`,
+        bookingRef,
+        meetLink,
+      });
     } catch {}
 
     res.json({

@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { getEnv } from '../lib/env.js';
 import { query } from '@bookedai/db';
 import { logger } from '../lib/logger.js';
+import { triggerEmail } from '../lib/send-email.js';
 
 export const webhookRouter = Router();
 
@@ -81,6 +82,17 @@ webhookRouter.post('/stripe', raw({ type: 'application/json' }), async (req, res
           });
 
           await pubsubService.publishBookingPaid(bookingId!, paymentId!, session.amount_total || 0);
+
+          // Send payment_received email via notification service
+          try {
+            await triggerEmail('payment_received', user.email, {
+              userName: user.display_name || user.email,
+              serviceName: service.name,
+              amount: `$${((session.amount_total || 0) / 100).toFixed(2)} AUD`,
+              paymentMethod: 'stripe',
+              reference: paymentId!,
+            });
+          } catch {}
         } catch (calErr) {
           logger.error({ calErr, bookingId }, 'Post-payment processing failed');
         }

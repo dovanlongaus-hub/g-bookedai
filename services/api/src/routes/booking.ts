@@ -11,6 +11,7 @@ import { query } from '@bookedai/db';
 import { HOLD_EXPIRY_MINUTES } from '@bookedai/shared';
 import { AppError } from '../middleware/error-handler.js';
 import { logger } from '../lib/logger.js';
+import { triggerEmail } from '../lib/send-email.js';
 import { randomUUID } from 'crypto';
 
 export const bookingRouter = Router();
@@ -170,6 +171,18 @@ bookingRouter.post('/confirm', authenticate, validate(confirmBookingSchema), asy
       await pubsubService.publishBookingPaid(bookingId, booking.payment_id || '', booking.total_cents);
 
       logger.info({ bookingId, eventId: calendarResult.eventId, meetUrl: calendarResult.meetUrl }, 'Calendar + Meet + email created');
+
+      // Trigger booking_confirmed email via notification service
+      try {
+        await triggerEmail('booking_confirmed', user.email, {
+          userName: user.display_name || user.email,
+          serviceName: service.name,
+          dateTime: new Date(slot.starts_at).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' }),
+          duration: `${Math.round((new Date(slot.ends_at).getTime() - new Date(slot.starts_at).getTime()) / 60000)} minutes`,
+          bookingRef: bookingId,
+          meetLink: calendarResult.meetUrl || '',
+        });
+      } catch {}
     } catch (err) {
       logger.error({ err, bookingId }, 'Failed to create calendar/email/pubsub events');
       // Non-blocking: booking is confirmed, but calendar/email failed

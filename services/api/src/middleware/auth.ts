@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { getEnv } from '../lib/env.js';
 import type { UserRole } from '@bookedai/shared';
 import { query } from '@bookedai/db';
+import { triggerEmail } from '../lib/send-email.js';
 
 export interface AuthPayload {
   userId: string;
@@ -108,6 +109,13 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
         firebaseUid: decodedToken.uid,
         provider: 'firebase',
       };
+
+      // Send welcome email to newly created user (non-blocking)
+      try {
+        triggerEmail('welcome', user.email, {
+          userName: decodedToken.name || user.email,
+        });
+      } catch {}
     } else {
       const user = result.rows[0];
       req.auth = {

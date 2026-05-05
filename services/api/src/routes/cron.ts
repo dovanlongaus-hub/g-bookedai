@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { query } from '@bookedai/db';
 import { logger } from '../lib/logger.js';
+import { triggerEmail } from '../lib/send-email.js';
 import { randomUUID } from 'crypto';
 
 export const cronRouter = Router();
@@ -60,6 +61,17 @@ cronRouter.post('/send-reminders-24h', async (_req, res) => {
 
     let sent = 0;
     for (const booking of result.rows) {
+      // Send reminder_24h email
+      try {
+        await triggerEmail('reminder_24h', booking.email, {
+          userName: booking.display_name || booking.email,
+          serviceName: booking.service_name,
+          dateTime: new Date(booking.starts_at).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' }),
+          meetLink: booking.google_meet_url || '',
+          bookingId: booking.id,
+        });
+      } catch {}
+
       // Log that reminder was sent (prevent duplicates)
       await query(
         `INSERT INTO audit_logs (id, entity_type, entity_id, action, after_json)
@@ -67,7 +79,7 @@ cronRouter.post('/send-reminders-24h', async (_req, res) => {
         [randomUUID(), booking.id, JSON.stringify({ email: booking.email, sent_at: new Date().toISOString() })],
       );
       sent++;
-      logger.info({ bookingId: booking.id, email: booking.email }, '24h reminder logged');
+      logger.info({ bookingId: booking.id, email: booking.email }, '24h reminder sent');
     }
 
     res.json({ success: true, reminders_sent: sent });
