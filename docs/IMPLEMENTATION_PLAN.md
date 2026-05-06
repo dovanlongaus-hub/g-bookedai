@@ -1,7 +1,8 @@
 # BookedAI — Implementation Plan & Modular Architecture
 
-> **Version:** 2.0 | **Date:** 2026-05-05
+> **Version:** 3.0 | **Date:** 2026-05-06
 > **Purpose:** Chi tiết kế hoạch thực hiện, tách module, và hướng dẫn scale/upgrade
+> **Revenue Plan:** Xem [REVENUE_PRIORITY_PLAN.md](./REVENUE_PRIORITY_PLAN.md) — kế hoạch ưu tiên kiếm tiền
 
 ---
 
@@ -224,56 +225,58 @@ Frontend Apps ──HTTP/HTTPS──▶ Nginx ──proxy──▶ API Gateway (
 
 ---
 
-## 4. Kế hoạch Scale & Upgrade
+## 4. Kế hoạch Scale & Upgrade — ƯU TIÊN KIẾM TIỀN
 
-### 4.1 Phase 5: Production Hardening (Week 1-2)
+> **Xem chi tiết:** [REVENUE_PRIORITY_PLAN.md](./REVENUE_PRIORITY_PLAN.md)
+> **Nguyên tắc:** Kiếm tiền → Giữ tiền → Tối ưu tiền
 
-| Task | Module | Priority | Effort |
-|------|--------|----------|--------|
-| Get working Gemini API key | M08 | CRITICAL | 5 min |
-| Google OAuth consent screen | M07 | HIGH | 1 day |
-| Connect real Google Calendar | M17 | HIGH | 2 hrs |
-| Send real Gmail confirmations | M17 | HIGH | 2 hrs |
-| Stripe webhook end-to-end test | M07 | HIGH | 1 hr |
-| Google Ads campaign launch | Marketing | HIGH | 4 hrs |
-| LinkedIn organic posts | Marketing | MEDIUM | 2 hrs |
-| Monitor error rates (Cloud Logging) | M17 | MEDIUM | 2 hrs |
+### 4.1 SPRINT 1: Fix Revenue Blockers (Tuần 1-2) — KIẾM TIỀN
 
-### 4.2 Phase 6: Multi-tenant Scale (Week 3-4)
+| # | Task | Module | Priority | Revenue Impact | Effort |
+|---|------|--------|----------|----------------|--------|
+| 1 | Fix Gemini API key (AI chat) | M08 | 🔴 CRITICAL | +10-15% conversion | 5 min |
+| 2 | Google OAuth consent screen | M07 | 🔴 CRITICAL | Unblocks all auth | 1 day |
+| 3 | Stripe Subscription auto-billing | M07 | 🔴 CRITICAL | 100% platform MRR | 4 hrs |
+| 4 | Real Google Calendar sync | M17 | 🟡 HIGH | Prevents overbooking | 4 hrs |
+| 5 | Real Gmail confirmations | M17 | 🟡 HIGH | +5% conversion, -20% no-show | 3 hrs |
+| 6 | Stripe webhook E2E test | M07 | 🟡 HIGH | 100% payment automation | 2 hrs |
 
-| Task | Module | Priority | Notes |
-|------|--------|----------|-------|
-| Tenant isolation (RLS policies) | M16 | HIGH | Migration 005 ready |
-| Tenant-scoped API middleware | M07 | HIGH | tenant.ts exists |
-| Custom domain mapping per tenant | Infra | HIGH | Cloudflare API |
-| Tenant billing (Stripe Subscriptions) | M07 | HIGH | New route |
-| Tenant dashboard | M01 | MEDIUM | Extend /admin |
-| Tenant settings API | M07 | MEDIUM | New route |
-| White-label CSS variables | M15 | MEDIUM | Per-tenant theme |
-| API key management UI | M01 | MEDIUM | New page |
+### 4.2 SPRINT 2: Customer Acquisition (Tuần 3-4) — ĐƯA KHÁCH VÀO
 
-### 4.3 Phase 7: Advanced AI (Month 2)
+| # | Task | Module | Priority | Revenue Impact | Effort |
+|---|------|--------|----------|----------------|--------|
+| 7 | Google Ads campaign (A$3,300/mo) | Marketing | 🔴 CRITICAL | 20-30 leads/mo | 4 hrs |
+| 8 | SEO: 10 industry/feature pages | M01 | 🟡 HIGH | Long-term A$0 CAC | 8 hrs |
+| 9 | Referral program live | M07 | 🟡 HIGH | CAC A$30-80 (viral) | 4 hrs |
+| 10 | Social proof (5 testimonials) | M01,M02 | 🟢 MEDIUM | +15% conversion | 2 hrs |
 
-| Task | Module | Priority | Notes |
-|------|--------|----------|-------|
-| AI creates real bookings (tool-use) | M08 | HIGH | Agent calls /guest-booking |
-| Conversation persistence (Firestore) | M08 | HIGH | @bookedai/google ready |
-| Voice input (Speech-to-Text) | M08 | MEDIUM | Google STT API |
-| AI session recording + transcript | M12 | MEDIUM | Google Drive upload |
-| Course AI tutor | M12 | MEDIUM | Per-lesson Q&A |
-| Marketing AI auto-post | M13 | LOW | Social API integration |
+### 4.3 SPRINT 3: Customer Retention (Tháng 2) — GIỮ TIỀN
 
-### 4.4 Phase 8: Enterprise (Month 3)
+| # | Task | Module | Priority | Revenue Impact | Effort |
+|---|------|--------|----------|----------------|--------|
+| 11 | SMS reminders (Twilio) | M09 | 🔴 CRITICAL | -30-50% no-show | 6 hrs |
+| 12 | Email drip onboarding (5 emails) | M09 | 🟡 HIGH | +20% activation | 4 hrs |
+| 13 | Auto follow-up booking | M07 | 🟡 HIGH | +25% repeat rate | 4 hrs |
+| 14 | In-app notifications + push | M09 | 🟢 MEDIUM | +10% engagement | 4 hrs |
 
-| Task | Module | Priority | Notes |
-|------|--------|----------|-------|
-| Xero accounting sync | M14 | HIGH | Stub code exists |
-| SMS notifications (Twilio) | M09 | HIGH | Channel ready |
-| Push notifications (FCM) | M09 | MEDIUM | Channel ready |
-| Mobile app (React Native) | New | MEDIUM | Shares packages/ |
-| BigQuery analytics pipeline | M17 | MEDIUM | Code ready |
-| Looker Studio dashboards | External | LOW | BigQuery views |
-| SOC 2 compliance | Docs | LOW | Security audit |
+### 4.4 SPRINT 4: Scale & Enterprise (Tháng 3) — SCALE
+
+| # | Task | Module | Priority | Revenue Impact | Effort |
+|---|------|--------|----------|----------------|--------|
+| 15 | Multi-tenant billing automation | M07 | 🔴 CRITICAL | 100% MRR auto | 8 hrs |
+| 16 | Xero accounting integration | M14 | 🟡 HIGH | Enterprise enabler | 16 hrs |
+| 17 | White-label custom domains | Infra | 🟡 HIGH | Justifies A$199/mo | 8 hrs |
+| 18 | 5% commission (Stripe Connect) | M07 | 🟡 HIGH | Passive income stream | 8 hrs |
+
+### 4.5 SPRINT 5: Premium Features (Tháng 4-6) — TỐI ƯU
+
+| # | Task | Module | Priority | Revenue Impact | Effort |
+|---|------|--------|----------|----------------|--------|
+| 19 | Afterpay/Zip BNPL | M11 | 🟡 HIGH | +15-20% checkout | 12 hrs |
+| 20 | Voice AI (after-hours) | M08 | 🟡 HIGH | +A$2-5K/mo/tenant | 40 hrs |
+| 21 | No-show prediction AI | M08 | 🟢 MEDIUM | +15-20% saved rev | 20 hrs |
+| 22 | Dynamic pricing | M07 | 🟢 MEDIUM | +10-25% ARPA | 16 hrs |
+| 23 | Mobile app (React Native) | New | 🟢 MEDIUM | +30% engagement | 80 hrs |
 
 ---
 
@@ -535,4 +538,4 @@ PGPASSWORD=localpass psql -h localhost -U bookedai -d longcare -c "
 ---
 
 *Document owner: bookedai.au Engineering*
-*Last updated: 2026-05-05*
+*Last updated: 2026-05-06*
