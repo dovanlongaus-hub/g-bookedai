@@ -18,14 +18,15 @@ AI recommends → Truth Engine confirms → Payment proves → Accounting record
 | book.longcare.au | apps/booking-web | 3002 | Next.js 15 + Stripe |
 | app.longcare.au | apps/user-app | 3003 | Next.js 15 |
 | admin.longcare.au | apps/admin-app | 3004 | Next.js 15 |
-| api.g.bookedai.au | services/api | 8080 | Express 5 + Firebase Auth |
-| agent.g.bookedai.au | services/agent | 8081 | Express 5 + Gemini |
-| (internal) | services/notification | 8082 | Gmail API + FCM |
+| api.g.bookedai.au | services/api | 8180→8080 | Express 5 + Dual Auth + OpenAPI |
+| (internal) | services/agent | 8081 | Express 5 + Gemini + OpenAI |
+| (internal) | services/notification | 8082 | Gmail API + Twilio + FCM + PostgreSQL |
+| (internal) | services/drive-sync | 8083 | Google Drive API + NotebookLM |
+| (internal) | services/design-agent | 8084 | Gemini + Brand/UI/Component gen |
+| (internal) | services/accounting-sync | 8085 | Xero OAuth2 |
 | (internal) | services/payment | - | Stripe SDK |
 | (internal) | services/learning-agent | - | Gemini + Google Docs |
 | (internal) | services/marketing-agent | - | Gemini + 8-channel content |
-| (internal) | services/accounting-sync | - | Xero SDK |
-| (internal) | services/design-agent | 8084 | Gemini + Brand/UI/Component gen |
 
 ### Google-First Tech Stack
 
@@ -67,12 +68,12 @@ apps/                       5 Frontend applications (Next.js 15)
 services/                   9 Backend microservices (Express 5)
 packages/
   shared/                   Types, constants, enums
-  db/                       PostgreSQL client, migrations (001-004), seeds
-  google/                   ALL Google Cloud & Workspace API integrations
+  db/                       PostgreSQL client, migrations (001-007), seeds
+  google/                   ALL Google Cloud & Workspace API integrations (14 services)
   ui/                       Shared React component library (Button, Card, Badge, Input, Footer)
 upload/logo_official/       Official logo PNG files (3 variants)
 docs/
-  PRD.md                    Product Requirements Document (v2.0)
+  PRD.md                    Product Requirements Document (v2.1)
   IMPLEMENTATION_ROADMAP.md Prioritized implementation plan
   architecture.html         Visual architecture diagrams (Mermaid)
   brand-kit.html            Brand identity showcase
@@ -83,6 +84,7 @@ docs/
 ## Security (Google-first)
 
 - Firebase Auth (Google Sign-In) replacing JWT
+- OpenAI OAuth fallback (ChatGPT Sign-In, JWT 7-day sessions)
 - Auto-create user on first login
 - Role-based access control (customer, mentor, admin, superadmin)
 - Helmet security headers
@@ -91,23 +93,34 @@ docs/
 - Zod request validation on all endpoints
 - Stripe webhook signature verification
 - Environment validation at startup
+- Compression (gzip/brotli)
 
 ## API Routes
 
 | Method | Path | Auth | Description |
 |---|---|---|---|
 | GET | /health | No | Health check with DB connectivity |
+| GET | /openapi.json | No | OpenAPI 3.1 specification |
+| GET | /docs | No | Scalar API documentation UI |
+| GET | /auth/providers | No | Available auth methods |
+| GET | /auth/openai/login | No | Initiate OpenAI OAuth flow |
+| GET | /auth/openai/callback | No | OAuth callback handler |
 | POST | /chat | No | AI chat (Gemini via agent service) |
 | GET | /services | No | List active services |
 | POST | /services/search | No | Search services |
-| POST | /booking/hold | Firebase | Hold slot (10min, auto-expiry via Cloud Scheduler) |
-| POST | /booking/confirm | Firebase | Confirm + Calendar + Meet + Gmail + Pub/Sub |
-| POST | /booking/cancel | Firebase | Cancel + release slot + audit log |
-| POST | /booking/reschedule | Firebase | Reschedule + Calendar update |
-| POST | /payment/checkout | Firebase | Stripe Checkout or bank transfer |
+| POST | /booking/hold | Firebase/JWT | Hold slot (10min, auto-expiry via Cloud Scheduler) |
+| POST | /booking/confirm | Firebase/JWT | Confirm + Calendar + Meet + Gmail + Pub/Sub |
+| POST | /booking/cancel | Firebase/JWT | Cancel + release slot + audit log |
+| POST | /booking/reschedule | Firebase/JWT | Reschedule + Calendar update |
+| POST | /payment/checkout | Firebase/JWT | Stripe Checkout or bank transfer |
 | POST | /webhooks/stripe | Signature | Stripe events → confirm → Calendar → Gmail |
-| POST | /learning/session-summary | Firebase | Gemini summary + Google Docs notes |
-| GET | /learning/history | Firebase | User's learning sessions |
+| POST | /learning/session-summary | Firebase/JWT | Gemini summary + Google Docs notes |
+| GET | /learning/history | Firebase/JWT | User's learning sessions |
+| GET | /courses | No | List available courses |
+| GET | /courses/:id | No | Course detail with lessons |
+| POST | /courses/:id/enroll | Firebase/JWT | Enroll in course |
+| GET | /notifications | Firebase/JWT | User notifications list |
+| PUT | /notifications/:id/read | Firebase/JWT | Mark notification as read |
 | POST | /marketing/campaigns | Admin | Create + AI generate 8-channel content |
 | POST | /marketing/approve | Admin | DRAFT→NEEDS_REVIEW→APPROVED→SCHEDULED→PUBLISHED |
 | GET | /events/booking/:id | SSE | Real-time booking status |
@@ -126,12 +139,18 @@ booking.created, booking.paid, booking.cancelled
 payment.succeeded, payment.failed
 session.completed, learning.notes.created
 marketing.content.approved, accounting.sync.failed
+notification.sent
 ```
 
-## Database (2 migrations)
+## Database (7 migrations)
 
 Migration 001: tenants, users, services, availability_slots, bookings, payments, learning_sessions, marketing_campaigns, audit_logs
 Migration 002: invoices (GST/BAS), social_content_items, notification_preferences, calendar_events, learning_notes + user columns (language, phone, display_name)
+Migration 003: OCC (version column) + webhook idempotency (webhook_events)
+Migration 004: OpenAI auth (users.openai_sub, users.auth_provider)
+Migration 005: In-app notifications table, read/unread status
+Migration 006: Courses, lessons, enrollments, quiz results, certificates
+Migration 007: Performance indexes on bookings, payments, users
 
 ## Key Principles
 

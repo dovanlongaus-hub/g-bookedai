@@ -76,13 +76,28 @@ services:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   agent:
     build:
       context: .
       dockerfile: services/agent/Dockerfile
     ports: ['8081:8080']
+    dns: [8.8.8.8, 8.8.4.4]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on: [api]
@@ -119,10 +134,7 @@ services:
     build:
       context: .
       dockerfile: services/drive-sync/Dockerfile
-    ports: ['8083:8080']
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
+    network_mode: host
     volumes:
       - ./credentials:/app/credentials:ro
       - ./docs:/app/docs:ro
@@ -157,6 +169,12 @@ services:
     ports: ['6379:6379']
     volumes:
       - redisdata:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
 volumes:
   pgdata:

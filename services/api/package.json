@@ -18,6 +18,7 @@
     "@bookedai/learning-agent": "workspace:*",
     "@bookedai/shared": "workspace:*",
     "@google-cloud/pubsub": "^4.9.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
@@ -31,6 +32,7 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.10",

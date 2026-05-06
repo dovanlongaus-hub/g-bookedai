@@ -26,6 +26,9 @@ import { guestBookingRouter } from './routes/guest-booking.js';
 import { dashboardRouter } from './routes/dashboard.js';
 import { notificationsRouter } from './routes/notifications.js';
 import { coursesRouter } from './routes/courses.js';
+import { openapiRouter } from './routes/openapi.js';
+import { docsRouter } from './routes/docs.js';
+import compression from 'compression';
 import { closePool } from '@bookedai/db';
 
 const env = getEnv();
@@ -34,8 +37,11 @@ const app = express();
 // Trust proxy (behind nginx/Cloudflare)
 app.set('trust proxy', 1);
 
+// Compression
+app.use(compression());
+
 // Security
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(requestId);
 
 // CORS - restrict to known origins
@@ -68,6 +74,10 @@ app.use('/webhooks', webhookRouter);
 
 // Body parsing
 app.use(express.json({ limit: '1mb' }));
+
+// API Documentation (before body parsing — serves HTML)
+app.use('/docs', docsRouter);
+app.use('/openapi.json', openapiRouter);
 
 // Routes
 app.use('/auth', authRouter);

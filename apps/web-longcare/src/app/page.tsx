@@ -198,6 +198,11 @@ export default function Home() {
         </div>
       </div>
       <div className="footer-bottom">
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
+          {['\u{1F1E6}\u{1F1FA} Australian Business', '\u{1F512} Privacy Act Compliant', '\u{1F4B0} GST Inclusive', '\u267F Accessible'].map((b, i) => (
+            <span key={i} style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{b}</span>
+          ))}
+        </div>
         &copy; 2026 Longcare AU. All rights reserved.
         <span style={{ margin: '0 0.5rem' }}>|</span>
         <a href="/terms" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Terms of Service</a>

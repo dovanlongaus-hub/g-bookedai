@@ -86,19 +86,18 @@ export default function Home() {
         <p className="hero-meta">No credit card required &middot; 14-day trial &middot; Cancel anytime</p>
 
         {/* Trust badges */}
-        <div className="trust-row">
-          <div className="trust-badge">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0L8.5 2.5H11.5L9.5 5L10.5 8L7 6.5L3.5 8L4.5 5L2.5 2.5H5.5L7 0Z"/></svg>
-            Enterprise-grade security
-          </div>
-          <div className="trust-badge">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0L8.5 2.5H11.5L9.5 5L10.5 8L7 6.5L3.5 8L4.5 5L2.5 2.5H5.5L7 0Z"/></svg>
-            99.9% uptime SLA
-          </div>
-          <div className="trust-badge">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 0L8.5 2.5H11.5L9.5 5L10.5 8L7 6.5L3.5 8L4.5 5L2.5 2.5H5.5L7 0Z"/></svg>
-            GDPR &amp; Privacy Act compliant
-          </div>
+        <div style={{ display: 'flex', gap: 24, justifyContent: 'center', marginTop: 32, flexWrap: 'wrap' }}>
+          {[
+            { icon: '\u{1F1E6}\u{1F1FA}', label: 'Australian Built' },
+            { icon: '\u{1F512}', label: 'Data in Sydney' },
+            { icon: '\u2713', label: 'GST Registered' },
+            { icon: '\u267F', label: 'WCAG 2.2 AA' },
+            { icon: '\u{1F3E2}', label: 'Privacy Act Compliant' },
+          ].map((b, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#555', fontSize: '0.75rem' }}>
+              <span>{b.icon}</span> {b.label}
+            </div>
+          ))}
         </div>
       </section>
 
@@ -257,6 +256,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Industry Segments */}
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 16 }}>Built for Australian Service Businesses</h2>
+        <p style={{ color: '#888', marginBottom: 48 }}>From solo practitioners to multi-location teams</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
+          {[
+            { icon: '\u{1F3E5}', name: 'Allied Health', desc: 'Physio, psychology, speech therapy' },
+            { icon: '\u{1F487}', name: 'Beauty & Wellness', desc: 'Hair, nails, massage, spa' },
+            { icon: '\u{1F3E0}', name: 'NDIS & Home Care', desc: 'Disability, aged care, support' },
+            { icon: '\u{1F4BC}', name: 'Professional Services', desc: 'Consulting, legal, accounting' },
+            { icon: '\u{1F3CB}\u{FE0F}', name: 'Fitness & Coaching', desc: 'PT, yoga, life coaching' },
+          ].map((s, i) => (
+            <div key={i} style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '24px 16px' }}>
+              <div style={{ fontSize: '2rem', marginBottom: 8 }}>{s.icon}</div>
+              <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: 4 }}>{s.name}</div>
+              <div style={{ color: '#666', fontSize: '0.75rem' }}>{s.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* How it works */}
       <section id="how-it-works" className="section">
         <div className="container">
@@ -299,7 +319,7 @@ export default function Home() {
           <div style={{ textAlign: 'center' }}>
             <h2 className="section-title">Simple, transparent pricing</h2>
             <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
-              Start free. Scale as you grow. No hidden fees.
+              Start small. Scale as you grow. No hidden fees.
             </p>
           </div>
 
@@ -307,24 +327,24 @@ export default function Home() {
             {/* Starter */}
             <div className="pricing-card">
               <div className="pricing-name">Starter</div>
-              <div className="pricing-price">$0<span>/mo</span></div>
-              <p className="pricing-desc">Perfect for testing. Up to 10 bookings per month.</p>
+              <div className="pricing-price">A$29<span>/mo</span></div>
+              <p className="pricing-desc">Perfect for solo practitioners. Up to 50 bookings per month.</p>
               <ul className="pricing-features">
                 <li><span className="check">&#10003;</span> AI Chatbot (1 language)</li>
-                <li><span className="check">&#10003;</span> Basic booking page</li>
+                <li><span className="check">&#10003;</span> Booking page</li>
                 <li><span className="check">&#10003;</span> Stripe payments</li>
                 <li><span className="check">&#10003;</span> Email confirmations</li>
                 <li><span className="check">&#10003;</span> Google Meet links</li>
-                <li><span className="check">&#10003;</span> 10 bookings/month</li>
+                <li><span className="check">&#10003;</span> 50 bookings/month</li>
               </ul>
-              <a href="#signup" className="btn btn-secondary btn-full" style={{ marginTop: 24 }}>Start Free</a>
+              <a href="#signup" className="btn btn-secondary btn-full" style={{ marginTop: 24 }}>Start 14-Day Trial</a>
             </div>
 
             {/* Growth */}
             <div className="pricing-card featured">
               <div className="pricing-badge">Most Popular</div>
               <div className="pricing-name">Growth</div>
-              <div className="pricing-price">$99<span>/mo</span></div>
+              <div className="pricing-price">A$79<span>/mo</span></div>
               <p className="pricing-desc">For growing businesses. Unlimited bookings.</p>
               <ul className="pricing-features">
                 <li><span className="check">&#10003;</span> AI Chatbot (3 languages)</li>
@@ -333,6 +353,8 @@ export default function Home() {
                 <li><span className="check">&#10003;</span> AI session notes</li>
                 <li><span className="check">&#10003;</span> Marketing Agent</li>
                 <li><span className="check">&#10003;</span> WhatsApp integration</li>
+                <li><span className="check">&#10003;</span> Xero integration</li>
+                <li><span className="check">&#10003;</span> Afterpay/Zip ready</li>
                 <li><span className="check">&#10003;</span> Unlimited bookings</li>
                 <li><span className="check">&#10003;</span> Analytics dashboard</li>
                 <li><span className="check">&#10003;</span> Priority support</li>
@@ -343,7 +365,7 @@ export default function Home() {
             {/* Enterprise */}
             <div className="pricing-card">
               <div className="pricing-name">Enterprise</div>
-              <div className="pricing-price">Custom</div>
+              <div className="pricing-price">A$199<span>/mo</span></div>
               <p className="pricing-desc">For large teams. White-label and API access.</p>
               <ul className="pricing-features">
                 <li><span className="check">&#10003;</span> Everything in Growth</li>
@@ -352,7 +374,9 @@ export default function Home() {
                 <li><span className="check">&#10003;</span> API access</li>
                 <li><span className="check">&#10003;</span> Multi-location support</li>
                 <li><span className="check">&#10003;</span> Dedicated account manager</li>
-                <li><span className="check">&#10003;</span> Xero/accounting integration</li>
+                <li><span className="check">&#10003;</span> MYOB integration</li>
+                <li><span className="check">&#10003;</span> SOC 2 compliance</li>
+                <li><span className="check">&#10003;</span> Australian data residency</li>
                 <li><span className="check">&#10003;</span> SLA guarantee</li>
                 <li><span className="check">&#10003;</span> Commission model option</li>
               </ul>
@@ -360,9 +384,9 @@ export default function Home() {
             </div>
           </div>
 
-          <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.8rem', marginTop: 32 }}>
-            All plans include SSL, Cloudflare CDN, 99.9% uptime SLA, and GDPR compliance.
-            <br />Commission model available: 0% monthly fee + 5-10% per transaction.
+          <p style={{ textAlign: 'center', color: '#888', fontSize: '0.8rem', marginTop: '1.5rem' }}>
+            All prices in AUD, GST inclusive &middot; Australian-built, data stays in Sydney &middot;<br/>
+            Commission model: A$0/mo + 5% per booking &middot; 14-day free trial on all plans
           </p>
         </div>
       </section>

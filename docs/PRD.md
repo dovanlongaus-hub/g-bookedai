@@ -1,6 +1,6 @@
 # bookedai.au — Product Requirements Document (PRD)
 
-> **Version:** 2.0 | **Updated:** 2026-05-04
+> **Version:** 2.1 | **Updated:** 2026-05-06
 > **Product:** bookedai.au — The AI Revenue Engine
 > **First Tenant:** longcare.au — AI Mentor & Learning
 > **Status:** MVP Development (Week 2)
@@ -24,7 +24,7 @@ Users → Cloudflare (DNS/CDN) → Nginx (SSL/Proxy) → Docker Compose
   ├── 4 Shared Packages
   └── Infrastructure (PostgreSQL 16, Redis 7)
       + Google Cloud Platform (Gemini, Calendar, Gmail, Drive, Pub/Sub...)
-      + External (Stripe, OpenAI OAuth, Xero, GA4)
+      + External (Stripe, OpenAI OAuth, Xero, Twilio, GA4)
 ```
 
 ### 2.1 Domain Map
@@ -37,23 +37,23 @@ Users → Cloudflare (DNS/CDN) → Nginx (SSL/Proxy) → Docker Compose
 | app.g.bookedai.au | user-app | 3003 | Next.js 15 | LIVE |
 | admin.g.bookedai.au | admin-app | 3004 | Next.js 15 | LIVE |
 | api.g.bookedai.au | api | 8180→8080 | Express 5 + Dual Auth | LIVE |
-| (internal) | agent | 8081 | Express 5 + Gemini | LIVE |
+| (internal) | agent | 8081 | Express 5 + Gemini + OpenAI | LIVE |
 | (internal) | design-agent | 8084 | Express 5 + Gemini | LIVE |
-| (internal) | notification | 8082 | Gmail API + FCM | PARTIAL |
-| (internal) | drive-sync | 8083 | Google Drive API | LIVE |
+| (internal) | notification | 8082 | Gmail API + Twilio + FCM + PostgreSQL | LIVE |
+| (internal) | drive-sync | 8083 | Google Drive API + NotebookLM | LIVE |
+| (internal) | accounting-sync | 8085 | Xero OAuth2 | STUB |
 | (internal) | payment | — | Stripe SDK | STUB |
 | (internal) | learning-agent | — | Gemini + Google Docs | DONE |
 | (internal) | marketing-agent | — | Gemini + 8-channel | DONE |
-| (internal) | accounting-sync | — | Xero SDK | STUB |
 
 ### 2.2 Shared Packages
 
 | Package | Purpose | Status |
 |---------|---------|--------|
 | @bookedai/shared | Types, constants, enums | DONE |
-| @bookedai/db | PostgreSQL client, 4 migrations, seeds | DONE |
+| @bookedai/db | PostgreSQL client, 7 migrations, seeds | DONE |
 | @bookedai/google | 14 Google Cloud/Workspace API integrations | DONE |
-| @bookedai/ui | Shared React component library (Button, Card, Badge, Input, Footer) | IN PROGRESS |
+| @bookedai/ui | Shared React component library (Button, Card, Badge, Input, Footer) | DONE |
 
 ### 2.3 Infrastructure
 
@@ -64,7 +64,7 @@ Users → Cloudflare (DNS/CDN) → Nginx (SSL/Proxy) → Docker Compose
 | SSL | Let's Encrypt (auto-renew, covers all subdomains) | LIVE |
 | Proxy | Nginx (reverse proxy, WebSocket, SSL termination) | LIVE |
 | Containers | Docker Compose (14 services) | LIVE |
-| Database | PostgreSQL 16 (4 migrations) | LIVE |
+| Database | PostgreSQL 16 (7 migrations) | LIVE |
 | Cache | Redis 7 | LIVE |
 | CI/CD | Not yet (planned: Cloud Build → Cloud Run) | TODO |
 
@@ -159,7 +159,7 @@ DRAFT → HOLD (10min) → PENDING_PAYMENT → CONFIRMED → [RESCHEDULED|CANCEL
 
 **Files:** `services/marketing-agent/`, `services/api/src/routes/marketing.ts`
 
-### 3.7 Design Agent (DONE — NEW)
+### 3.7 Design Agent (DONE)
 
 **Service:** `services/design-agent` (Port 8084)
 
@@ -199,7 +199,7 @@ DRAFT → HOLD (10min) → PENDING_PAYMENT → CONFIRMED → [RESCHEDULED|CANCEL
 
 **Chat Widget:** Floating bottom-right, preserves full AI chat functionality
 
-### 3.9 Shared UI Library — @bookedai/ui (IN PROGRESS)
+### 3.9 Shared UI Library — @bookedai/ui (DONE)
 
 **Package:** `packages/ui`
 **Components:** Button (5 variants), Card (5 variants), Badge (6 semantic), Input (label/error/hint), Footer
@@ -214,16 +214,22 @@ Calendar, Gmail, Docs, Drive, Firestore, Pub/Sub, Cloud Scheduler, Tasks, BigQue
 
 ### 3.11 Database Schema (DONE)
 
-4 migrations:
+7 migrations:
 - 001: tenants, users, services, availability_slots, bookings, payments, learning_sessions, marketing_campaigns, audit_logs
 - 002: invoices (GST/BAS), social_content_items, notification_preferences, calendar_events, learning_notes
 - 003: OCC (version column) + webhook idempotency (webhook_events)
 - 004: OpenAI auth (users.openai_sub, users.auth_provider)
+- 005: In-app notifications table, read/unread status
+- 006: Courses, lessons, enrollments, quiz results, certificates
+- 007: Performance indexes on bookings, payments, users
 
-### 3.12 Notification System (PARTIAL)
+### 3.12 Notification System (DONE)
 
-**Done:** Email channel (Gmail API)
-**TODO:** SMS (Twilio), Push (FCM), In-app (Firestore), email templates
+**4 Channels:**
+- Email — Gmail API, 7 templates (confirmation, reminder, cancellation, payment receipt, welcome, learning summary, marketing)
+- SMS — Twilio Programmable SMS
+- Push — Firebase Cloud Messaging (FCM)
+- In-app — PostgreSQL notifications table, real-time polling
 
 ### 3.13 DNS Automation (DONE)
 
@@ -283,6 +289,7 @@ Radius:        12px / 20px
 | DDoS | Cloudflare (proxied for g.bookedai.au) | DONE |
 | SSL | Let's Encrypt (auto-renew) | DONE |
 | API Key system | X-API-Key header / query param, tenant lookup | DONE |
+| Compression | gzip/brotli via compression middleware | DONE |
 | 2FA | Not yet | TODO |
 
 ---
@@ -292,6 +299,8 @@ Radius:        12px / 20px
 | Method | Path | Auth | Status |
 |--------|------|------|--------|
 | GET | /health | No | DONE |
+| GET | /openapi.json | No | DONE |
+| GET | /docs | No | DONE |
 | GET | /auth/providers | No | DONE |
 | GET | /auth/openai/login | No | DONE |
 | GET | /auth/openai/callback | No | DONE |
@@ -306,6 +315,11 @@ Radius:        12px / 20px
 | POST | /webhooks/stripe | Sig | DONE |
 | POST | /learning/session-summary | Auth | DONE |
 | GET | /learning/history | Auth | DONE |
+| GET | /courses | No | DONE |
+| GET | /courses/:id | No | DONE |
+| POST | /courses/:id/enroll | Auth | DONE |
+| GET | /notifications | Auth | DONE |
+| PUT | /notifications/:id/read | Auth | DONE |
 | POST | /marketing/campaigns | Admin | DONE |
 | POST | /marketing/approve | Admin | DONE |
 | GET | /events/booking/:id | SSE | DONE |
@@ -393,28 +407,26 @@ Radius:        12px / 20px
 | CR-050 | 2026-05-04 | Google Service Account configured | HIGH | DONE |
 | CR-051 | 2026-05-04 | OG image generation + analytics dashboard | MEDIUM | IN PROGRESS |
 | CR-052 | 2026-05-04 | UAT test suite (158 tests), production launch checklist (169 items), incident playbook (7 runbooks) | HIGH | DONE |
+| CR-053 | 2026-05-06 | Backend hardening (compression, OpenAPI docs, Scalar UI) | HIGH | DONE |
+| CR-054 | 2026-05-06 | DevOps (health probes, restart policies, deploy scripts) | HIGH | DONE |
+| CR-055 | 2026-05-06 | Database optimization (pending migrations, indexes) | HIGH | DONE |
+| CR-056 | 2026-05-06 | Architecture documentation update | MEDIUM | DONE |
 
 ---
 
-## 10. Project Statistics (as of 2026-05-04)
+## 10. Project Statistics
 
-| Metric | Value |
-|---|---|
-| Git commits | 43 |
-| Pages | 46 |
-| TypeScript files | 227 |
-| API route files | 17 (40+ endpoints) |
-| Live domains | 6 HTTPS |
-| PM2 services | 9 online |
-| Unit tests | 17 |
-| E2E tests | 16 |
-| DB tables | 16 |
-| DB bookings | 2 real |
-| DB users | 3 |
-| Stripe products | 5 LIVE |
-| Availability slots | 70 |
-| Tenants | 2 |
-| PRD Change Requests | 52 (48 DONE, 2 PARTIAL, 2 PENDING) |
+| Metric | Count |
+|--------|-------|
+| Services | 9 |
+| Frontend Apps | 5 |
+| Shared Packages | 4 |
+| Database Migrations | 7 |
+| API Endpoints | 25+ |
+| Email Templates | 7 |
+| Notification Channels | 4 (email, SMS, push, in-app) |
+| Google Integrations | 14 |
+| Change Requests | 56 |
 
 ---
 

@@ -54,7 +54,7 @@ tr:hover td { background: #1e293b; }
 <p class="subtitle">Turn customer intent into revenue — automatically<br>
 <span class="badge badge-blue">Server: 34.40.164.84</span>
 <span class="badge badge-green">Region: australia-southeast1</span>
-<span class="badge badge-purple">Updated: 2026-05-04</span>
+<span class="badge badge-purple">Updated: 2026-05-06</span>
 </p>
 
 <!-- STACK ARCHITECTURE IMAGE -->
@@ -85,44 +85,55 @@ graph TB
     end
 
     subgraph DC["🐳 Docker Compose"]
-        subgraph FE["Frontend (Next.js 15)"]
-            F1["web-g-bookedai\n:3000"]
-            F2["web-longcare\n:3001"]
-            F3["booking-web\n:3002"]
-            F4["user-app\n:3003"]
-            F5["admin-app\n:3004"]
+        subgraph FE["Frontend (Next.js 15) — 5 Apps"]
+            F1["web-g-bookedai\n:3000\nLogin, i18n, Admin tools"]
+            F2["web-longcare\n:3001\nSEO, Sitemap, Robots"]
+            F3["booking-web\n:3002\n3-step Stripe flow"]
+            F4["user-app\n:3003\nDashboard, Learning, Notifications"]
+            F5["admin-app\n:3004\nRevenue KPIs, Campaigns, Users"]
         end
 
-        subgraph BE["Backend (Express 5 + tsx)"]
-            B1["API\n:8080"]
-            B2["Agent\n:8081"]
-            B3["Notification\n:8082"]
-            B4["Drive-Sync\n:8083"]
-            B5["Payment"]
-            B6["Learning-Agent"]
-            B7["Marketing-Agent"]
-            B8["Accounting-Sync"]
+        subgraph BE["Backend (Express 5 + tsx) — 9 Services"]
+            B1["API\n:8080→:8180\nDual Auth, OpenAPI, Scalar"]
+            B2["Agent\n:8081\nGemini+OpenAI, Revenue Orchestrator"]
+            B3["Notification\n:8082\nEmail+SMS+Push+In-app"]
+            B4["Drive-Sync\n:8083\nDrive, NotebookLM, CEO Dashboard"]
+            B9["Design-Agent\n:8084\nUI Review, Brand Gen, Components"]
+            B10["Accounting-Sync\n:8085\nXero OAuth2, Invoices, GST"]
+            B5["Payment (internal)\nStripe SDK"]
+            B6["Learning-Agent (internal)\nGemini Curriculum, Quiz, Certs"]
+            B7["Marketing-Agent (internal)\n8-Channel Content Gen"]
+        end
+
+        subgraph PKG["Shared Packages — 4 Libraries"]
+            P1["@bookedai/shared\nTypes, Constants, Enums"]
+            P2["@bookedai/db\nPostgreSQL, 7 Migrations"]
+            P3["@bookedai/google\n14 Google Services"]
+            P4["@bookedai/ui\nButton, Card, Badge, Input, Footer"]
         end
 
         subgraph DB["Infrastructure"]
-            PG["PostgreSQL 16\n:5432"]
+            PG["PostgreSQL 16\n:5432\n7 Migrations"]
             RD["Redis 7\n:6379"]
         end
     end
 
-    subgraph GCP["☁️ Google Cloud Platform"]
+    subgraph GCP["☁️ Google Cloud Platform (14 Integrations)"]
         G1[Gemini 2.0 Flash]
         G2[Firebase Auth]
         G3[Cloud Pub/Sub]
         G4[Gmail + Calendar + Meet]
-        G5[Drive + Docs]
+        G5[Drive + Docs + NotebookLM]
         G6[BigQuery + GA4]
+        G7[Cloud Tasks + Scheduler]
+        G8[Translation + Logging]
     end
 
     subgraph EXT["External Services"]
-        E1[Stripe]
+        E1[Stripe Payments]
         E2[OpenAI OAuth]
-        E3[Xero]
+        E3[Xero Accounting]
+        E4[Twilio SMS]
     end
 
     D1 --> N1 --> F1
@@ -132,15 +143,64 @@ graph TB
     D5 --> N5 --> B1
 
     F1 & F2 & F3 & F4 & F5 --> B1
+    F1 & F2 & F3 & F4 & F5 --> P1 & P4
     B1 --> PG & RD
     B1 --> B2 & B3 & B4
     B1 --> G2 & G3
     B2 --> G1
-    B3 --> G4
+    B3 --> G4 & E4
     B4 --> G5
     B1 --> E1 & E2
-    B8 --> E3
+    B10 --> E3
     B1 --> G6
+    B6 --> G1 & G5
+    B7 --> G1
+    B9 --> G1
+    B1 --> P2 & P3
+</div>
+
+<!-- NOTIFICATION FLOW -->
+<h2><span class="section-icon">🔔</span>Notification System (4 Channels)</h2>
+<div class="card">
+<div class="mermaid">
+graph LR
+    subgraph Triggers["Event Triggers"]
+        T1[Booking Confirmed]
+        T2[Payment Received]
+        T3[Session Reminder]
+        T4[Learning Complete]
+        T5[Marketing Campaign]
+    end
+
+    NS["Notification Service\n:8082"]
+
+    subgraph Channels["4 Notification Channels"]
+        C1["📧 Email\nGmail API\n7 Templates"]
+        C2["📱 SMS\nTwilio"]
+        C3["🔔 Push\nFCM"]
+        C4["💬 In-App\nPostgreSQL"]
+    end
+
+    T1 & T2 & T3 & T4 & T5 --> NS
+    NS --> C1 & C2 & C3 & C4
+</div>
+</div>
+
+<!-- EMAIL FLOW -->
+<h2><span class="section-icon">📧</span>Email Templates</h2>
+<div class="card">
+<table>
+<thead><tr><th>#</th><th>Template</th><th>Trigger</th><th>Data</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Booking Confirmation</td><td>booking.confirmed</td><td>Service, date, time, Meet link</td></tr>
+<tr><td>2</td><td>Booking Reminder</td><td>Cloud Scheduler (24h before)</td><td>Service, date, preparation notes</td></tr>
+<tr><td>3</td><td>Booking Cancellation</td><td>booking.cancelled</td><td>Service, refund info</td></tr>
+<tr><td>4</td><td>Payment Receipt</td><td>payment.succeeded</td><td>Amount, invoice number, GST</td></tr>
+<tr><td>5</td><td>Welcome Email</td><td>user.created</td><td>Name, getting started guide</td></tr>
+<tr><td>6</td><td>Learning Summary</td><td>session.completed</td><td>Notes, recommendations, next steps</td></tr>
+<tr><td>7</td><td>Marketing Campaign</td><td>marketing.content.approved</td><td>Campaign content, UTM links</td></tr>
+</tbody>
+</table>
 </div>
 
 <!-- DOMAIN MAP -->
@@ -153,11 +213,16 @@ graph TB
 <tr><td><strong>admin.g.bookedai.au</strong></td><td>admin-app</td><td class="port">3004</td><td class="tech">Next.js 15</td><td class="status-up">● Live</td></tr>
 <tr><td><strong>booking.g.bookedai.au</strong></td><td>booking-web</td><td class="port">3002</td><td class="tech">Next.js 15 + Stripe</td><td class="status-up">● Live</td></tr>
 <tr><td><strong>app.g.bookedai.au</strong></td><td>user-app</td><td class="port">3003</td><td class="tech">Next.js 15</td><td class="status-up">● Live</td></tr>
-<tr><td><strong>api.g.bookedai.au</strong></td><td>api</td><td class="port">8180→8080</td><td class="tech">Express 5 + Dual Auth</td><td class="status-up">● Live</td></tr>
+<tr><td><strong>api.g.bookedai.au</strong></td><td>api</td><td class="port">8180→8080</td><td class="tech">Express 5 + Dual Auth + OpenAPI</td><td class="status-up">● Live</td></tr>
 <tr><td><strong>longcare.au</strong></td><td>web-longcare</td><td class="port">3001</td><td class="tech">Next.js 15 + SEO</td><td class="status-up">● Live</td></tr>
-<tr><td>agent (internal)</td><td>agent</td><td class="port">8081</td><td class="tech">Express 5 + Gemini</td><td class="status-internal">● Internal</td></tr>
-<tr><td>notification (internal)</td><td>notification</td><td class="port">8082</td><td class="tech">Gmail API + FCM</td><td class="status-internal">● Internal</td></tr>
-<tr><td>drive-sync (internal)</td><td>drive-sync</td><td class="port">8083</td><td class="tech">Google Drive API</td><td class="status-internal">● Internal</td></tr>
+<tr><td>agent (internal)</td><td>agent</td><td class="port">8081</td><td class="tech">Gemini + OpenAI</td><td class="status-internal">● Internal</td></tr>
+<tr><td>notification (internal)</td><td>notification</td><td class="port">8082</td><td class="tech">Gmail + Twilio + FCM</td><td class="status-internal">● Internal</td></tr>
+<tr><td>drive-sync (internal)</td><td>drive-sync</td><td class="port">8083</td><td class="tech">Google Drive + NotebookLM</td><td class="status-internal">● Internal</td></tr>
+<tr><td>design-agent (internal)</td><td>design-agent</td><td class="port">8084</td><td class="tech">Gemini + Brand/UI Gen</td><td class="status-internal">● Internal</td></tr>
+<tr><td>accounting-sync (internal)</td><td>accounting-sync</td><td class="port">8085</td><td class="tech">Xero OAuth2 + GST</td><td class="status-internal">● Internal</td></tr>
+<tr><td>payment (internal)</td><td>payment</td><td class="port">—</td><td class="tech">Stripe SDK</td><td class="status-internal">● Internal</td></tr>
+<tr><td>learning-agent (internal)</td><td>learning-agent</td><td class="port">—</td><td class="tech">Gemini Curriculum</td><td class="status-internal">● Internal</td></tr>
+<tr><td>marketing-agent (internal)</td><td>marketing-agent</td><td class="port">—</td><td class="tech">8-Channel Content</td><td class="status-internal">● Internal</td></tr>
 </tbody>
 </table>
 </div>
@@ -265,6 +330,7 @@ graph LR
         T7[learning.notes.created]
         T8[marketing.content.approved]
         T9[accounting.sync.failed]
+        T10[notification.sent]
     end
 
     subgraph Subscribers
@@ -284,11 +350,12 @@ graph LR
     T2 & T4 & T6 --> ANALYTICS
     T7 --> DRIVE
     T9 --> NOTIFY
+    NOTIFY --> T10
 </div>
 </div>
 
 <!-- DATABASE -->
-<h2><span class="section-icon">🗄️</span>Database Schema</h2>
+<h2><span class="section-icon">🗄️</span>Database Schema (7 Migrations)</h2>
 <div class="card">
 <div class="mermaid">
 erDiagram
@@ -300,6 +367,10 @@ erDiagram
     BOOKINGS ||--o{ CALENDAR_EVENTS : creates
     USERS ||--o{ LEARNING_SESSIONS : attends
     LEARNING_SESSIONS ||--o{ LEARNING_NOTES : generates
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ ENROLLMENTS : enrolls
+    COURSES ||--o{ LESSONS : contains
+    COURSES ||--o{ ENROLLMENTS : has
 
     TENANTS {
         uuid id PK
@@ -344,16 +415,31 @@ erDiagram
         integer duration_minutes
         boolean active
     }
+    COURSES {
+        uuid id PK
+        text title
+        text description
+        text track
+    }
+    NOTIFICATIONS {
+        uuid id PK
+        uuid user_id FK
+        text channel
+        text message
+        boolean read
+    }
 </div>
 </div>
 
 <!-- API ROUTES -->
-<h2><span class="section-icon">🔌</span>API Endpoints</h2>
+<h2><span class="section-icon">🔌</span>API Endpoints (25+)</h2>
 <div class="card">
 <table>
 <thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr></thead>
 <tbody>
 <tr><td><span class="badge badge-green">GET</span></td><td>/health</td><td>—</td><td>Health check + DB connectivity</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/openapi.json</td><td>—</td><td>OpenAPI 3.1 specification</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/docs</td><td>—</td><td>Scalar API documentation UI</td></tr>
 <tr><td><span class="badge badge-green">GET</span></td><td>/auth/providers</td><td>—</td><td>Available auth methods</td></tr>
 <tr><td><span class="badge badge-green">GET</span></td><td>/auth/openai/login</td><td>—</td><td>Initiate OpenAI OAuth flow</td></tr>
 <tr><td><span class="badge badge-green">GET</span></td><td>/auth/openai/callback</td><td>—</td><td>OAuth callback handler</td></tr>
@@ -368,8 +454,15 @@ erDiagram
 <tr><td><span class="badge badge-blue">POST</span></td><td>/webhooks/stripe</td><td><span class="badge badge-red">Sig</span></td><td>Stripe webhook events</td></tr>
 <tr><td><span class="badge badge-blue">POST</span></td><td>/learning/session-summary</td><td><span class="badge badge-orange">Auth</span></td><td>Gemini summary + Docs notes</td></tr>
 <tr><td><span class="badge badge-green">GET</span></td><td>/learning/history</td><td><span class="badge badge-orange">Auth</span></td><td>User's learning sessions</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/courses</td><td>—</td><td>List available courses</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/courses/:id</td><td>—</td><td>Course detail with lessons</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/courses/:id/enroll</td><td><span class="badge badge-orange">Auth</span></td><td>Enroll in course</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/notifications</td><td><span class="badge badge-orange">Auth</span></td><td>User notifications list</td></tr>
+<tr><td><span class="badge badge-cyan">PUT</span></td><td>/notifications/:id/read</td><td><span class="badge badge-orange">Auth</span></td><td>Mark notification as read</td></tr>
 <tr><td><span class="badge badge-blue">POST</span></td><td>/marketing/campaigns</td><td><span class="badge badge-purple">Admin</span></td><td>Create campaign</td></tr>
+<tr><td><span class="badge badge-blue">POST</span></td><td>/marketing/approve</td><td><span class="badge badge-purple">Admin</span></td><td>Approve campaign</td></tr>
 <tr><td><span class="badge badge-green">GET</span></td><td>/events/booking/:id</td><td>SSE</td><td>Real-time booking status</td></tr>
+<tr><td><span class="badge badge-green">GET</span></td><td>/events/chat/:id</td><td>SSE</td><td>AI chat streaming</td></tr>
 </tbody>
 </table>
 </div>
@@ -386,6 +479,7 @@ erDiagram
 <div class="infra-item"><h4>Zod</h4><p>Input validation<br>Schema-first</p></div>
 <div class="infra-item"><h4>Auth</h4><p>Firebase + JWT<br>Role-based</p></div>
 <div class="infra-item"><h4>Stripe</h4><p>Webhook signature<br>Verification</p></div>
+<div class="infra-item"><h4>Compression</h4><p>gzip/brotli<br>All responses</p></div>
 </div>
 </div>
 
@@ -393,48 +487,75 @@ erDiagram
 <h2><span class="section-icon">⚙️</span>Technology Stack</h2>
 <div class="grid">
 <div class="card">
-<h3>Frontend</h3>
+<h3>Frontend (5 Apps)</h3>
 <ul style="list-style:none; padding:0;">
 <li>▸ Next.js 15 (5 applications)</li>
 <li>▸ React 19</li>
 <li>▸ next-intl (en/vi/zh)</li>
 <li>▸ Tailwind CSS</li>
+<li>▸ @bookedai/ui (shared components)</li>
 <li>▸ Firebase SDK (auth)</li>
 <li>▸ Stripe.js (payments)</li>
 </ul>
 </div>
 <div class="card">
-<h3>Backend</h3>
+<h3>Backend (9 Services)</h3>
 <ul style="list-style:none; padding:0;">
-<li>▸ Express 5 (7 microservices)</li>
+<li>▸ Express 5 (9 microservices)</li>
 <li>▸ TypeScript + tsx runtime</li>
 <li>▸ Firebase Admin SDK</li>
 <li>▸ jsonwebtoken (JWT)</li>
 <li>▸ Zod (validation)</li>
 <li>▸ Pino (logging)</li>
+<li>▸ OpenAPI 3.1 + Scalar UI</li>
+<li>▸ Compression (gzip/brotli)</li>
 </ul>
 </div>
 <div class="card">
-<h3>AI & Google</h3>
+<h3>AI & Google (14 Services)</h3>
 <ul style="list-style:none; padding:0;">
 <li>▸ Gemini 2.0 Flash</li>
 <li>▸ Google Calendar + Meet</li>
-<li>▸ Gmail API</li>
+<li>▸ Gmail API (7 templates)</li>
 <li>▸ Google Drive + Docs</li>
+<li>▸ NotebookLM</li>
 <li>▸ Cloud Pub/Sub</li>
+<li>▸ Cloud Tasks + Scheduler</li>
 <li>▸ BigQuery + GA4</li>
+<li>▸ Translation + Logging</li>
 </ul>
 </div>
 <div class="card">
 <h3>Infrastructure</h3>
 <ul style="list-style:none; padding:0;">
 <li>▸ Docker Compose</li>
-<li>▸ PostgreSQL 16</li>
+<li>▸ PostgreSQL 16 (7 migrations)</li>
 <li>▸ Redis 7</li>
 <li>▸ Nginx + Certbot</li>
 <li>▸ Cloudflare DNS</li>
 <li>▸ GCE (production)</li>
 </ul>
+</div>
+</div>
+
+<!-- SHARED PACKAGES -->
+<h2><span class="section-icon">📦</span>Shared Packages (4 Libraries)</h2>
+<div class="grid">
+<div class="card">
+<h3>@bookedai/shared</h3>
+<p>Types, constants, enums (UserRole, BookingStatus, PaymentMethod)</p>
+</div>
+<div class="card">
+<h3>@bookedai/db</h3>
+<p>PostgreSQL client, 7 migrations, seeds, tenant context</p>
+</div>
+<div class="card">
+<h3>@bookedai/google</h3>
+<p>14 Google Cloud/Workspace API integrations</p>
+</div>
+<div class="card">
+<h3>@bookedai/ui</h3>
+<p>Button (5 variants), Card (5 variants), Badge (6 semantic), Input, Footer</p>
 </div>
 </div>
 
@@ -453,26 +574,28 @@ graph TD
         A5["admin-app"]
     end
 
-    subgraph services["services/ (7 Express microservices)"]
+    subgraph services["services/ (9 Express microservices)"]
         S1["api"]
         S2["agent"]
         S3["notification"]
         S4["drive-sync"]
+        S9["design-agent"]
+        S10["accounting-sync"]
         S5["payment"]
         S6["learning-agent"]
         S7["marketing-agent"]
-        S8["accounting-sync"]
     end
 
-    subgraph packages["packages/ (3 shared libraries)"]
+    subgraph packages["packages/ (4 shared libraries)"]
         P1["@bookedai/shared\n(types, enums)"]
-        P2["@bookedai/db\n(PostgreSQL, migrations)"]
-        P3["@bookedai/google\n(all Google APIs)"]
+        P2["@bookedai/db\n(PostgreSQL, 7 migrations)"]
+        P3["@bookedai/google\n(14 Google APIs)"]
+        P4["@bookedai/ui\n(Button, Card, Badge, Input, Footer)"]
     end
 
     ROOT --> apps & services & packages
-    A1 & A2 & A3 & A4 & A5 --> P1
-    S1 & S2 & S3 & S4 --> P1 & P2 & P3
+    A1 & A2 & A3 & A4 & A5 --> P1 & P4
+    S1 & S2 & S3 & S4 & S9 & S10 --> P1 & P2 & P3
 </div>
 </div>
 
@@ -483,13 +606,15 @@ graph TD
 graph LR
     DEV["pnpm dev\n(local)"] --> BUILD["docker compose\nbuild"]
     BUILD --> UP["docker compose\nup -d"]
-    UP --> NGINX["Nginx\nreverse proxy"]
+    UP --> HEALTH["Health probes\n/health"]
+    HEALTH --> NGINX["Nginx\nreverse proxy"]
     NGINX --> CF["Cloudflare\nDNS + CDN"]
     CF --> USERS["Users\n(HTTPS)"]
 
     style DEV fill:#1e40af
     style BUILD fill:#7c3aed
     style UP fill:#059669
+    style HEALTH fill:#0d9488
     style NGINX fill:#d97706
     style CF fill:#dc2626
     style USERS fill:#0891b2
@@ -499,6 +624,7 @@ graph LR
 <div style="text-align:center; margin-top:3rem; padding:2rem; color:#64748b; font-size:0.85rem;">
 <p>BookedAI Platform &copy; 2026 | AI Revenue Engine for Australian Businesses</p>
 <p>First Tenant: longcare.au — AI Mentor & Learning</p>
+<p>9 Services | 5 Apps | 4 Packages | 7 Migrations | 14 Google Integrations</p>
 </div>
 
 </div>
