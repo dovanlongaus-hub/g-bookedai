@@ -123,6 +123,16 @@ docs/
 | PUT | /notifications/:id/read | Firebase/JWT | Mark notification as read |
 | POST | /marketing/campaigns | Admin | Create + AI generate 8-channel content |
 | POST | /marketing/approve | Admin | DRAFT→NEEDS_REVIEW→APPROVED→SCHEDULED→PUBLISHED |
+| GET | /approval/pending | Admin | List pending spending approvals |
+| GET | /approval/history | Admin | Processed approval history |
+| GET | /approval/stats | Admin | Spending summary & limits |
+| POST | /approval/request | Admin | Create spending approval request |
+| POST | /approval/:id/approve | Admin | Approve spending (dual-control) |
+| POST | /approval/:id/reject | Admin | Reject spending (reason required) |
+| GET | /approval/ledger | Admin | Spending ledger for reconciliation |
+| POST | /approval/ledger/:id/reconcile | Admin | Mark ledger entry reconciled |
+| GET | /dashboard/admin/* | Admin | Dashboard stats (secured) |
+| POST | /dashboard/admin/approve-payment | Admin | Approve bank transfer (audit trail) |
 | GET | /events/booking/:id | SSE | Real-time booking status |
 | GET | /events/chat/:id | SSE | AI chat streaming |
 
@@ -151,6 +161,7 @@ Migration 004: OpenAI auth (users.openai_sub, users.auth_provider)
 Migration 005: In-app notifications table, read/unread status
 Migration 006: Courses, lessons, enrollments, quiz results, certificates
 Migration 007: Performance indexes on bookings, payments, users
+Migration 008: Approval workflow — approval_requests, spending_limits, spending_ledger tables
 
 ## Key Principles
 
@@ -163,3 +174,8 @@ Migration 007: Performance indexes on bookings, payments, users
 7. Australian Privacy Act compliance (APP 1-13)
 8. WCAG 2.2 AA accessibility target
 9. GST-inclusive pricing (10% GST for Australian tax)
+10. **NO auto-spend without manual approval** — All spending requires admin button click + reason
+11. **Dual-control principle** — Cannot approve your own spending request
+12. **Spending limits enforced** — Per-role, per-category, per-day/month caps
+13. **Audit trail immutable** — Every approve/reject logged with actor + timestamp + reason
+14. **Reconciliation required** — All spending must be reconciled in spending_ledger

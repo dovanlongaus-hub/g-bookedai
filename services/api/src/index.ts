@@ -26,6 +26,7 @@ import { guestBookingRouter } from './routes/guest-booking.js';
 import { dashboardRouter } from './routes/dashboard.js';
 import { notificationsRouter } from './routes/notifications.js';
 import { coursesRouter } from './routes/courses.js';
+import { approvalRouter } from './routes/approval.js';
 import { openapiRouter } from './routes/openapi.js';
 import { docsRouter } from './routes/docs.js';
 import compression from 'compression';
@@ -98,6 +99,7 @@ app.use('/guest-booking', guestBookingRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/notifications', notificationsRouter);
 app.use('/courses', coursesRouter);
+app.use('/approval', approvalRouter);
 
 // Error handling
 app.use(notFoundHandler);

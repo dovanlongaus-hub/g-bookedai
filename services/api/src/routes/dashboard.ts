@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import { query } from '@bookedai/db';
 import { logger } from '../lib/logger.js';
+import { authenticate, requireRole } from '../middleware/auth.js';
 
 export const dashboardRouter = Router();
 
 /**
- * Admin dashboard stats
+ * Admin dashboard stats — requires admin auth
  */
-dashboardRouter.get('/admin/stats', async (_req, res) => {
+dashboardRouter.get('/admin/stats', authenticate, requireRole('admin', 'superadmin'), async (_req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
 
@@ -96,7 +97,7 @@ dashboardRouter.get('/user/bookings', async (req, res) => {
 /**
  * Revenue by service
  */
-dashboardRouter.get('/admin/revenue-by-service', async (_req, res) => {
+dashboardRouter.get('/admin/revenue-by-service', authenticate, requireRole('admin', 'superadmin'), async (_req, res) => {
   try {
     const result = await query(`
       SELECT s.name, count(b.id)::int as bookings, coalesce(sum(b.total_cents),0)::int as revenue
@@ -124,7 +125,7 @@ dashboardRouter.get('/admin/revenue-by-service', async (_req, res) => {
 /**
  * Pending bank transfers (for admin approval)
  */
-dashboardRouter.get('/admin/pending-payments', async (_req, res) => {
+dashboardRouter.get('/admin/pending-payments', authenticate, requireRole('admin', 'superadmin'), async (_req, res) => {
   try {
     const result = await query(`
       SELECT p.id as payment_id, p.amount_cents, p.bank_reference, p.created_at,
@@ -147,18 +148,39 @@ dashboardRouter.get('/admin/pending-payments', async (_req, res) => {
 /**
  * Approve bank transfer payment
  */
-dashboardRouter.post('/admin/approve-payment', async (req, res) => {
+dashboardRouter.post('/admin/approve-payment', authenticate, requireRole('admin', 'superadmin'), async (req, res) => {
   try {
-    const { paymentId, bookingId } = req.body;
+    const { paymentId, bookingId, reason } = req.body;
     if (!paymentId || !bookingId) {
       res.status(400).json({ success: false, error: 'paymentId and bookingId required' });
       return;
     }
 
+    // Get payment details for audit trail
+    const paymentResult = await query('SELECT * FROM payments WHERE id = $1', [paymentId]);
+    if (paymentResult.rows.length === 0) {
+      res.status(404).json({ success: false, error: 'Payment not found' });
+      return;
+    }
+
+    const payment = paymentResult.rows[0];
+
     await query('UPDATE payments SET status = $1 WHERE id = $2', ['SUCCEEDED', paymentId]);
     await query('UPDATE bookings SET status = $1, updated_at = now() WHERE id = $2', ['CONFIRMED', bookingId]);
 
-    logger.info({ paymentId, bookingId }, 'Bank transfer approved');
+    // Audit log with who approved and why
+    await query(
+      `INSERT INTO audit_logs (actor_user_id, entity_type, entity_id, action, before_json, after_json)
+       VALUES ($1, 'payment', $2, 'MANUAL_APPROVE', $3, $4)`,
+      [
+        req.auth!.userId,
+        paymentId,
+        JSON.stringify({ status: payment.status, amount_cents: payment.amount_cents }),
+        JSON.stringify({ status: 'SUCCEEDED', approved_by: req.auth!.email, reason: reason || 'Bank transfer verified' }),
+      ],
+    );
+
+    logger.info({ paymentId, bookingId, approvedBy: req.auth!.email, reason }, 'Bank transfer approved with audit trail');
     res.json({ success: true, message: 'Payment approved, booking confirmed' });
   } catch (err) {
     res.status(500).json({ success: false });
@@ -168,7 +190,7 @@ dashboardRouter.post('/admin/approve-payment', async (req, res) => {
 /**
  * List all users
  */
-dashboardRouter.get('/admin/users', async (_req, res) => {
+dashboardRouter.get('/admin/users', authenticate, requireRole('admin', 'superadmin'), async (_req, res) => {
   try {
     const result = await query(`
       SELECT u.id, u.email, u.display_name, u.role, u.language, u.phone, u.created_at,

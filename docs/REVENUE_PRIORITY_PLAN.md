@@ -1,8 +1,44 @@
 # BookedAI — Kế Hoạch Ưu Tiên Kiếm Tiền
 
-> **Version:** 1.0 | **Date:** 2026-05-06
+> **Version:** 1.1 | **Date:** 2026-05-06
 > **Nguyên tắc:** Ưu tiên tuyệt đối thứ tự: **Kiếm tiền → Giữ tiền → Tối ưu tiền**
+> **Quy tắc chi tiền:** Mọi chi tiêu tự động PHẢI có nút Approve bằng tay + lý do đối chiếu
+> **Compliance:** [COMPLIANCE_GOVERNANCE.md](./COMPLIANCE_GOVERNANCE.md) — Australian Privacy Act, GST, ACL, AML/CTF, WCAG 2.2 AA
 > **Target:** A$138,600 ARR (Month 12) | Break-even Month 4-5
+
+---
+
+## Quy tắc chi tiền — LUÔN PHẢI TUÂN THỦ
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  MỌI CHI TIÊU TỰ ĐỘNG PHẢI:                                 │
+│                                                              │
+│  1. Tạo approval request trong hệ thống                     │
+│  2. Hiển thị trên Approval Center (admin.longcare.au/approvals)│
+│  3. Admin khác (không phải người tạo) nhấn APPROVE           │
+│  4. Có lý do/justification BẮT BUỘC                         │
+│  5. Ghi vào spending_ledger để đối chiếu                     │
+│  6. GST tự động tính (10%)                                   │
+│  7. Reconcile cuối tháng                                     │
+│                                                              │
+│  KHÔNG BAO GIỜ tự động chi tiền mà không có nút approve.    │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Chi tiêu cần approve bao gồm:**
+
+| Loại | Ví dụ | Spending Limit (admin) |
+|------|-------|----------------------|
+| Refund | Hoàn tiền khách | $500/lần, $2,000/ngày |
+| Payout | Chi cho vendor/partner | $1,000/lần, **dual-approval** |
+| Ad Spend | Google Ads, Facebook Ads | $500/lần, $5,000/tháng |
+| SMS Cost | Twilio SMS nhắc lịch | $100/lần, auto-approve < $50 |
+| Marketing | Content, influencer, PR | $1,000/lần, $10,000/tháng |
+| Vendor | Software, hosting, tools | $2,000/lần, **dual-approval** |
+| Subscription | Tenant billing charge | $500/lần, $5,000/tháng |
+
+> Xem chi tiết: [COMPLIANCE_GOVERNANCE.md](./COMPLIANCE_GOVERNANCE.md)
 
 ---
 
@@ -133,6 +169,7 @@ GET  /payment/subscription     → Current plan status
 | **Conversion tracking** | GA4 + GTM events đã setup (12 events) |
 | **Revenue impact** | 20-30 leads/tháng → 5-8 customers → A$400-600 MRR |
 | **Effort** | 4 giờ setup + ongoing optimize |
+| **APPROVAL** | Category: `ad_spend`, mỗi lần nạp budget phải approve qua Approval Center |
 
 **Chiến lược keywords:**
 
@@ -216,6 +253,7 @@ Tier 3 — Brand (10% budget):
 | **Cost** | ~A$0.08/SMS, ~A$50/tháng cho 625 bookings |
 | **Revenue impact** | Saves A$500-1,500/tháng in no-show losses |
 | **Effort** | 6 giờ |
+| **APPROVAL** | Category: `sms_cost`, auto-approve < $50, monthly limit $2,000 |
 
 ### 3.2 ⓬ Email Drip — Onboarding Sequence (Week 5-6)
 
