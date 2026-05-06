@@ -3,6 +3,7 @@
 > **Version:** 1.0 | **Date:** 2026-05-06
 > **Applicable Standards:** Australian Privacy Act 1988, ACL, GST Act, AML/CTF, WCAG 2.2 AA, OWASP Top 10
 > **Scope:** All BookedAI platform operations, tenant data, and financial transactions
+> **Master Document:** [REQUIREMENTS.md](./REQUIREMENTS.md) — Yeu cau chi tiet tong hop toan bo du an
 
 ---
 

@@ -3,6 +3,7 @@
 > **Version:** 2.1 | **Updated:** 2026-05-06
 > **Product:** bookedai.au — The AI Revenue Engine
 > **First Tenant:** longcare.au — AI Mentor & Learning
+> **Master Document:** [REQUIREMENTS.md](./REQUIREMENTS.md) — Yeu cau chi tiet tong hop toan bo du an
 > **Status:** MVP Development (Week 2)
 
 ---

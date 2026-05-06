@@ -3,6 +3,7 @@
 > **Version:** 3.0 | **Date:** 2026-05-06
 > **Purpose:** Chi tiết kế hoạch thực hiện, tách module, và hướng dẫn scale/upgrade
 > **Revenue Plan:** Xem [REVENUE_PRIORITY_PLAN.md](./REVENUE_PRIORITY_PLAN.md) — kế hoạch ưu tiên kiếm tiền
+> **Master Document:** [REQUIREMENTS.md](./REQUIREMENTS.md) — Yeu cau chi tiet tong hop toan bo du an
 
 ---
 

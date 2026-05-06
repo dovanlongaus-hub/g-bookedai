@@ -1,8 +1,9 @@
 # BookedAI — Complete Project Documentation
 
-> **Version:** 5.1 | **Date:** 2026-05-05
+> **Version:** 5.1 | **Date:** 2026-05-06
 > **Product:** bookedai.au — The AI Revenue Engine
 > **First Tenant:** longcare.au — AI Mentor & Learning
+> **Master Document:** [REQUIREMENTS.md](./REQUIREMENTS.md) — Yeu cau chi tiet tong hop toan bo du an
 > **Status:** Production Live
 > **Repository:** https://github.com/dovanlongaus-hub/g-bookedai
 
