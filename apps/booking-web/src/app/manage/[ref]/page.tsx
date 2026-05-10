@@ -32,7 +32,7 @@ export default function ManageBookingPage() {
     return (
       <main className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="glass-panel" style={{ maxWidth: 480, textAlign: 'center', padding: '3rem 2rem' }}>
-          <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2.5rem' }}>✓</div>
+          <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2.5rem' }}>✓</div>
           <h1 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Request Submitted</h1>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>We've received your request. You'll get a confirmation email shortly.</p>
           <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
@@ -99,7 +99,7 @@ export default function ManageBookingPage() {
         <div style={{ display: 'grid', gap: 12 }}>
           {/* Reschedule */}
           <button className="glass-panel" onClick={() => setAction('reschedule')} style={{ border: '1px solid var(--surface-border)', cursor: 'pointer', padding: '1.25rem', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 16, transition: 'border-color 0.2s' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(99,102,241,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>📅</div>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>📅</div>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 2 }}>Change Date & Time</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Pick a new time slot that works better for you</p>
@@ -109,7 +109,7 @@ export default function ManageBookingPage() {
 
           {/* Change Service */}
           <a href="https://book.longcare.au" className="glass-panel" style={{ border: '1px solid var(--surface-border)', cursor: 'pointer', padding: '1.25rem', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 16, textDecoration: 'none', color: 'inherit', transition: 'border-color 0.2s' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(34,211,238,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>🔄</div>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: '#ECFEFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>🔄</div>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 2 }}>Choose Different Service</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Browse all services and book a different session</p>
@@ -119,7 +119,7 @@ export default function ManageBookingPage() {
 
           {/* Cancel */}
           <button className="glass-panel" onClick={() => setAction('cancel')} style={{ border: '1px solid var(--surface-border)', cursor: 'pointer', padding: '1.25rem', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 16, transition: 'border-color 0.2s' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>❌</div>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: '#FEF2F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>❌</div>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 2 }}>Cancel Booking</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Free cancellation 24h+ before session</p>
@@ -129,7 +129,7 @@ export default function ManageBookingPage() {
 
           {/* Contact Support */}
           <a href={`https://wa.me/61455301335?text=${encodeURIComponent(`Hi, I need help with booking ${ref}`)}`} target="_blank" rel="noopener" className="glass-panel" style={{ border: '1px solid var(--surface-border)', cursor: 'pointer', padding: '1.25rem', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 16, textDecoration: 'none', color: 'inherit', transition: 'border-color 0.2s' }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(37,211,102,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>💬</div>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: '#F0FDF4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>💬</div>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 2 }}>WhatsApp Support</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Chat with us for any questions</p>
@@ -144,11 +144,11 @@ export default function ManageBookingPage() {
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>📅 Pick a New Time</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>Select your preferred date and time below.</p>
-          <div style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 8, padding: '0.75rem', marginBottom: '1rem', fontSize: '0.8rem', color: '#fcd34d' }}>
+          <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 8, padding: '0.75rem', marginBottom: '1rem', fontSize: '0.8rem', color: '#92400E' }}>
             Free reschedule if 24h+ before session. Less than 24h: $15 fee.
           </div>
           {/* Mini calendar placeholder */}
-          <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 12, padding: '2rem', textAlign: 'center', marginBottom: '1rem' }}>
+          <div style={{ background: '#F8FAFC', borderRadius: 12, padding: '2rem', textAlign: 'center', marginBottom: '1rem' }}>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>Contact us to reschedule:</p>
             <a href={`https://wa.me/61455301335?text=${encodeURIComponent(`Hi, I'd like to reschedule booking ${ref}`)}`} className="btn-primary" style={{ margin: 0, width: 'auto', padding: '0.75rem 2rem', display: 'inline-flex', alignItems: 'center', gap: 8 }}>💬 Reschedule via WhatsApp</a>
           </div>
@@ -160,11 +160,11 @@ export default function ManageBookingPage() {
       {action === 'cancel' && (
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>❌ Cancel Booking</h2>
-          <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 8, padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}>
-            <p style={{ color: '#fca5a5', fontWeight: 600, marginBottom: 4 }}>Cancellation Policy</p>
-            <p style={{ color: '#fca5a5' }}>• 24h+ before: Full refund</p>
-            <p style={{ color: '#fca5a5' }}>• Less than 24h: 50% refund</p>
-            <p style={{ color: '#fca5a5' }}>• No-show: No refund</p>
+          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 8, padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}>
+            <p style={{ color: '#991B1B', fontWeight: 600, marginBottom: 4 }}>Cancellation Policy</p>
+            <p style={{ color: '#991B1B' }}>• 24h+ before: Full refund</p>
+            <p style={{ color: '#991B1B' }}>• Less than 24h: 50% refund</p>
+            <p style={{ color: '#991B1B' }}>• No-show: No refund</p>
           </div>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'block', marginBottom: 6 }}>Reason for cancellation (optional)</label>
@@ -173,12 +173,12 @@ export default function ManageBookingPage() {
               onChange={(e) => setCancelReason(e.target.value)}
               placeholder="Let us know why you're cancelling..."
               rows={3}
-              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--surface-border)', borderRadius: 8, color: '#fff', fontSize: '0.9rem', outline: 'none', resize: 'vertical' }}
+              style={{ width: '100%', padding: '0.75rem 1rem', background: '#FFFFFF', border: '1px solid var(--surface-border)', borderRadius: 8, color: '#0F172A', fontSize: '0.9rem', outline: 'none', resize: 'vertical' }}
             />
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn-secondary" style={{ flex: 1, margin: 0 }} onClick={() => setAction('view')}>← Back</button>
-            <button style={{ flex: 1, padding: '0.75rem', background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }} onClick={() => setAction('done')}>Confirm Cancel</button>
+            <button style={{ flex: 1, padding: '0.75rem', background: '#ef4444', color: '#0F172A', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }} onClick={() => setAction('done')}>Confirm Cancel</button>
           </div>
         </div>
       )}
@@ -191,7 +191,7 @@ export default function ManageBookingPage() {
         </div>
       </div>
 
-      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: '0.7rem', marginTop: '2rem' }}>Powered by bookedai.au</p>
+      <p style={{ textAlign: 'center', color: '#94A3B8', fontSize: '0.7rem', marginTop: '2rem' }}>Powered by bookedai.au</p>
     </main>
   );
 }

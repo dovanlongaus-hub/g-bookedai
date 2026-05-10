@@ -1,10 +1,27 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Sparkles,
+  Clock,
+  Users,
+  FileText,
+  Map,
+  X,
+} from 'lucide-react';
 import { Breadcrumbs } from '../../../components/breadcrumbs';
+import { getPageMetadata } from '@/lib/metadata';
+import { HeroMentor } from '@/components/illustrations/hero-mentor';
+import { FlowThreeStep } from '@/components/illustrations/flow-three-step';
 
 export const metadata: Metadata = {
-  title: '1-Hour AI Mentor Session $99 — Deep-Dive Coaching | Longcare AU',
-  description:
-    'Book a 1-hour AI mentoring session for $99 AUD. Personalised deep-dive into AI workflows, prompt engineering, and automation. Live Google Meet with an expert AI mentor in Australia.',
+  ...getPageMetadata({
+    title: '1-Hour AI Mentor Session $99 | LongCare AU',
+    description:
+      'Book a 1-hour AI mentoring session for $99 AUD. Personalised deep-dive into AI workflows and prompt engineering via Google Meet.',
+    path: '/services/ai-mentor',
+  }),
   keywords: [
     'AI mentor session Australia',
     'AI coaching 1 hour',
@@ -17,45 +34,38 @@ export const metadata: Metadata = {
     'book AI expert online',
     'AI business coaching Australia',
   ],
-  openGraph: {
-    title: '1-Hour AI Mentor Session — $99 AUD | Longcare AU',
-    description:
-      'Deep-dive AI mentoring tailored to your needs. Custom prompts, workflows, and a personalised learning path. $99 AUD via Google Meet.',
-    url: 'https://longcare.au/services/ai-mentor',
-    siteName: 'Longcare AU — Powered by BookedAI',
-    locale: 'en_AU',
-    type: 'website',
-    images: [
-      {
-        url: 'https://longcare.au/api/og?title=AI+Mentor+Session&subtitle=$99+AUD+—+60+Minutes',
-        width: 1200,
-        height: 630,
-        alt: '1-Hour AI Mentor Session — $99',
-      },
-    ],
-  },
-  alternates: {
-    canonical: 'https://longcare.au/services/ai-mentor',
-  },
 };
 
 const BENEFITS = [
   {
     title: '60 Minutes 1-on-1',
     desc: 'A full hour of dedicated mentoring via Google Meet. Enough time to tackle real problems, build workflows, and get hands-on practice.',
+    Icon: Clock,
   },
   {
     title: 'Custom AI Workflows',
     desc: 'We build AI prompts and workflows tailored to your specific role, industry, or business. Not generic tutorials — real solutions you can use tomorrow.',
+    Icon: Users,
   },
   {
     title: 'AI Session Summary',
     desc: 'After the session, you receive AI-generated notes including key decisions, action items, code snippets, and a Q&A summary.',
+    Icon: FileText,
   },
   {
     title: 'Personalised Learning Path',
     desc: 'A structured plan for continuing your AI development, including recommended tools, resources, and follow-up session suggestions.',
+    Icon: Map,
   },
+];
+
+const USE_CASES = [
+  'Build custom ChatGPT/Gemini prompts for your workflow',
+  'Automate repetitive tasks with AI (emails, reports, data entry)',
+  'Develop an AI strategy roadmap for your SME',
+  'Learn prompt engineering techniques for better AI outputs',
+  'Evaluate and compare AI tools for your specific use case',
+  'Integrate AI into your existing tech stack',
 ];
 
 const FAQ_ITEMS = [
@@ -81,6 +91,37 @@ const FAQ_ITEMS = [
   },
 ];
 
+const COMPARISON = [
+  { feature: 'Duration', starter: '30 min', mentor: '60 min' },
+  { feature: 'Google Meet 1-on-1', starter: 'Yes', mentor: 'Yes' },
+  { feature: 'AI-Generated Notes', starter: 'Yes', mentor: 'Yes' },
+  { feature: 'Custom AI Workflows', starter: '-', mentor: 'Yes' },
+  { feature: 'Personalised Learning Path', starter: '-', mentor: 'Yes' },
+  { feature: 'Session Q&A Summary', starter: '-', mentor: 'Yes' },
+];
+
+function Cell({ value, highlight = false }: { value: string; highlight?: boolean }) {
+  if (value === 'Yes') {
+    return (
+      <span
+        className={`inline-flex items-center gap-1 ${
+          highlight ? 'text-sky-700' : 'text-emerald-600'
+        }`}
+      >
+        <CheckCircle2 className="size-4" aria-hidden /> Yes
+      </span>
+    );
+  }
+  if (value === '-') {
+    return (
+      <span className="inline-flex items-center text-slate-300">
+        <X className="size-4" aria-hidden />
+      </span>
+    );
+  }
+  return <span className="text-slate-700">{value}</span>;
+}
+
 export default function AIMentorPage() {
   const serviceSchema = {
     '@context': 'https://schema.org',
@@ -101,7 +142,7 @@ export default function AIMentorPage() {
       priceCurrency: 'AUD',
       availability: 'https://schema.org/InStock',
       validFrom: '2026-01-01',
-      url: 'https://booking.g.bookedai.au?service=mentor-1h',
+      url: 'https://book.longcare.au?service=mentor-1h',
     },
   };
 
@@ -116,7 +157,7 @@ export default function AIMentorPage() {
   };
 
   return (
-    <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+    <main className="bg-[#F8FAFC] text-slate-800">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
@@ -125,183 +166,201 @@ export default function AIMentorPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <Breadcrumbs
-        items={[
-          { name: 'Home', url: '/' },
-          { name: 'Services', url: '/services' },
-          { name: 'AI Mentor', url: '/services/ai-mentor' },
-        ]}
-      />
 
-      {/* Hero */}
-      <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <div
-          style={{
-            display: 'inline-block',
-            background: 'var(--accent)',
-            color: '#0b0c10',
-            borderRadius: '20px',
-            padding: '0.3rem 1rem',
-            fontSize: '0.85rem',
-            fontWeight: 'bold',
-            marginBottom: '1.5rem',
-          }}
-        >
-          MOST POPULAR
-        </div>
-        <h1 className="hero-title" style={{ fontSize: '3rem' }}>
-          1-Hour AI Mentor Session
-        </h1>
-        <p className="hero-subtitle">
-          Deep-dive AI mentoring tailored to your specific needs. We build custom prompts,
-          workflows, and a personalised learning path — all in 60 minutes.
-        </p>
-        <div className="card-price" style={{ justifyContent: 'center', fontSize: '3rem', marginBottom: '1.5rem' }}>
-          <span>$99</span>
-          <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>AUD / session</span>
-        </div>
-        <a
-          href="https://booking.g.bookedai.au?service=mentor-1h"
-          className="btn btn-primary"
-          style={{ marginRight: '1rem' }}
-        >
-          Book Now for $99
-        </a>
-        <a href="/services" className="btn btn-outline">
-          View All Services
-        </a>
+      <div className="mx-auto max-w-[1120px] px-6 sm:px-10 pt-6">
+        <Breadcrumbs
+          items={[
+            { name: 'Home', url: '/' },
+            { name: 'Services', url: '/services' },
+            { name: 'AI Mentor', url: '/services/ai-mentor' },
+          ]}
+        />
       </div>
 
+      {/* Hero */}
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 pt-8 pb-12">
+        <div className="grid lg:grid-cols-[1fr_auto] gap-8 lg:gap-16 items-center">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 mb-5">
+              <Sparkles className="size-3" aria-hidden /> Most popular
+            </span>
+            <h1 className="font-heading text-4xl sm:text-5xl font-semibold tracking-tight text-slate-900">
+              1-Hour AI Mentor Session
+            </h1>
+            <p className="mt-4 text-lg text-slate-600">
+              Deep-dive AI mentoring tailored to your specific needs. We build custom prompts,
+              workflows, and a personalised learning path — all in 60 minutes.
+            </p>
+            <div className="mt-6 flex items-baseline gap-2">
+              <span className="text-4xl sm:text-5xl font-bold text-slate-900">$99</span>
+              <span className="text-base text-slate-500">AUD / session</span>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="https://book.longcare.au?service=mentor-1h"
+                className="bg-sky-700 hover:bg-sky-600 text-white px-6 py-3 rounded-full font-semibold inline-flex items-center gap-2 no-underline transition"
+              >
+                Book Now for $99 <ArrowRight className="size-4" aria-hidden />
+              </a>
+              <Link
+                href="/services"
+                className="border border-slate-300 hover:border-slate-400 text-slate-700 px-6 py-3 rounded-full font-medium inline-flex items-center gap-2 no-underline transition"
+              >
+                View All Services
+              </Link>
+            </div>
+          </div>
+          <div className="hidden lg:block">
+            <HeroMentor className="text-sky-700" width={360} height={270} />
+          </div>
+        </div>
+      </section>
+
+      {/* Booking flow */}
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-8">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 sm:p-12 overflow-x-auto">
+          <h3 className="font-heading text-2xl text-slate-900 text-center mb-8">From booking to outcomes</h3>
+          <div className="flex justify-center">
+            <FlowThreeStep width={720} height={140} />
+          </div>
+          <div className="mt-6 grid grid-cols-3 gap-4 text-center text-sm text-slate-600 max-w-2xl mx-auto">
+            <div><strong className="text-slate-900 block">Book</strong>Choose your slot</div>
+            <div><strong className="text-slate-900 block">Session</strong>60 min deep-dive</div>
+            <div><strong className="text-slate-900 block">Notes</strong>Workflows + learning path</div>
+          </div>
+        </div>
+      </section>
+
       {/* Benefits */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="section-title">What You Get</h2>
-        <div className="grid">
-          {BENEFITS.map((b) => (
-            <div key={b.title} className="card">
-              <h3 className="card-title" style={{ fontSize: '1.2rem' }}>{b.title}</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{b.desc}</p>
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-12">
+        <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 text-center mb-12">
+          What You Get
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2">
+          {BENEFITS.map(({ title, desc, Icon }) => (
+            <div
+              key={title}
+              className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm"
+            >
+              <div className="size-10 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center mb-4">
+                <Icon className="size-5" aria-hidden />
+              </div>
+              <h3 className="font-heading text-xl font-semibold text-slate-900">{title}</h3>
+              <p className="mt-2 text-slate-600 text-sm leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Use Cases */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="section-title">Popular Use Cases</h2>
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
-          {[
-            'Build custom ChatGPT/Gemini prompts for your workflow',
-            'Automate repetitive tasks with AI (emails, reports, data entry)',
-            'Develop an AI strategy roadmap for your SME',
-            'Learn prompt engineering techniques for better AI outputs',
-            'Evaluate and compare AI tools for your specific use case',
-            'Integrate AI into your existing tech stack',
-          ].map((item) => (
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-12">
+        <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 text-center mb-12">
+          Popular Use Cases
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {USE_CASES.map((item) => (
             <div
               key={item}
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '0.75rem',
-                padding: '1rem',
-                background: 'var(--card-bg)',
-                borderRadius: '12px',
-                border: '1px solid var(--card-border)',
-              }}
+              className="flex items-start gap-3 bg-white border border-slate-200 rounded-xl p-4 shadow-sm"
             >
-              <span style={{ color: 'var(--accent)', fontSize: '1.2rem', flexShrink: 0 }}>&#10003;</span>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{item}</span>
+              <CheckCircle2 className="size-5 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden />
+              <span className="text-sm text-slate-700">{item}</span>
             </div>
           ))}
         </div>
       </section>
 
       {/* Comparison */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="section-title">Starter vs Mentor</h2>
-        <div style={{ maxWidth: '700px', margin: '0 auto', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <th style={{ textAlign: 'left', padding: '0.75rem' }}>Feature</th>
-                <th style={{ textAlign: 'center', padding: '0.75rem' }}>Starter $29</th>
-                <th style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--accent)' }}>Mentor $99</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { feature: 'Duration', starter: '30 min', mentor: '60 min' },
-                { feature: 'Google Meet 1-on-1', starter: 'Yes', mentor: 'Yes' },
-                { feature: 'AI-Generated Notes', starter: 'Yes', mentor: 'Yes' },
-                { feature: 'Custom AI Workflows', starter: '-', mentor: 'Yes' },
-                { feature: 'Personalised Learning Path', starter: '-', mentor: 'Yes' },
-                { feature: 'Session Q&A Summary', starter: '-', mentor: 'Yes' },
-              ].map((row) => (
-                <tr key={row.feature} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '0.75rem' }}>{row.feature}</td>
-                  <td
-                    style={{
-                      textAlign: 'center',
-                      padding: '0.75rem',
-                      color: row.starter === 'Yes' ? 'var(--accent)' : row.starter === '-' ? 'rgba(255,255,255,0.2)' : 'inherit',
-                    }}
-                  >
-                    {row.starter}
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'center',
-                      padding: '0.75rem',
-                      color: row.mentor === 'Yes' ? 'var(--accent)' : 'inherit',
-                    }}
-                  >
-                    {row.mentor}
-                  </td>
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-12">
+        <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 text-center mb-12">
+          Starter vs Mentor
+        </h2>
+        <div className="max-w-2xl mx-auto bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th className="text-left px-4 py-3 font-semibold text-slate-700">Feature</th>
+                  <th className="text-center px-4 py-3 font-semibold text-slate-700">
+                    Starter $29
+                  </th>
+                  <th className="text-center px-4 py-3 font-semibold text-sky-700">Mentor $99</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {COMPARISON.map((row) => (
+                  <tr key={row.feature}>
+                    <td className="px-4 py-3 text-slate-700">{row.feature}</td>
+                    <td className="px-4 py-3 text-center">
+                      <Cell value={row.starter} />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Cell value={row.mentor} highlight />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="section-title">Frequently Asked Questions</h2>
-        <div className="faq-list">
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-12">
+        <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 text-center mb-12">
+          Frequently Asked Questions
+        </h2>
+        <div className="max-w-3xl mx-auto space-y-3">
           {FAQ_ITEMS.map((faq, i) => (
-            <details key={i} className="faq-item">
-              <summary className="faq-question" style={{ listStyle: 'none' }}>
+            <details
+              key={i}
+              className="group bg-white border border-slate-200 rounded-xl shadow-sm open:shadow-md transition"
+            >
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 p-5 font-medium text-slate-900">
                 <span>{faq.q}</span>
-                <span style={{ color: 'var(--accent)' }}>+</span>
+                <span className="size-6 rounded-full bg-sky-50 text-sky-700 flex items-center justify-center text-lg leading-none transition group-open:rotate-45">
+                  +
+                </span>
               </summary>
-              <div className="faq-answer">{faq.a}</div>
+              <div className="px-5 pb-5 text-slate-700 text-sm leading-relaxed">{faq.a}</div>
             </details>
           ))}
         </div>
       </section>
 
       {/* Final CTA */}
-      <div className="cta-banner">
-        <h2>Ready for a deep-dive AI session?</h2>
-        <p>
-          Book your 1-hour AI Mentor session and walk away with custom workflows, actionable insights, and a clear path forward.
-        </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="https://booking.g.bookedai.au?service=mentor-1h" className="btn btn-primary">
-            Book $99 Mentor Session
-          </a>
-          <a href="/services/packages" className="btn btn-outline">
-            Save with Packages
-          </a>
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 pb-20">
+        <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl p-10 sm:p-14 text-center shadow-sm">
+          <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+            Ready for a deep-dive AI session?
+          </h2>
+          <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+            Book your 1-hour AI Mentor session and walk away with custom workflows, actionable
+            insights, and a clear path forward.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3 justify-center">
+            <a
+              href="https://book.longcare.au?service=mentor-1h"
+              className="bg-sky-700 hover:bg-sky-600 text-white px-6 py-3 rounded-full font-semibold inline-flex items-center gap-2 no-underline transition"
+            >
+              Book $99 Mentor Session <ArrowRight className="size-4" aria-hidden />
+            </a>
+            <Link
+              href="/services/packages"
+              className="border border-slate-300 hover:border-slate-400 text-slate-700 px-6 py-3 rounded-full font-medium inline-flex items-center gap-2 no-underline transition"
+            >
+              Save with Packages
+            </Link>
+          </div>
+          <p className="mt-6 text-xs text-slate-500">
+            Powered by{' '}
+            <a href="https://g.bookedai.au" className="text-sky-700 hover:underline">
+              bookedai.au
+            </a>{' '}
+            | Pay by card or bank transfer | Cancel free 24h before
+          </p>
         </div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '1.5rem' }}>
-          Powered by{' '}
-          <a href="https://g.bookedai.au" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-            bookedai.au
-          </a>{' '}
-          | Pay by card or bank transfer | Cancel free 24h before
-        </p>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

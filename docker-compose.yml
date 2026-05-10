@@ -134,7 +134,12 @@ services:
     build:
       context: .
       dockerfile: services/drive-sync/Dockerfile
-    network_mode: host
+    ports: ['8083:8080']
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./credentials:/app/credentials:ro
       - ./docs:/app/docs:ro

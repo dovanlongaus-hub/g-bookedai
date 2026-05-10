@@ -15,7 +15,7 @@ export default function NotFound() {
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
       }}>
-        <img src="/logo.svg" alt="Longcare" style={{ height: 36, marginBottom: '2rem', opacity: 0.8 }} />
+        <img src="/logo.png" alt="Longcare" style={{ height: 36, marginBottom: '2rem', opacity: 0.85 }} />
         <h1 style={{
           fontSize: '3rem',
           fontWeight: 800,

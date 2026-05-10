@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
+import { CONTACT_EMAIL } from '@/lib/site-config';
+import { getPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Terms of Service — Longcare AU',
-  description: 'Terms of service for Longcare AU AI mentoring and learning platform.',
-};
+export const metadata: Metadata = getPageMetadata({
+  title: 'Terms of Service | LongCare AU',
+  description: 'Terms of service for the LongCare AU AI mentoring and learning platform — booking, payment, cancellation, and liability.',
+  path: '/terms',
+});
 
 export default function TermsPage() {
   return (
@@ -117,7 +120,7 @@ export default function TermsPage() {
           </p>
           <p style={{ marginTop: '0.75rem' }}>
             <strong style={{ color: 'var(--text-main)' }}>Email:</strong>{' '}
-            <a href="mailto:ceo@longcare.au" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>ceo@longcare.au</a>
+            <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'var(--accent)', textDecoration: 'underline' }}>{CONTACT_EMAIL}</a>
           </p>
           <p style={{ marginTop: '0.25rem' }}>
             <strong style={{ color: 'var(--text-main)' }}>Location:</strong> Sydney, NSW, Australia

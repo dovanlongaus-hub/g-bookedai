@@ -1,98 +1,115 @@
 'use client';
 
-import { useState } from 'react';
-import { ThemeToggle } from './theme-toggle';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Menu, X } from 'lucide-react';
+
+const links = [
+  { href: '/services', label: 'Services' },
+  { href: '/agents', label: 'Agents' },
+  { href: '/toolkit', label: 'Toolkit' },
+  { href: '/academy', label: 'Academy' },
+  { href: '/solutions', label: 'Solutions' },
+  { href: '/resources', label: 'Resources' },
+];
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState('');
 
-  const links = [
-    { href: '/services', label: 'Services' },
-    { href: '/pricing', label: 'Pricing' },
-    { href: '/how-it-works', label: 'How it Works' },
-    { href: '/courses', label: 'Courses' },
-    { href: '/mentors', label: 'Mentors' },
-    { href: '/faq', label: 'FAQ' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/testimonials', label: 'Reviews' },
-  ];
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      // Active state for in-page anchors only (#section-id).
+      const anchors = links
+        .filter((l) => l.href.startsWith('#'))
+        .map((l) => l.href.slice(1));
+      let current = '';
+      for (const id of anchors) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 120) current = id;
+      }
+      setActive(current);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <>
-      <nav aria-label="Main navigation" style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        background: 'rgba(11, 12, 16, 0.85)', backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 1.5rem',
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64 }}>
-          <a href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/logo.svg" alt="Longcare" style={{ height: 28 }} />
-          </a>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+        scrolled ? 'shadow-[0_1px_3px_rgba(15,23,42,0.06)]' : ''
+      }`}
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div className="mx-auto max-w-[1120px] flex items-center justify-between h-16 px-8 sm:px-10">
+        <a href="/" className="flex items-center gap-2.5 no-underline">
+          <Image
+            src="/logo.png"
+            alt="Longcare — AI Transformation for the Next Generation of Businesses"
+            width={208}
+            height={44}
+            priority
+            className="h-10 w-auto"
+          />
+        </a>
 
-          {/* Desktop links */}
-          <div className="desktop-nav" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
-            {links.slice(0, 5).map(l => (
-              <a key={l.href} href={l.href} style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.85rem' }}>{l.label}</a>
-            ))}
-            <a href="https://g.longcare.au" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '0.85rem' }}>AI Chat</a>
-            <button
-              onClick={() => {
-                const el = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-                if (el) { el.value = el.value === 'vi' ? 'en' : 'vi'; el.dispatchEvent(new Event('change')); }
-                else { window.open('https://translate.google.com/translate?sl=en&tl=vi&u=' + window.location.href, '_blank'); }
-              }}
-              style={{ background: 'none', border: '1px solid rgba(255,255,255,0.15)', color: '#9ba1a6', padding: '3px 8px', borderRadius: 4, fontSize: '0.75rem', cursor: 'pointer' }}
+        <div className="hidden md:flex items-center gap-5 lg:gap-7">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className={`text-[13px] font-medium transition-colors no-underline cursor-pointer ${
+                active === l.href.slice(1)
+                  ? 'text-sky-700 border-b-2 border-sky-700 pb-0.5'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
             >
-              VI
-            </button>
-            <ThemeToggle />
-            <a href="/search" style={{ color: '#9ba1a6', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              {l.label}
             </a>
-            <a href="https://book.longcare.au" style={{
-              background: 'var(--accent, #66fcf1)', color: '#0b0c10', padding: '0.5rem 1.25rem',
-              borderRadius: 24, fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none',
-            }}>Book Now</a>
-            <a href="https://g.bookedai.au" style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none', fontSize: '0.7rem' }}>Powered by BookedAI</a>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button className="mobile-menu-btn" onClick={() => setOpen(!open)} aria-label="Toggle menu" aria-expanded={open} style={{
-            display: 'none', background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 8,
-          }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {open ? <path d="M18 6L6 18M6 6l12 12" /> : <><path d="M3 6h18M3 12h18M3 18h18" /></>}
-            </svg>
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile overlay */}
-      {open && (
-        <div className="mobile-overlay" role="dialog" aria-label="Navigation menu" style={{
-          position: 'fixed', top: 64, left: 0, right: 0, bottom: 0, zIndex: 99,
-          background: 'rgba(11, 12, 16, 0.98)', backdropFilter: 'blur(20px)',
-          padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem',
-        }} onClick={() => setOpen(false)}>
-          {links.map(l => (
-            <a key={l.href} href={l.href} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.1rem', padding: '0.75rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{l.label}</a>
           ))}
-          <a href="https://g.longcare.au" style={{ color: '#9ba1a6', textDecoration: 'none', fontSize: '1.1rem', padding: '0.75rem 0' }}>AI Chat</a>
-          <a href="https://book.longcare.au" style={{
-            background: 'var(--accent, #66fcf1)', color: '#0b0c10', padding: '0.85rem', borderRadius: 8,
-            fontWeight: 600, textDecoration: 'none', textAlign: 'center', marginTop: '1rem',
-          }}>Book Now</a>
+          <a
+            href="https://book.longcare.au"
+            rel="noopener noreferrer"
+            className="cursor-pointer btn-cta inline-flex items-center gap-1.5 px-5 py-2.5 text-[13px] font-semibold rounded-full no-underline"
+          >
+            Book a consult
+          </a>
+        </div>
+
+        <button
+          onClick={() => setOpen(!open)}
+          className="md:hidden p-2 text-slate-700 cursor-pointer"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+        >
+          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
+      </div>
+
+      {open && (
+        <div className="md:hidden bg-[#F8FAFC] border-t border-slate-200 px-8 py-5 space-y-4">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="block text-[15px] font-medium text-slate-700 no-underline py-1 cursor-pointer"
+            >
+              {l.label}
+            </a>
+          ))}
+          <a
+            href="https://book.longcare.au"
+            rel="noopener noreferrer"
+            className="block mt-3 btn-cta px-5 py-3 text-sm font-semibold rounded-full text-center no-underline cursor-pointer"
+          >
+            Book a consult
+          </a>
         </div>
       )}
-
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: block !important; }
-        }
-      `}</style>
-    </>
+    </nav>
   );
 }

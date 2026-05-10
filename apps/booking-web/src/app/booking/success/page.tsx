@@ -16,7 +16,7 @@ function SuccessContent() {
   return (
     <div className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="glass-panel" style={{ maxWidth: 500, textAlign: 'center', padding: '3rem 2rem' }}>
-        <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2.5rem' }}>✓</div>
+        <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2.5rem' }}>✓</div>
         <h1 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Payment Successful!</h1>
         <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Your booking has been confirmed. Check your email for the Google Meet link.</p>
         {bookingId && <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontFamily: 'monospace' }}>Ref: {bookingId}</p>}

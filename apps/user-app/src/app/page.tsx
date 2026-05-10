@@ -1,248 +1,338 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { Bell, Settings, LogIn } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Toaster, toast } from 'sonner';
+import { SessionAlert } from '../components/SessionAlert';
+import { StatsGrid } from '../components/StatsGrid';
+import { BookingCard } from '../components/BookingCard';
+import { LearningProgress } from '../components/LearningProgress';
+import {
+  fetchMyBookings,
+  fetchMyNotifications,
+  fetchUnreadCount,
+  fetchLearningHistory,
+  isAuthenticated,
+} from '../lib/api';
+
+// Inline initAuth to avoid cross-package build issues
+function checkAuthFromUrl() {
+  if (typeof window === 'undefined') return;
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('auth_token');
+  const provider = params.get('auth_provider');
+  if (token) {
+    localStorage.setItem('auth_token', token);
+    if (provider) localStorage.setItem('auth_provider', provider);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('auth_token');
+    url.searchParams.delete('auth_provider');
+    window.history.replaceState({}, '', url.pathname + url.search);
+  }
+}
+
+interface Booking {
+  id: string;
+  service_name: string;
+  starts_at: string;
+  ends_at: string;
+  status: string;
+  google_meet_url?: string;
+}
+
+interface LearningSession {
+  id: string;
+  service_name: string;
+  summary: string;
+  next_cta: string;
+  created_at: string;
+}
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+};
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
+};
 
 export default function Dashboard() {
   const [isDemo, setIsDemo] = useState(true);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [learningHistory, setLearningHistory] = useState<LearningSession[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/services')
-      .then(r => r.json())
-      .then(d => {
-        if (d.success) setIsDemo(false);
-      })
-      .catch(() => {});
+    // Pick up cross-domain auth token from URL if present
+    checkAuthFromUrl();
+
+    if (!isAuthenticated()) {
+      setIsDemo(true);
+      setLoading(false);
+      return;
+    }
+
+    setIsDemo(false);
+    setLoading(true);
+
+    Promise.allSettled([
+      fetchMyBookings(),
+      fetchLearningHistory(),
+      fetchUnreadCount(),
+    ]).then(([bookingsRes, learningRes, unreadRes]) => {
+      if (bookingsRes.status === 'fulfilled' && bookingsRes.value.success) {
+        setBookings(bookingsRes.value.data || []);
+      }
+      if (learningRes.status === 'fulfilled' && learningRes.value.success) {
+        setLearningHistory(learningRes.value.data || []);
+      }
+      if (unreadRes.status === 'fulfilled' && unreadRes.value.success) {
+        setUnreadCount(unreadRes.value.data?.count || 0);
+      }
+      setLoading(false);
+    });
   }, []);
-  const upcomingBookings = [
-    {
-      id: 'BK-1047',
-      service: 'AI Strategy Consultation',
-      date: 'Mon 5 May 2026, 10:00 AM',
-      duration: '60 min',
-      status: 'confirmed' as const,
-      meetLink: 'https://meet.google.com/abc-defg-hij',
-      mentor: 'Dr. Sarah Chen',
-    },
-    {
-      id: 'BK-1052',
-      service: 'Machine Learning Fundamentals',
-      date: 'Wed 7 May 2026, 2:00 PM',
-      duration: '90 min',
-      status: 'confirmed' as const,
-      meetLink: 'https://meet.google.com/klm-nopq-rst',
-      mentor: 'James Nguyen',
-    },
-    {
-      id: 'BK-1058',
-      service: 'Career Pathway Review',
-      date: 'Fri 9 May 2026, 11:00 AM',
-      duration: '45 min',
-      status: 'pending' as const,
-      meetLink: null,
-      mentor: 'Dr. Sarah Chen',
-    },
+
+  // Separate upcoming vs past bookings
+  const now = new Date();
+  const upcomingBookings = bookings.filter(
+    (b) => b.starts_at && new Date(b.starts_at) > now && !['CANCELLED', 'REFUNDED'].includes(b.status),
+  );
+  const completedCount = bookings.filter((b) => b.status === 'CONFIRMED' && b.starts_at && new Date(b.starts_at) < now).length;
+
+  // Compute learning steps from history
+  const learningSteps = learningHistory.slice(0, 5).map((s) => ({
+    label: s.service_name || 'Session',
+    completed: true,
+  }));
+
+  // Compute a next upcoming session for the alert
+  const nextSession = upcomingBookings.length > 0
+    ? upcomingBookings.sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime())[0]
+    : null;
+
+  // Format date/time helpers
+  function formatDate(iso: string) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Australia/Sydney' });
+  }
+  function formatTime(iso: string) {
+    const d = new Date(iso);
+    return d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit', timeZone: 'Australia/Sydney' }) + ' AEST';
+  }
+  function countdown(iso: string) {
+    const diff = new Date(iso).getTime() - now.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days <= 0) return 'Today';
+    if (days === 1) return 'Tomorrow';
+    return `in ${days} days`;
+  }
+
+  // --- Demo data fallback ---
+  const demoBookings = [
+    { id: 'BK-1047', service: '1-Hour AI Mentor', date: 'Mon 5 May', time: '10:00 AM AEST', countdown: 'Tomorrow', meetLink: 'https://meet.google.com/abc-defg-hij' },
+    { id: 'BK-1052', service: 'Machine Learning Fundamentals', date: 'Wed 7 May', time: '2:00 PM AEST', countdown: 'in 3 days', meetLink: 'https://meet.google.com/klm-nopq-rst' },
+    { id: 'BK-1058', service: 'Career Pathway Review', date: 'Fri 9 May', time: '11:00 AM AEST', countdown: 'in 5 days', meetLink: undefined },
   ];
 
-  const learningHistory = [
-    {
-      id: 'LS-0041',
-      title: 'Introduction to Neural Networks',
-      date: '28 Apr 2026',
-      summary: 'Covered perceptrons, activation functions, and backpropagation fundamentals. Built a simple classifier from scratch.',
-      docsLink: 'https://docs.google.com/document/d/1abc123',
-      progress: 100,
-    },
-    {
-      id: 'LS-0039',
-      title: 'Data Pipeline Architecture',
-      date: '21 Apr 2026',
-      summary: 'Designed an ETL pipeline using Cloud Dataflow. Discussed batch vs streaming patterns and error handling strategies.',
-      docsLink: 'https://docs.google.com/document/d/2def456',
-      progress: 100,
-    },
-    {
-      id: 'LS-0036',
-      title: 'Python for Data Science',
-      date: '14 Apr 2026',
-      summary: 'Pandas, NumPy, and matplotlib deep dive. Completed exploratory data analysis on a real-world dataset.',
-      docsLink: 'https://docs.google.com/document/d/3ghi789',
-      progress: 100,
-    },
+  const demoLearningSteps = [
+    { label: 'Intro to AI', completed: true },
+    { label: 'Data Pipelines', completed: true },
+    { label: 'Neural Networks', completed: true },
+    { label: 'Deep Learning', completed: false },
+    { label: 'Deployment', completed: false },
   ];
 
-  const recommendations = [
-    {
-      title: 'Deep Learning with TensorFlow',
-      reason: 'Based on your neural networks session, this is the natural next step.',
-      type: 'Course',
-    },
-    {
-      title: 'Cloud ML Deployment Workshop',
-      reason: 'You have strong pipeline skills — learn to deploy models to production.',
-      type: 'Workshop',
-    },
-    {
-      title: 'Resume & Portfolio Review',
-      reason: 'With 12 sessions completed, it is time to showcase your new skills.',
-      type: 'Career',
-    },
-  ];
+  const recentNotes = learningHistory.length > 0
+    ? learningHistory.slice(0, 3).map((s) => ({ title: s.service_name || 'Session Notes', link: '#' }))
+    : [
+        { title: 'Introduction to Neural Networks', link: 'https://docs.google.com/document/d/1abc123' },
+        { title: 'Data Pipeline Architecture', link: 'https://docs.google.com/document/d/2def456' },
+        { title: 'Python for Data Science', link: 'https://docs.google.com/document/d/3ghi789' },
+      ];
 
   return (
-    <main className="dashboard animate-in">
-      {/* Header */}
-      <div className="dashboard-header">
-        <div>
-          <h1>My Dashboard</h1>
-          <p className="user-info" style={{ marginTop: '0.25rem' }}>
-            Welcome back, Long D.
-          </p>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <p className="user-info">app.longcare.au</p>
-          <p className="user-info" style={{ fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            Member since Jan 2026
-          </p>
-        </div>
-      </div>
+    <main className="dashboard">
+      <Toaster
+        theme="dark"
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: 'rgba(15, 15, 36, 0.95)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            color: '#f8f9fa',
+          },
+        }}
+      />
 
-      {/* Demo Mode Banner */}
-      {isDemo && (
-        <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: 12, padding: '1rem 1.5rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+      >
+        {/* Header */}
+        <motion.div variants={fadeUpItem} className="dashboard-header">
           <div>
-            <strong>Demo Mode</strong>
-            <span style={{ color: 'var(--text-muted)', marginLeft: '0.75rem' }}>Sign in with Google to see your real bookings and learning history</span>
+            <h1>Welcome back!</h1>
           </div>
-          <a href="https://g.longcare.au" className="btn btn-primary" style={{ margin: 0, padding: '0.5rem 1rem', width: 'auto', fontSize: '0.85rem' }}>Sign In</a>
-        </div>
-      )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Button
+              variant="outline"
+              size="icon"
+              className="relative border-[rgba(255,255,255,0.08)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[rgba(255,255,255,0.04)]"
+              title="Notifications"
+              onClick={() => window.location.href = '/notifications'}
+            >
+              <Bell className="h-4 w-4" />
+              {unreadCount > 0 && (
+                <Badge className="absolute -top-1.5 -right-1.5 h-4 min-w-4 p-0 flex items-center justify-center text-[0.6rem] bg-[#ef4444] text-white border-0">
+                  {unreadCount}
+                </Badge>
+              )}
+            </Button>
+            <a href="/settings">
+              <Button
+                variant="outline"
+                size="icon"
+                className="border-[rgba(255,255,255,0.08)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[rgba(255,255,255,0.04)]"
+                title="Settings"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            </a>
+          </div>
+        </motion.div>
 
-      {/* Stats */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-label">Total Sessions</div>
-          <div className="stat-value learning">12</div>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            +3 this month
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Upcoming Bookings</div>
-          <div className="stat-value bookings">3</div>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            Next: Mon 5 May
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Learning Progress</div>
-          <div className="stat-value learning">78%</div>
-          <div className="progress-bar">
-            <div className="progress-fill" style={{ width: '78%' }} />
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Hours Invested</div>
-          <div className="stat-value" style={{ color: 'var(--accent)' }}>18.5</div>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-            Avg 1.5h per session
-          </div>
-        </div>
-      </div>
-
-      {/* Upcoming Bookings */}
-      <section className="section">
-        <h2>Upcoming Bookings</h2>
-        {upcomingBookings.map((booking) => (
-          <div className="card" key={booking.id}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                  <strong style={{ fontSize: '1.05rem' }}>{booking.service}</strong>
-                  <span className={`badge ${booking.status}`}>
-                    {booking.status === 'confirmed' ? 'Confirmed' : 'Pending Payment'}
+        {/* Demo Mode Banner */}
+        {isDemo && (
+          <motion.div variants={fadeUpItem}>
+            <Card className="demo-banner-card mb-6">
+              <div className="flex justify-between items-center flex-wrap gap-3 p-4">
+                <div>
+                  <strong>Demo Mode</strong>
+                  <span style={{ color: 'var(--text-muted)', marginLeft: '0.75rem' }}>
+                    Sign in with Google to see your real bookings and learning history
                   </span>
                 </div>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                  {booking.date} &middot; {booking.duration} &middot; with {booking.mentor}
-                </p>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-                  Ref: {booking.id}
-                </p>
+                <a href={`https://g.bookedai.au/login?redirect=${encodeURIComponent('https://app.longcare.au')}`}>
+                  <Button size="sm">
+                    <LogIn className="mr-1.5 h-3.5 w-3.5" />
+                    Sign In
+                  </Button>
+                </a>
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                {booking.meetLink ? (
-                  <a href={booking.meetLink} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                    Join Meet
-                  </a>
-                ) : (
-                  <a href="https://book.longcare.au/payment" className="btn btn-outline">
-                    Complete Payment
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
+            </Card>
+          </motion.div>
+        )}
 
-      {/* Learning History */}
-      <section className="section">
-        <h2>Learning History</h2>
-        {learningHistory.map((session) => (
-          <div className="card" key={session.id}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                  <strong>{session.title}</strong>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{session.date}</span>
-                </div>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                  {session.summary}
-                </p>
-              </div>
-              <a href={session.docsLink} className="btn btn-outline" target="_blank" rel="noopener noreferrer" style={{ whiteSpace: 'nowrap' }}>
-                View Notes
-              </a>
-            </div>
+        {/* Loading state */}
+        {loading && !isDemo && (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div style={{ display: 'inline-block', width: 32, height: 32, border: '3px solid rgba(255,255,255,0.1)', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
-        ))}
-      </section>
+        )}
 
-      {/* Recommended Next Steps */}
-      <section className="section">
-        <h2>Recommended Next Steps</h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
-          Personalised by AI based on your learning history
-        </p>
-        {recommendations.map((rec, i) => (
-          <div className="card" key={i}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
-                  <strong>{rec.title}</strong>
-                  <span className="badge confirmed">{rec.type}</span>
-                </div>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                  {rec.reason}
-                </p>
-              </div>
-              <a href="https://book.longcare.au" className="btn btn-outline">
-                Book Now
-              </a>
-            </div>
-          </div>
-        ))}
-      </section>
+        {/* Session Alert - real or demo */}
+        {!loading && nextSession && (
+          <motion.div variants={fadeUpItem}>
+            <SessionAlert
+              serviceName={nextSession.service_name}
+              dateTime={`${formatDate(nextSession.starts_at)} ${formatTime(nextSession.starts_at)}`}
+              meetLink={nextSession.google_meet_url}
+              onReschedule={() => window.open('https://book.longcare.au', '_blank')}
+            />
+          </motion.div>
+        )}
+        {!loading && isDemo && (
+          <motion.div variants={fadeUpItem}>
+            <SessionAlert
+              serviceName="1-Hour AI Mentor"
+              dateTime="Today 2:00 PM AEST"
+              meetLink="https://meet.google.com/abc-defg-hij"
+              onReschedule={() => window.open('https://book.longcare.au', '_blank')}
+            />
+          </motion.div>
+        )}
 
-      {/* CTA */}
-      <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-        <a href="https://book.longcare.au" className="btn btn-primary" style={{ padding: '0.85rem 2.5rem', fontSize: '1rem' }}>
-          Book Next Session
-        </a>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.75rem' }}>
-          Sessions from $99 AUD incl. GST &middot; Google Meet &middot; AI session notes included
-        </p>
-      </div>
+        {/* Stats Grid */}
+        <motion.div variants={fadeUpItem}>
+          <StatsGrid
+            sessionsCompleted={isDemo ? 12 : completedCount}
+            hoursLearned={isDemo ? 18 : learningHistory.length * 1.5}
+            currentStreak={isDemo ? 4 : Math.min(upcomingBookings.length, 7)}
+            packageUsed={isDemo ? 7 : bookings.length}
+            packageTotal={isDemo ? 10 : Math.max(bookings.length, 10)}
+          />
+        </motion.div>
+
+        {/* Upcoming Bookings */}
+        <motion.section variants={fadeUpItem} className="section">
+          <h2>Upcoming Bookings</h2>
+          {!isDemo && upcomingBookings.length === 0 && !loading && (
+            <p style={{ color: 'var(--text-muted)', padding: '1rem 0' }}>No upcoming bookings. Book a session to get started!</p>
+          )}
+          {!isDemo
+            ? upcomingBookings
+                .sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime())
+                .map((booking) => (
+                  <BookingCard
+                    key={booking.id}
+                    date={formatDate(booking.starts_at)}
+                    time={formatTime(booking.starts_at)}
+                    serviceName={booking.service_name}
+                    meetLink={booking.google_meet_url}
+                    countdown={countdown(booking.starts_at)}
+                    onReschedule={() => window.open('https://book.longcare.au', '_blank')}
+                  />
+                ))
+            : demoBookings.map((booking) => (
+                <BookingCard
+                  key={booking.id}
+                  date={booking.date}
+                  time={booking.time}
+                  serviceName={booking.service}
+                  meetLink={booking.meetLink}
+                  countdown={booking.countdown}
+                  onReschedule={() => window.open('https://book.longcare.au', '_blank')}
+                />
+              ))}
+
+          {/* Book Next Session CTA */}
+          <a href="https://book.longcare.au">
+            <Button className="w-full mt-3 shimmer-button text-base py-5" size="lg">
+              Book Next Session
+            </Button>
+          </a>
+        </motion.section>
+
+        {/* Learning Progress */}
+        <motion.div variants={fadeUpItem}>
+          <LearningProgress
+            trackTitle="Track A: AI Foundations"
+            completionPercent={isDemo ? 60 : (learningHistory.length > 0 ? Math.round((learningHistory.length / Math.max(learningHistory.length + 2, 5)) * 100) : 0)}
+            steps={isDemo ? demoLearningSteps : learningSteps}
+            recentNotes={recentNotes}
+            recommendedTitle="Deep Learning with TensorFlow"
+            recommendedDesc="Based on your neural networks session, this is the natural next step."
+            onBookRecommended={() => window.open('https://book.longcare.au', '_blank')}
+          />
+        </motion.div>
+
+        {/* Footer info */}
+        <motion.div variants={fadeUpItem} style={{ textAlign: 'center', padding: '1.5rem 0 1rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+            Sessions from $99 AUD incl. GST &middot; Google Meet &middot; AI session notes included
+          </p>
+        </motion.div>
+      </motion.div>
     </main>
   );
 }

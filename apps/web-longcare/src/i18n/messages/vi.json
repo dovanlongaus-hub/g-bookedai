@@ -1,0 +1,189 @@
+{
+  "site": {
+    "name": "LongCare AU",
+    "tagline": "AI thực dụng cho doanh nghiệp vừa và nhỏ Úc",
+    "description": "Hướng dẫn AI, triển khai agentic, ROI đo lường được cho doanh nghiệp Úc."
+  },
+  "nav": {
+    "services": "Dịch vụ",
+    "academy": "Học viện",
+    "solutions": "Giải pháp",
+    "agents": "Agent",
+    "toolkit": "Bộ công cụ",
+    "resources": "Tài nguyên",
+    "blog": "Blog",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "bookConsult": "Đặt lịch tư vấn"
+  },
+  "footer": {
+    "services": "Dịch vụ",
+    "learnAndAssess": "Học & đánh giá",
+    "company": "Công ty",
+    "rightsReserved": "Bản quyền đã được bảo hộ",
+    "abnNote": "Doanh nghiệp Úc đã đăng ký ABN",
+    "compliance": "Giá đã bao gồm GST · Tuân thủ APP 1-13 · WCAG 2.2 AA"
+  },
+  "cta": {
+    "primary": "Đặt lịch tư vấn",
+    "secondary": "Tìm hiểu thêm",
+    "joinWaitlist": "Tham gia danh sách chờ",
+    "viewPricing": "Xem báo giá",
+    "getStarted": "Bắt đầu ngay",
+    "talkToMentor": "Trò chuyện với chuyên gia",
+    "downloadGuide": "Tải hướng dẫn"
+  },
+  "common": {
+    "comingSoon": "Sắp ra mắt",
+    "freeFirstLesson": "Bài học đầu miễn phí",
+    "gstInclusive": "Đã bao gồm GST",
+    "earlyAccess": "Truy cập sớm",
+    "applyForPilot": "Đăng ký chương trình thí điểm",
+    "loading": "Đang tải…",
+    "readMore": "Đọc tiếp",
+    "backToTop": "Lên đầu trang",
+    "search": "Tìm kiếm",
+    "yes": "Có",
+    "no": "Không",
+    "minutes": "phút",
+    "hours": "giờ"
+  },
+  "homepage": {
+    "heroTitle": "AI tạo ra giá trị thực — dành cho doanh nghiệp vừa và nhỏ Úc",
+    "heroSubtitle": "Hướng dẫn, triển khai agentic và ROI đo lường được ngay từ tuần đầu.",
+    "trustStrip": "Được tin dùng bởi doanh nghiệp vừa và nhỏ Úc trong y tế, bán lẻ, dịch vụ ăn uống, bất động sản, xây dựng, giáo dục và dịch vụ chuyên môn.",
+    "valuePropTitle": "Vì sao doanh nghiệp Úc chọn LongCare",
+    "valuePropPractical": "Thực dụng, không lý thuyết suông",
+    "valuePropMeasurable": "ROI đo lường được từ ngày đầu",
+    "valuePropCompliant": "Tuân thủ Luật Bảo vệ Quyền riêng tư Úc & GST"
+  },
+  "services": {
+    "hubTitle": "Dịch vụ Hướng dẫn AI & Triển khai Agentic",
+    "hubSubtitle": "Từ buổi khởi đầu 30 phút đến hợp tác triển khai nhiều tháng.",
+    "starterName": "Buổi Khởi đầu AI 30 Phút",
+    "starterTagline": "Trải nghiệm đầu tiên với hướng dẫn AI thực dụng",
+    "mentorName": "Buổi Hướng dẫn AI 1 Giờ",
+    "mentorTagline": "Tư vấn chuyên sâu cho một bài toán kinh doanh cụ thể",
+    "packagesName": "Gói Hướng dẫn AI",
+    "packagesTagline": "Hành trình nhiều buổi kèm hỗ trợ triển khai"
+  },
+  "academy": {
+    "hubTitle": "Học viện AI LongCare",
+    "hubSubtitle": "Đào tạo AI thực dụng cho doanh nghiệp vừa và nhỏ Úc và chuyên gia.",
+    "courseCatalog": "Danh mục khóa học",
+    "certifications": "Chứng chỉ",
+    "freeFirstLesson": "Bài học đầu luôn miễn phí"
+  },
+  "solutions": {
+    "hubTitle": "Giải pháp theo Ngành",
+    "hubSubtitle": "Các mô hình AI đã được kiểm chứng trong các ngành dọc của doanh nghiệp Úc.",
+    "exploreVertical": "Khám phá ngành này"
+  },
+  "resources": {
+    "hubTitle": "Tài nguyên AI cho doanh nghiệp vừa và nhỏ Úc",
+    "hubSubtitle": "Khung làm việc, mẫu biểu và đánh giá — tất cả miễn phí.",
+    "assessmentName": "Đánh giá Mức độ Sẵn sàng AI",
+    "assessmentTagline": "12 câu hỏi, 6 phút, nhận điểm trưởng thành và ước tính ROI",
+    "templatesName": "Mẫu biểu & Khung làm việc",
+    "guidesName": "Hướng dẫn Triển khai"
+  },
+  "blog": {
+    "hubTitle": "Góc nhìn & Ghi chép thực tế",
+    "hubSubtitle": "Bài học thật từ các doanh nghiệp Úc ứng dụng AI.",
+    "readTime": "Đọc {minutes} phút",
+    "publishedOn": "Đăng ngày {date}"
+  },
+  "contact": {
+    "title": "Trò chuyện với LongCare",
+    "subtitle": "Hãy chia sẻ về doanh nghiệp của bạn, chúng tôi phản hồi trong vòng một ngày làm việc.",
+    "nameLabel": "Họ và tên",
+    "emailLabel": "Email",
+    "phoneLabel": "Số điện thoại (không bắt buộc)",
+    "messageLabel": "Chúng tôi có thể giúp gì?",
+    "submit": "Gửi tin nhắn",
+    "success": "Cảm ơn bạn — chúng tôi sẽ liên hệ sớm."
+  },
+  "errors": {
+    "generic": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+    "network": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
+    "validation": "Vui lòng kiểm tra các trường được đánh dấu.",
+    "rateLimit": "Quá nhiều yêu cầu. Thử lại sau một phút.",
+    "notFound": "Không tìm thấy trang này.",
+    "serverError": "Máy chủ gặp sự cố. Chúng tôi đang xử lý."
+  },
+  "about": {
+    "heroTitle": "Về LongCare",
+    "heroSubtitle": "AI thực dụng — đồng hành cùng doanh nghiệp vừa và nhỏ Úc ứng dụng AI",
+    "heroBody": "LongCare AU ra đời để thu hẹp khoảng cách giữa lời quảng bá về AI và kết quả kinh doanh thực tế. Chúng tôi kết hợp các chuyên gia cố vấn giàu kinh nghiệm với công cụ học tập do AI hỗ trợ, để cá nhân và doanh nghiệp vừa và nhỏ tại Úc có thể ứng dụng AI an toàn, có trách nhiệm và mang lại ROI đo lường được.",
+    "missionTitle": "Sứ mệnh của chúng tôi",
+    "missionBody": "Đưa AI đến với mọi người — từ cá nhân nâng cao kỹ năng cho thập kỷ làm việc tiếp theo, đến các doanh nghiệp vừa và nhỏ đang chuyển đổi số. Chúng tôi kết hợp hướng dẫn 1-1 cá nhân hoá với công cụ học tập AI để mang lại kết quả bạn có thể đo lường: giờ tiết kiệm, khách hàng được phục vụ, doanh thu tạo ra.",
+    "founderSectionTitle": "Gặp gỡ Nhà sáng lập",
+    "founderName": "TS. Đỗ Long",
+    "founderRole": "Nhà sáng lập & Cố vấn AI trưởng",
+    "founderBio1": "Với hơn 15 năm kinh nghiệm trong lĩnh vực công nghệ, TS. Long sáng lập LongCare AU và BookedAI nhằm đưa AI đến với mọi chuyên gia và doanh nghiệp vừa và nhỏ tại Úc. Hoạt động cố vấn của ông tập trung vào tích hợp AI thực dụng — prompt engineering, tự động hoá quy trình và triển khai có trách nhiệm — biến nghiên cứu tiên tiến thành kết quả thể hiện rõ trong báo cáo lãi/lỗ của bạn.",
+    "founderLanguages": "Ngôn ngữ: Tiếng Anh, Tiếng Việt.",
+    "team": {
+      "title": "Đội ngũ của chúng tôi",
+      "subtitle": "Hướng dẫn chuyên gia phù hợp với mục tiêu của bạn — từ cố vấn AI thực hành đến hỗ trợ học tập 24/7.",
+      "languagesLabel": "Ngôn ngữ:",
+      "founder": {
+        "name": "TS. Đỗ Long",
+        "title": "Nhà sáng lập & Cố vấn AI trưởng",
+        "bio": "Với hơn 15 năm trong ngành công nghệ, TS. Long sáng lập LongCare AU và BookedAI để đưa AI đến với mọi người. Ông chuyên hỗ trợ chuyên gia và doanh nghiệp vừa và nhỏ tích hợp AI vào quy trình thực tế với kết quả thực dụng và đo lường được.",
+        "languages": "Tiếng Anh, Tiếng Việt",
+        "ctaLabel": "Đặt lịch với TS. Long",
+        "expertise1": "Chiến lược AI",
+        "expertise2": "Prompt Engineering",
+        "expertise3": "Tự động hoá doanh nghiệp"
+      },
+      "assistant": {
+        "name": "Trợ lý Học tập AI",
+        "title": "Vận hành bởi Gemini",
+        "bio": "Sẵn sàng 24/7 bằng tiếng Anh, tiếng Việt và tiếng Trung. Tự động tạo ghi chú buổi học, trích xuất Q&A và đề xuất bước tiếp theo cá nhân hoá sau mỗi buổi cố vấn.",
+        "languages": "EN / VI / ZH",
+        "ctaLabel": "Trò chuyện ngay",
+        "expertise1": "Ghi chú buổi học",
+        "expertise2": "Trích xuất Q&A",
+        "expertise3": "Gợi ý cải thiện"
+      },
+      "guests": {
+        "name": "Cố vấn Khách mời",
+        "title": "Chuyên gia ngành (Sắp ra mắt)",
+        "bio": "Đội ngũ cố vấn khách mời luân phiên thuộc các lĩnh vực tài chính, y tế, giáo dục và vận hành. Tham gia danh sách chờ để được thông báo khi các workshop chuyên đề mở đăng ký.",
+        "languages": "Đa dạng",
+        "ctaLabel": "Tham gia danh sách chờ",
+        "expertise1": "Workshop ngành",
+        "expertise2": "Chủ đề chuyên sâu",
+        "expertise3": "Chuyên gia luân phiên"
+      }
+    },
+    "values": {
+      "title": "Giá trị cốt lõi",
+      "practical": {
+        "title": "AI thực dụng",
+        "desc": "Không thổi phồng. Mỗi buổi học đều cho ra một quy trình bạn có thể dùng ngay sáng thứ Hai."
+      },
+      "smeFirst": {
+        "title": "Ưu tiên doanh nghiệp vừa và nhỏ",
+        "desc": "Được thiết kế cho doanh nghiệp vừa và nhỏ Úc — không phải ngân sách của tập đoàn lớn."
+      },
+      "responsibleAI": {
+        "title": "AI có trách nhiệm",
+        "desc": "Tuân thủ Luật Bảo vệ Quyền riêng tư Úc. Dữ liệu của bạn vẫn là của bạn."
+      },
+      "australian": {
+        "title": "Tập trung vào thị trường Úc",
+        "desc": "Giá đã bao gồm GST, tuân thủ quy định Úc và có cố vấn am hiểu thị trường địa phương."
+      }
+    },
+    "whyTitle": "Vì sao chọn LongCare",
+    "why1": "Buổi học trực tiếp qua Google Meet — kết hợp cố vấn con người với ghi chú do AI tạo.",
+    "why2": "Tóm tắt AI, trích xuất Q&A và đề xuất bước tiếp theo cá nhân hoá sau mỗi buổi học.",
+    "why3": "Tất cả tài liệu buổi học được lưu trên Google Docs và truy cập từ bảng điều khiển của bạn.",
+    "why4": "Xây dựng trên Google Cloud với Gemini AI — bảo mật, nhanh và tuân thủ Luật Bảo vệ Quyền riêng tư Úc.",
+    "why5": "Đa ngôn ngữ (Anh / Việt / Trung) phù hợp với cộng đồng doanh nghiệp vừa và nhỏ đa dạng tại Úc.",
+    "cta": {
+      "button": "Đặt buổi Cố vấn AI"
+    }
+  }
+}

@@ -20,6 +20,7 @@
     "allowJs": true,
     "noEmit": true,
     "incremental": true,
+    "skipLibCheck": true,
     "isolatedModules": true,
     "lib": [
       "ES2022",

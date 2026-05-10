@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { query } from '@bookedai/db';
 import { logger } from '../lib/logger.js';
 import { authenticate, requireRole } from '../middleware/auth.js';
@@ -6,9 +7,25 @@ import { authenticate, requireRole } from '../middleware/auth.js';
 export const dashboardRouter = Router();
 
 /**
+ * Internal-only middleware: allows requests from localhost (server-to-server proxy)
+ * Falls back to normal Firebase/JWT auth if not from localhost
+ */
+function authenticateOrInternal(req: Request, res: Response, next: NextFunction) {
+  const ip = req.ip || req.socket.remoteAddress || '';
+  const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+  if (isLocal) {
+    // Internal request from Next.js proxy — set admin context
+    req.auth = { userId: 'internal', tenantId: 'internal', email: 'admin@internal', role: 'admin', firebaseUid: '', provider: 'firebase' };
+    return next();
+  }
+  // External request — require real auth
+  return authenticate(req, res, () => requireRole('admin', 'superadmin')(req, res, next));
+}
+
+/**
  * Admin dashboard stats — requires admin auth
  */
-dashboardRouter.get('/admin/stats', authenticate, requireRole('admin', 'superadmin'), async (_req, res) => {
+dashboardRouter.get('/admin/stats', authenticateOrInternal, async (_req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
 
@@ -97,7 +114,7 @@ dashboardRouter.get('/user/bookings', async (req, res) => {
 /**
  * Revenue by service
  */
-dashboardRouter.get('/admin/revenue-by-service', authenticate, requireRole('admin', 'superadmin'), async (_req, res) => {
+dashboardRouter.get('/admin/revenue-by-service', authenticateOrInternal, async (_req, res) => {
   try {
     const result = await query(`
       SELECT s.name, count(b.id)::int as bookings, coalesce(sum(b.total_cents),0)::int as revenue
@@ -188,9 +205,66 @@ dashboardRouter.post('/admin/approve-payment', authenticate, requireRole('admin'
 });
 
 /**
+ * Revenue chart — daily revenue for last 30 days
+ */
+dashboardRouter.get('/admin/revenue-chart', authenticateOrInternal, async (_req, res) => {
+  try {
+    const result = await query(`
+      SELECT DATE(p.created_at) as date, coalesce(sum(p.amount_cents),0)::int as revenue
+      FROM payments p
+      WHERE p.status = 'SUCCEEDED' AND p.created_at >= now() - interval '30 days'
+      GROUP BY DATE(p.created_at)
+      ORDER BY date ASC
+    `);
+
+    res.json({
+      success: true,
+      data: result.rows.map((r: any) => ({
+        date: new Date(r.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }),
+        value: Math.round(r.revenue / 100),
+      })),
+    });
+  } catch (err) {
+    logger.error({ err }, 'Revenue chart failed');
+    res.status(500).json({ success: false });
+  }
+});
+
+/**
+ * Recent bookings — last 10
+ */
+dashboardRouter.get('/admin/recent-bookings', authenticateOrInternal, async (_req, res) => {
+  try {
+    const result = await query(`
+      SELECT b.id, b.status, b.total_cents, b.created_at, b.google_meet_url,
+             s.name as service_name, u.email, u.display_name
+      FROM bookings b
+      JOIN services s ON b.service_id = s.id
+      JOIN users u ON b.user_id = u.id
+      ORDER BY b.created_at DESC LIMIT 10
+    `);
+
+    res.json({
+      success: true,
+      data: result.rows.map((r: any) => ({
+        id: r.id.slice(0, 8).toUpperCase(),
+        service: r.service_name,
+        customer: r.display_name || r.email,
+        status: r.status.toLowerCase(),
+        amount: `$${(r.total_cents / 100).toFixed(2)}`,
+        date: new Date(r.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }),
+      })),
+    });
+  } catch (err) {
+    logger.error({ err }, 'Recent bookings failed');
+    res.status(500).json({ success: false });
+  }
+});
+
+/**
  * List all users
  */
-dashboardRouter.get('/admin/users', authenticate, requireRole('admin', 'superadmin'), async (_req, res) => {
+dashboardRouter.get('/admin/users', authenticateOrInternal, async (_req, res) => {
   try {
     const result = await query(`
       SELECT u.id, u.email, u.display_name, u.role, u.language, u.phone, u.created_at,

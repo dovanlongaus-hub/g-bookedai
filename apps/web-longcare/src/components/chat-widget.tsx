@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { trackEvent } from '@/lib/analytics';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -20,12 +21,8 @@ export function ChatWidget() {
   const [lang, setLang] = useState('en');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const trackEvent = (name: string, params?: Record<string, any>) => {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', name, params);
-    }
-  };
+  // Track when the chat was opened so we can report duration on close.
+  const openedAtRef = useRef<number | null>(null);
 
   // Detect language from browser
   useEffect(() => {
@@ -53,7 +50,7 @@ export function ChatWidget() {
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setLoading(true);
-    trackEvent('send_chat_message', { language: lang });
+    trackEvent('chat_message', { role: 'user', length: userMsg.length });
 
     try {
       // Call the bookedai chat API via nginx proxy
@@ -65,31 +62,47 @@ export function ChatWidget() {
       const data = await res.json();
       const reply = data?.data?.reply || data?.reply || 'Sorry, please try again.';
       setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+      trackEvent('chat_message', { role: 'assistant', length: reply.length });
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: lang === 'vi' ? 'Xin lỗi, vui lòng thử lại.' : 'Sorry, please try again.' }]);
+      const fallback = lang === 'vi' ? 'Xin lỗi, vui lòng thử lại.' : 'Sorry, please try again.';
+      setMessages(prev => [...prev, { role: 'assistant', content: fallback }]);
+      trackEvent('chat_message', { role: 'assistant', length: fallback.length });
     } finally {
       setLoading(false);
     }
   }
 
+  function handleClose() {
+    const duration_s = openedAtRef.current
+      ? Math.max(0, Math.round((Date.now() - openedAtRef.current) / 1000))
+      : undefined;
+    openedAtRef.current = null;
+    trackEvent('chat_close', { duration_s });
+    setOpen(false);
+  }
+
   if (!open) {
     return (
       <button
-        onClick={() => { setOpen(true); trackEvent('open_chat'); }}
+        onClick={() => {
+          setOpen(true);
+          openedAtRef.current = Date.now();
+          trackEvent('chat_open', { trigger: 'manual' });
+        }}
         aria-label="Chat with AI"
         style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
           width: 60, height: 60, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #66fcf1, #45a29e)',
+          background: '#2563eb',
           border: 'none', cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(102, 252, 241, 0.4)',
+          boxShadow: '0 4px 20px rgba(37, 99, 235, 0.4)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.2s, box-shadow 0.2s',
         }}
         onMouseEnter={e => { (e.target as HTMLElement).style.transform = 'scale(1.1)'; }}
         onMouseLeave={e => { (e.target as HTMLElement).style.transform = 'scale(1)'; }}
       >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#0b0c10">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff">
           <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-3 12H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-3H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-3H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"/>
         </svg>
       </button>
@@ -100,27 +113,27 @@ export function ChatWidget() {
     <div style={{
       position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
       width: 380, maxWidth: 'calc(100vw - 32px)', height: 520, maxHeight: 'calc(100vh - 48px)',
-      background: '#0b0c10', border: '1px solid rgba(255,255,255,0.1)',
+      background: '#ffffff', border: '1px solid #e2e8f0',
       borderRadius: 16, display: 'flex', flexDirection: 'column',
-      boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
+      boxShadow: '0 8px 40px rgba(0,0,0,0.1)',
       overflow: 'hidden',
     }}>
       {/* Header */}
       <div style={{
-        padding: '12px 16px', background: 'linear-gradient(135deg, rgba(102,252,241,0.15), rgba(69,162,158,0.1))',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        padding: '12px 16px', background: '#f8fafc',
+        borderBottom: '1px solid #e2e8f0',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }} />
-          <span style={{ fontWeight: 600, color: '#fff', fontSize: '0.9rem' }}>Longcare AI</span>
-          <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem' }}>Online</span>
+          <span style={{ fontWeight: 600, color: '#334155', fontSize: '0.9rem' }}>Longcare AI</span>
+          <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Online</span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '2px 8px', borderRadius: 12, fontSize: '0.7rem', cursor: 'pointer' }}>
+          <button onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')} style={{ background: 'none', border: '1px solid #e2e8f0', color: '#64748b', padding: '2px 8px', borderRadius: 12, fontSize: '0.7rem', cursor: 'pointer' }}>
             {lang === 'vi' ? 'EN' : 'VI'}
           </button>
-          <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>×</button>
+          <button onClick={handleClose} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>×</button>
         </div>
       </div>
 
@@ -132,8 +145,8 @@ export function ChatWidget() {
               maxWidth: '85%', padding: '10px 14px', borderRadius: 12,
               fontSize: '0.85rem', lineHeight: 1.5, whiteSpace: 'pre-wrap',
               ...(msg.role === 'user'
-                ? { background: '#45a29e', color: '#fff', borderBottomRightRadius: 4 }
-                : { background: 'rgba(255,255,255,0.06)', color: '#e0e0e0', borderBottomLeftRadius: 4 }),
+                ? { background: '#2563eb', color: '#fff', borderBottomRightRadius: 4 }
+                : { background: '#f1f5f9', color: '#334155', borderBottomLeftRadius: 4 }),
             }}>
               {msg.content}
             </div>
@@ -141,10 +154,10 @@ export function ChatWidget() {
         ))}
         {loading && (
           <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 10 }}>
-            <div style={{ background: 'rgba(255,255,255,0.06)', padding: '10px 14px', borderRadius: 12, display: 'flex', gap: 4 }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.4)', animation: 'pulse 1s infinite' }} />
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.4)', animation: 'pulse 1s infinite 0.2s' }} />
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.4)', animation: 'pulse 1s infinite 0.4s' }} />
+            <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: 12, display: 'flex', gap: 4 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#94a3b8', animation: 'pulse 1s infinite' }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#94a3b8', animation: 'pulse 1s infinite 0.2s' }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#94a3b8', animation: 'pulse 1s infinite 0.4s' }} />
             </div>
           </div>
         )}
@@ -158,9 +171,9 @@ export function ChatWidget() {
             ? ['Xem dịch vụ', 'Đặt lịch', 'Bảng giá']
             : ['View services', 'Book a session', 'Pricing']
           ).map(s => (
-            <button key={s} onClick={() => { setInput(s); trackEvent('click_suggestion', { suggestion: s }); }} style={{
-              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-              color: '#aaa', padding: '4px 10px', borderRadius: 16, fontSize: '0.75rem', cursor: 'pointer',
+            <button key={s} onClick={() => { setInput(s); }} style={{
+              background: '#f8fafc', border: '1px solid #e2e8f0',
+              color: '#64748b', padding: '4px 10px', borderRadius: 16, fontSize: '0.75rem', cursor: 'pointer',
             }}>{s}</button>
           ))}
         </div>
@@ -168,7 +181,7 @@ export function ChatWidget() {
 
       {/* Input */}
       <form onSubmit={handleSend} style={{
-        padding: '10px 12px', borderTop: '1px solid rgba(255,255,255,0.08)',
+        padding: '10px 12px', borderTop: '1px solid #e2e8f0',
         display: 'flex', gap: 8,
       }}>
         <input
@@ -178,15 +191,15 @@ export function ChatWidget() {
           onChange={e => setInput(e.target.value)}
           placeholder={lang === 'vi' ? 'Nhập tin nhắn...' : 'Type a message...'}
           style={{
-            flex: 1, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: 8, padding: '8px 12px', color: '#fff', fontSize: '0.85rem', outline: 'none',
+            flex: 1, background: '#ffffff', border: '1px solid #e2e8f0',
+            borderRadius: 8, padding: '8px 12px', color: '#334155', fontSize: '0.85rem', outline: 'none',
           }}
         />
         <button
           type="submit"
           disabled={loading || !input.trim()}
           style={{
-            background: '#45a29e', border: 'none', borderRadius: 8,
+            background: '#2563eb', border: 'none', borderRadius: 8,
             padding: '8px 16px', color: '#fff', fontWeight: 600, fontSize: '0.85rem',
             cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
             opacity: loading || !input.trim() ? 0.5 : 1,

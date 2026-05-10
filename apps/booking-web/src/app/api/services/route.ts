@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const API_URL = process.env.API_URL || 'http://localhost:8090';
+const API_URL = process.env.API_URL || 'http://localhost:8180';
 
 export async function GET() {
   try {

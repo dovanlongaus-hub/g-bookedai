@@ -75,6 +75,7 @@ const faqCategories = [
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
+  const panelId = `faq-panel-${q.replace(/\W+/g, '-').toLowerCase()}`;
 
   return (
     <div
@@ -84,7 +85,10 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       }}
     >
       <button
+        type="button"
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={panelId}
         style={{
           background: 'none',
           border: 'none',
@@ -103,6 +107,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       >
         <span>{q}</span>
         <span
+          aria-hidden="true"
           style={{
             transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s',
@@ -117,6 +122,8 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       </button>
       {open && (
         <p
+          id={panelId}
+          role="region"
           style={{
             color: 'var(--text-muted, #9ba1a6)',
             lineHeight: 1.8,
@@ -135,13 +142,6 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 export default function FAQPage() {
   return (
     <>
-      <head>
-        <title>FAQ — Longcare AU</title>
-        <meta
-          name="description"
-          content="Frequently asked questions about Longcare AU AI mentoring sessions, booking, payments, technology, and more."
-        />
-      </head>
       <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h1 className="hero-title" style={{ fontSize: '3rem' }}>

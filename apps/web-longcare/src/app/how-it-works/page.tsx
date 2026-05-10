@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
+import { getPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'How It Works — AI Mentoring | Longcare AU',
-  description: 'Learn how Longcare AI mentoring works: choose a service, book a time, join via Google Meet, learn with your mentor, and get AI-powered notes.',
-};
+export const metadata: Metadata = getPageMetadata({
+  title: 'How It Works — AI Mentoring | LongCare AU',
+  description: 'Learn how LongCare AI mentoring works: choose a service, book a time, join via Google Meet, and get AI-powered session notes.',
+  path: '/how-it-works',
+});
 
 const steps = [
   {

@@ -1,0 +1,26 @@
+# Terraform state + caches — never commit these.
+.terraform/
+.terraform.lock.hcl.bak
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Variable files — may contain billing IDs / org IDs / domain secrets.
+*.tfvars
+*.tfvars.json
+
+# Local plan outputs.
+*.tfplan
+plan.out
+
+# CLI side files.
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Editors / OS.
+.DS_Store
+.idea/
+.vscode/

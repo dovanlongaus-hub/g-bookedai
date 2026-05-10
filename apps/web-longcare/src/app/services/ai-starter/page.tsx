@@ -1,10 +1,26 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  CheckCircle2,
+  Sparkles,
+  Video,
+  FileText,
+  Map,
+} from 'lucide-react';
 import { Breadcrumbs } from '../../../components/breadcrumbs';
+import { CONTACT_EMAIL } from '@/lib/site-config';
+import { getPageMetadata } from '@/lib/metadata';
+import { HeroMentor } from '@/components/illustrations/hero-mentor';
+import { FlowThreeStep } from '@/components/illustrations/flow-three-step';
 
 export const metadata: Metadata = {
-  title: '30-Min AI Starter Session $29 — Book Online | Longcare AU',
-  description:
-    'Book a 30-minute AI starter session for just $29 AUD. Perfect introduction to ChatGPT, Gemini, and AI tools for beginners. Live Google Meet with an AI mentor in Australia.',
+  ...getPageMetadata({
+    title: '30-Min AI Starter Session $29 | LongCare AU',
+    description:
+      'Book a 30-minute AI starter session for just $29 AUD. Perfect introduction to ChatGPT, Gemini, and AI tools via Google Meet.',
+    path: '/services/ai-starter',
+  }),
   keywords: [
     'AI starter session',
     'AI for beginners Australia',
@@ -17,27 +33,32 @@ export const metadata: Metadata = {
     'AI tools for beginners',
     'book AI session online',
   ],
-  openGraph: {
-    title: '30-Min AI Starter Session — $29 AUD | Longcare AU',
-    description:
-      'Get started with AI in just 30 minutes. Live 1-on-1 Google Meet session with an AI mentor. Only $29.',
-    url: 'https://longcare.au/services/ai-starter',
-    siteName: 'Longcare AU — Powered by BookedAI',
-    locale: 'en_AU',
-    type: 'website',
-    images: [
-      {
-        url: 'https://longcare.au/api/og?title=AI+Starter+Session&subtitle=$29+AUD+—+30+Minutes',
-        width: 1200,
-        height: 630,
-        alt: '30-Min AI Starter Session — $29',
-      },
-    ],
-  },
-  alternates: {
-    canonical: 'https://longcare.au/services/ai-starter',
-  },
 };
+
+const BENEFITS = [
+  {
+    title: 'Live 1-on-1 Session',
+    desc: '30 minutes of personalised guidance via Google Meet. Ask anything about AI tools, prompting, or automation.',
+    Icon: Video,
+  },
+  {
+    title: 'AI-Generated Notes',
+    desc: 'After the session, receive a comprehensive summary with key takeaways, tips, and resources curated by AI.',
+    Icon: FileText,
+  },
+  {
+    title: 'Next Steps Plan',
+    desc: 'Get a personalised recommendation for your AI learning journey, whether you are an individual or running a business.',
+    Icon: Map,
+  },
+];
+
+const AUDIENCE = [
+  'Professionals curious about AI but unsure where to start',
+  'Small business owners wanting to understand AI opportunities',
+  'Students looking to build AI skills for their career',
+  'Anyone who has tried ChatGPT or Gemini but wants to use them better',
+];
 
 const FAQ_ITEMS = [
   {
@@ -58,7 +79,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Can I get a refund?',
-    a: 'You can cancel or reschedule free of charge up to 24 hours before your session. Contact us at ceo@longcare.au for any issues.',
+    a: `You can cancel or reschedule free of charge up to 24 hours before your session. Contact us at ${CONTACT_EMAIL} for any issues.`,
   },
 ];
 
@@ -82,7 +103,7 @@ export default function AIStarterPage() {
       priceCurrency: 'AUD',
       availability: 'https://schema.org/InStock',
       validFrom: '2026-01-01',
-      url: 'https://booking.g.bookedai.au?service=starter-30min',
+      url: 'https://book.longcare.au?service=starter-30min',
     },
   };
 
@@ -97,7 +118,7 @@ export default function AIStarterPage() {
   };
 
   return (
-    <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+    <main className="bg-[#F8FAFC] text-slate-800">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
@@ -106,146 +127,166 @@ export default function AIStarterPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <Breadcrumbs
-        items={[
-          { name: 'Home', url: '/' },
-          { name: 'Services', url: '/services' },
-          { name: 'AI Starter', url: '/services/ai-starter' },
-        ]}
-      />
 
-      {/* Hero */}
-      <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <div
-          style={{
-            display: 'inline-block',
-            background: 'rgba(102, 252, 241, 0.1)',
-            border: '1px solid rgba(102, 252, 241, 0.2)',
-            borderRadius: '20px',
-            padding: '0.3rem 1rem',
-            fontSize: '0.85rem',
-            color: 'var(--accent)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          Best for beginners
-        </div>
-        <h1 className="hero-title" style={{ fontSize: '3rem' }}>
-          30-Min AI Starter Session
-        </h1>
-        <p className="hero-subtitle">
-          Discover how AI can accelerate your daily workflows in just 30 minutes.
-          Live 1-on-1 Google Meet with an experienced AI mentor.
-        </p>
-        <div className="card-price" style={{ justifyContent: 'center', fontSize: '3rem', marginBottom: '1.5rem' }}>
-          <span>$29</span>
-          <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>AUD / session</span>
-        </div>
-        <a
-          href="https://booking.g.bookedai.au?service=starter-30min"
-          className="btn btn-primary"
-          style={{ marginRight: '1rem' }}
-        >
-          Book Now for $29
-        </a>
-        <a href="/services" className="btn btn-outline">
-          View All Services
-        </a>
+      <div className="mx-auto max-w-[1120px] px-6 sm:px-10 pt-6">
+        <Breadcrumbs
+          items={[
+            { name: 'Home', url: '/' },
+            { name: 'Services', url: '/services' },
+            { name: 'AI Starter', url: '/services/ai-starter' },
+          ]}
+        />
       </div>
 
+      {/* Hero */}
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 pt-8 pb-12">
+        <div className="grid lg:grid-cols-[1fr_auto] gap-8 lg:gap-16 items-center">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 mb-5">
+              <Sparkles className="size-3" aria-hidden /> Best for beginners
+            </span>
+            <h1 className="font-heading text-4xl sm:text-5xl font-semibold tracking-tight text-slate-900">
+              30-Min AI Starter Session
+            </h1>
+            <p className="mt-4 text-lg text-slate-600">
+              Discover how AI can accelerate your daily workflows in just 30 minutes. Live 1-on-1
+              Google Meet with an experienced AI mentor.
+            </p>
+            <div className="mt-6 flex items-baseline gap-2">
+              <span className="text-4xl sm:text-5xl font-bold text-slate-900">$29</span>
+              <span className="text-base text-slate-500">AUD / session</span>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="https://book.longcare.au?service=starter-30min"
+                className="bg-sky-700 hover:bg-sky-600 text-white px-6 py-3 rounded-full font-semibold inline-flex items-center gap-2 no-underline transition"
+              >
+                Book Now for $29 <ArrowRight className="size-4" aria-hidden />
+              </a>
+              <Link
+                href="/services"
+                className="border border-slate-300 hover:border-slate-400 text-slate-700 px-6 py-3 rounded-full font-medium inline-flex items-center gap-2 no-underline transition"
+              >
+                View All Services
+              </Link>
+            </div>
+          </div>
+          <div className="hidden lg:block">
+            <HeroMentor className="text-sky-700" width={360} height={270} />
+          </div>
+        </div>
+      </section>
+
+      {/* Booking flow */}
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-8">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 sm:p-12 overflow-x-auto">
+          <h3 className="font-heading text-2xl text-slate-900 text-center mb-8">How it works</h3>
+          <div className="flex justify-center">
+            <FlowThreeStep width={720} height={140} />
+          </div>
+          <div className="mt-6 grid grid-cols-3 gap-4 text-center text-sm text-slate-600 max-w-2xl mx-auto">
+            <div><strong className="text-slate-900 block">Book</strong>Pick a slot online</div>
+            <div><strong className="text-slate-900 block">Session</strong>30 min Google Meet</div>
+            <div><strong className="text-slate-900 block">Notes</strong>AI summary + next steps</div>
+          </div>
+        </div>
+      </section>
+
       {/* Benefits */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="section-title">What You Get</h2>
-        <div className="grid">
-          {[
-            {
-              title: 'Live 1-on-1 Session',
-              desc: '30 minutes of personalised guidance via Google Meet. Ask anything about AI tools, prompting, or automation.',
-            },
-            {
-              title: 'AI-Generated Notes',
-              desc: 'After the session, receive a comprehensive summary with key takeaways, tips, and resources curated by AI.',
-            },
-            {
-              title: 'Next Steps Plan',
-              desc: 'Get a personalised recommendation for your AI learning journey, whether you are an individual or running a business.',
-            },
-          ].map((b) => (
-            <div key={b.title} className="card">
-              <h3 className="card-title" style={{ fontSize: '1.2rem' }}>{b.title}</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{b.desc}</p>
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-12">
+        <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 text-center mb-12">
+          What You Get
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {BENEFITS.map(({ title, desc, Icon }) => (
+            <div
+              key={title}
+              className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm"
+            >
+              <div className="size-10 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center mb-4">
+                <Icon className="size-5" aria-hidden />
+              </div>
+              <h3 className="font-heading text-xl font-semibold text-slate-900">{title}</h3>
+              <p className="mt-2 text-slate-600 text-sm leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Who Is This For */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="section-title">Who Is This For?</h2>
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
-          {[
-            'Professionals curious about AI but unsure where to start',
-            'Small business owners wanting to understand AI opportunities',
-            'Students looking to build AI skills for their career',
-            'Anyone who has tried ChatGPT or Gemini but wants to use them better',
-          ].map((item) => (
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-12">
+        <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 text-center mb-12">
+          Who Is This For?
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {AUDIENCE.map((item) => (
             <div
               key={item}
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '0.75rem',
-                padding: '1rem',
-                background: 'var(--card-bg)',
-                borderRadius: '12px',
-                border: '1px solid var(--card-border)',
-              }}
+              className="flex items-start gap-3 bg-white border border-slate-200 rounded-xl p-4 shadow-sm"
             >
-              <span style={{ color: 'var(--accent)', fontSize: '1.2rem', flexShrink: 0 }}>&#10003;</span>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{item}</span>
+              <CheckCircle2 className="size-5 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden />
+              <span className="text-sm text-slate-700">{item}</span>
             </div>
           ))}
         </div>
       </section>
 
       {/* FAQ */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="section-title">Frequently Asked Questions</h2>
-        <div className="faq-list">
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 py-12">
+        <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 text-center mb-12">
+          Frequently Asked Questions
+        </h2>
+        <div className="max-w-3xl mx-auto space-y-3">
           {FAQ_ITEMS.map((faq, i) => (
-            <details key={i} className="faq-item">
-              <summary className="faq-question" style={{ listStyle: 'none' }}>
+            <details
+              key={i}
+              className="group bg-white border border-slate-200 rounded-xl shadow-sm open:shadow-md transition"
+            >
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 p-5 font-medium text-slate-900">
                 <span>{faq.q}</span>
-                <span style={{ color: 'var(--accent)' }}>+</span>
+                <span className="size-6 rounded-full bg-sky-50 text-sky-700 flex items-center justify-center text-lg leading-none transition group-open:rotate-45">
+                  +
+                </span>
               </summary>
-              <div className="faq-answer">{faq.a}</div>
+              <div className="px-5 pb-5 text-slate-700 text-sm leading-relaxed">{faq.a}</div>
             </details>
           ))}
         </div>
       </section>
 
       {/* Final CTA */}
-      <div className="cta-banner">
-        <h2>Start your AI journey for just $29</h2>
-        <p>
-          No commitment. No risk. Book a 30-minute session and see how AI mentoring can help you or your business.
-        </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="https://booking.g.bookedai.au?service=starter-30min" className="btn btn-primary">
-            Book $29 Starter
-          </a>
-          <a href="/services/ai-mentor" className="btn btn-outline">
-            Or Try 1-Hour Mentor ($99)
-          </a>
+      <section className="mx-auto max-w-[1120px] px-6 sm:px-10 pb-20">
+        <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl p-10 sm:p-14 text-center shadow-sm">
+          <h2 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+            Start your AI journey for just $29
+          </h2>
+          <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+            No commitment. No risk. Book a 30-minute session and see how AI mentoring can help you
+            or your business.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3 justify-center">
+            <a
+              href="https://book.longcare.au?service=starter-30min"
+              className="bg-sky-700 hover:bg-sky-600 text-white px-6 py-3 rounded-full font-semibold inline-flex items-center gap-2 no-underline transition"
+            >
+              Book $29 Starter <ArrowRight className="size-4" aria-hidden />
+            </a>
+            <Link
+              href="/services/ai-mentor"
+              className="border border-slate-300 hover:border-slate-400 text-slate-700 px-6 py-3 rounded-full font-medium inline-flex items-center gap-2 no-underline transition"
+            >
+              Or Try 1-Hour Mentor ($99)
+            </Link>
+          </div>
+          <p className="mt-6 text-xs text-slate-500">
+            Powered by{' '}
+            <a href="https://g.bookedai.au" className="text-sky-700 hover:underline">
+              bookedai.au
+            </a>{' '}
+            | Pay by card or bank transfer | Cancel free 24h before
+          </p>
         </div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '1.5rem' }}>
-          Powered by{' '}
-          <a href="https://g.bookedai.au" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-            bookedai.au
-          </a>{' '}
-          | Pay by card or bank transfer | Cancel free 24h before
-        </p>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

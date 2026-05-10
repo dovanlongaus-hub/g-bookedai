@@ -1,11 +1,178 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, useInView, useMotionValue, useTransform, animate } from 'motion/react';
+import { Bot, CalendarDays, CreditCard, Video, Brain, BarChart3, ArrowRight, Check, Zap, Globe, Shield, Star } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+
+const featureIcons = [Bot, CalendarDays, CreditCard, Video, Brain, BarChart3];
+
+const features = [
+  {
+    icon: Bot,
+    title: 'AI Conversations',
+    desc: 'Multilingual chatbot on web, WhatsApp, and voice. Answers questions, recommends services, and guides to booking.',
+  },
+  {
+    icon: CalendarDays,
+    title: 'Smart Booking',
+    desc: '24/7 self-service booking with calendar sync, hold slots, automated reminders, and real-time availability.',
+  },
+  {
+    icon: CreditCard,
+    title: 'Payments',
+    desc: 'Stripe card payments, QR bank transfers, multi-currency. Automatic invoicing with GST compliance built in.',
+  },
+  {
+    icon: Video,
+    title: 'Video Meetings',
+    desc: 'Branded meeting rooms on your domain. Google Meet integration with auto-generated join links and calendar invites.',
+  },
+  {
+    icon: Brain,
+    title: 'AI Notes',
+    desc: 'Auto-generated session summaries, Q&A extraction, and improvement suggestions saved to Google Docs.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Analytics',
+    desc: 'Real-time dashboard with revenue tracking, booking funnel, customer LTV, and BigQuery-powered reports.',
+  },
+];
+
+const pricingPlans = [
+  {
+    name: 'Starter',
+    monthlyPrice: '$0',
+    annualPrice: '$0',
+    period: '/mo',
+    desc: 'Perfect for trying BookedAI. Up to 20 bookings per month.',
+    featured: false,
+    cta: 'Start Free',
+    features: [
+      'AI Chatbot (1 language)',
+      'Booking page',
+      'Stripe payments',
+      'Email confirmations',
+      'Google Meet links',
+      '20 bookings/month',
+    ],
+  },
+  {
+    name: 'Growth',
+    monthlyPrice: '$99',
+    annualPrice: '$79',
+    period: '/mo',
+    desc: 'For growing businesses. Unlimited bookings and AI notes.',
+    featured: true,
+    cta: 'Start Free Trial',
+    features: [
+      'AI Chatbot (3 languages)',
+      'Custom booking domain',
+      'Stripe + QR payments',
+      'AI session notes',
+      'Marketing Agent',
+      'WhatsApp integration',
+      'Xero integration',
+      'Unlimited bookings',
+      'Analytics dashboard',
+      'Priority support',
+    ],
+  },
+  {
+    name: 'Enterprise',
+    monthlyPrice: 'Custom',
+    annualPrice: 'Custom',
+    period: '',
+    desc: 'For large teams. White-label, API access, and SLA.',
+    featured: false,
+    cta: 'Contact Sales',
+    features: [
+      'Everything in Growth',
+      'White-label branding',
+      'Custom AI training',
+      'API access',
+      'Multi-location support',
+      'Dedicated account manager',
+      'SOC 2 compliance',
+      'Australian data residency',
+      'SLA guarantee',
+    ],
+  },
+];
+
+const integrations = [
+  'Google Calendar', 'Google Meet', 'Gmail', 'Google Docs',
+  'Stripe', 'Afterpay', 'Zip Pay', 'Xero',
+  'MYOB', 'WhatsApp', 'Twilio SMS', 'Firebase',
+  'BigQuery', 'Looker Studio', 'NotebookLM', 'Cloud Run', 'Pub/Sub',
+];
+
+const steps = [
+  { num: '1', title: 'Connect', desc: 'Add your services, pricing, and availability. Connect Google Workspace for calendar, email, and docs.' },
+  { num: '2', title: 'Customize', desc: 'Brand your chatbot, booking page, and meeting rooms. Use your custom domain for a seamless experience.' },
+  { num: '3', title: 'Launch', desc: 'Go live instantly. AI handles customer interactions 24/7 while you focus on delivering great service.' },
+];
+
+const stats = [
+  { value: 500, suffix: '+', label: 'Sessions processed' },
+  { value: 99.9, suffix: '%', label: 'Platform uptime' },
+  { value: 3, suffix: '', label: 'Languages supported' },
+  { value: 50, suffix: 'k+', label: 'Revenue processed', prefix: '$' },
+];
+
+// Animated counter component
+function AnimatedStat({ value, suffix, prefix, label }: { value: number; suffix: string; prefix?: string; label: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (v) => {
+    if (value % 1 !== 0) return v.toFixed(1);
+    return Math.round(v).toString();
+  });
+  const [display, setDisplay] = useState('0');
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(count, value, { duration: 2, ease: 'easeOut' });
+      const unsub = rounded.on('change', (v) => setDisplay(v));
+      return () => {
+        controls.stop();
+        unsub();
+      };
+    }
+  }, [isInView, value, count, rounded]);
+
+  return (
+    <div ref={ref} className="stat">
+      <div className="stat-number">{prefix}{display}{suffix}</div>
+      <div className="stat-label">{label}</div>
+    </div>
+  );
+}
+
+// Stagger container variants
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
+};
 
 export default function Home() {
   const [formData, setFormData] = useState({ business: '', email: '', phone: '' });
   const [signupStatus, setSignupStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [signupMessage, setSignupMessage] = useState('');
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
   const handleSignup = async () => {
     if (!formData.business || !formData.email) {
@@ -49,17 +216,20 @@ export default function Home() {
       <nav className="nav">
         <div className="nav-inner">
           <a href="/" className="nav-logo">
-            <img src="/logo-light.png" alt="BookedAI" style={{ height: 36 }} />
+            <img src="/logo.png" alt="LongCare.au — Long Term Care. AI Powered. Future Ready." className="h-10 w-auto" />
           </a>
           <div className="nav-links">
-            <a href="/features">Features</a>
+            <a href="#features">Features</a>
             <a href="#pricing">Pricing</a>
             <a href="/docs">Docs</a>
-            <a href="/docs/guide">Guide</a>
             <a href="/integrations">Integrations</a>
             <a href="/partners">Partners</a>
             <a href="https://longcare.au">Case Study</a>
-            <a href="#signup" className="btn btn-primary">Get Started</a>
+            <a href="#signup">
+              <Button className="shimmer-button">
+                Get Started <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
           </div>
         </div>
       </nav>
@@ -71,399 +241,368 @@ export default function Home() {
 
       {/* Hero */}
       <section className="hero">
-        <div className="hero-tag">Enterprise-grade AI platform</div>
-        <h1 className="hero-title">
-          The AI Revenue Engine<br />for Service Businesses
-        </h1>
-        <p className="hero-subtitle">
-          Automate conversations, booking, payments, meetings, and customer retention.
-          One platform that handles your entire revenue pipeline — from first contact to repeat booking.
-        </p>
-        <div className="hero-actions">
-          <a href="#signup" className="btn btn-primary btn-lg" onClick={() => trackEvent('start_trial')}>Start Free</a>
-          <a href="https://longcare.au" className="btn btn-secondary btn-lg">Watch Demo</a>
-        </div>
-        <p className="hero-meta">No credit card required &middot; 14-day trial &middot; Cancel anytime</p>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
+          <motion.div variants={fadeUpItem}>
+            <Badge variant="outline" className="hero-tag-badge mb-6">
+              <Zap className="mr-1.5 h-3 w-3" />
+              Enterprise-grade AI platform
+            </Badge>
+          </motion.div>
 
-        {/* Trust badges */}
-        <div style={{ display: 'flex', gap: 24, justifyContent: 'center', marginTop: 32, flexWrap: 'wrap' }}>
-          {[
-            { icon: '\u{1F1E6}\u{1F1FA}', label: 'Australian Built' },
-            { icon: '\u{1F512}', label: 'Data in Sydney' },
-            { icon: '\u2713', label: 'GST Registered' },
-            { icon: '\u267F', label: 'WCAG 2.2 AA' },
-            { icon: '\u{1F3E2}', label: 'Privacy Act Compliant' },
-          ].map((b, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#555', fontSize: '0.75rem' }}>
-              <span>{b.icon}</span> {b.label}
+          <motion.h1 variants={fadeUpItem} className="hero-title">
+            The AI Revenue Engine<br />for Service Businesses
+          </motion.h1>
+
+          <motion.p variants={fadeUpItem} className="hero-subtitle">
+            Turn customer intent into revenue — automatically.
+          </motion.p>
+
+          <motion.div variants={fadeUpItem} className="hero-actions">
+            <a href="#signup" onClick={() => trackEvent('start_trial')}>
+              <Button size="lg" className="shimmer-button text-base px-8 py-6">
+                Start Free <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
+            <a href="https://longcare.au">
+              <Button variant="outline" size="lg" className="text-base px-8 py-6 border-[rgba(255,255,255,0.1)] text-[var(--text)] hover:bg-[var(--bg-card)] hover:border-[rgba(255,255,255,0.15)]">
+                Book a Demo
+              </Button>
+            </a>
+          </motion.div>
+
+          <motion.p variants={fadeUpItem} className="hero-meta">
+            No credit card required &middot; 14-day trial &middot; Cancel anytime
+          </motion.p>
+        </motion.div>
+
+        {/* Product screenshot mock (glass card) */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.7, ease: 'easeOut' }}
+          className="glass"
+          style={{ marginTop: 48, borderRadius: 16, padding: 32, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}
+        >
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#ef4444' }} />
+            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#f59e0b' }} />
+            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#22c55e' }} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div style={{ background: 'rgba(99,102,241,0.1)', borderRadius: 12, padding: 20 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: 4 }}>Revenue Today</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#22c55e' }}>$2,450</div>
             </div>
-          ))}
-        </div>
+            <div style={{ background: 'rgba(20,184,166,0.1)', borderRadius: 12, padding: 20 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: 4 }}>Active Sessions</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-light)' }}>12</div>
+            </div>
+          </div>
+          <div style={{ marginTop: 16, background: 'rgba(255,255,255,0.03)', borderRadius: 8, padding: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              <span>AI Chat <ArrowRight className="inline h-3 w-3 mx-1" /> Booking <ArrowRight className="inline h-3 w-3 mx-1" /> Payment <ArrowRight className="inline h-3 w-3 mx-1" /> Meeting</span>
+              <span style={{ color: '#22c55e' }}>Live</span>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Stats */}
-      <section className="section">
-        <div className="container">
-          <div className="stats-row">
-            <div className="stat">
-              <div className="stat-number">500+</div>
-              <div className="stat-label">Sessions processed</div>
-            </div>
-            <div className="stat">
-              <div className="stat-number">99.9%</div>
-              <div className="stat-label">Platform uptime</div>
-            </div>
-            <div className="stat">
-              <div className="stat-number">$50k+</div>
-              <div className="stat-label">Revenue processed</div>
-            </div>
-            <div className="stat">
-              <div className="stat-number">3</div>
-              <div className="stat-label">Languages supported</div>
-            </div>
+      {/* Trust Strip */}
+      <section className="section" style={{ paddingTop: 0, paddingBottom: 48 }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 32 }}>
+            Powering businesses across Australia
+          </p>
+          <div className="stats-row" style={{ margin: 0 }}>
+            {stats.map((s, i) => (
+              <AnimatedStat key={i} value={s.value} suffix={s.suffix} prefix={s.prefix} label={s.label} />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* Feature Grid */}
       <section id="features" className="section section-dark">
         <div className="container">
-          <div style={{ textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.5 }}
+            style={{ textAlign: 'center' }}
+          >
             <h2 className="section-title">Everything you need to grow</h2>
             <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
               One platform replaces 10+ tools. AI handles everything from first contact to repeat booking.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="feature-grid">
-            {/* AI Conversations */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4V14H4a2 2 0 01-2-2V4zm4 3a1 1 0 100 2h8a1 1 0 100-2H6zm0 3a1 1 0 100 2h4a1 1 0 100-2H6z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">AI Conversations</h3>
-              <p className="feature-desc">
-                Multilingual chatbot on web, WhatsApp, and voice. Auto-answers questions, recommends services, and guides customers to booking.
-              </p>
-            </div>
-
-            {/* Smart Booking */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 110-2h1V8a1 1 0 011-1z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">Smart Booking</h3>
-              <p className="feature-desc">
-                24/7 self-service booking with calendar sync, 10-minute hold slots, automated reminders, and real-time availability.
-              </p>
-            </div>
-
-            {/* Payment Processing */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM2 9v5a2 2 0 002 2h12a2 2 0 002-2V9H2zm4 3a1 1 0 011-1h2a1 1 0 110 2H7a1 1 0 01-1-1zm5 0a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">Payment Processing</h3>
-              <p className="feature-desc">
-                Stripe card payments, QR code bank transfers, and multi-currency support. Automatic invoicing with GST compliance.
-              </p>
-            </div>
-
-            {/* Video Meetings */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2 6a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm12 .5l4-2v9l-4-2v-5z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">Video Meetings</h3>
-              <p className="feature-desc">
-                Branded meeting rooms on your domain. Google Meet integration with auto-generated join links and calendar invites.
-              </p>
-            </div>
-
-            {/* Email Automation */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v1.2L10 11 2 6.2V5zm0 3.5V15a2 2 0 002 2h12a2 2 0 002-2V8.5l-8 4.8-8-4.8z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">Email Automation</h3>
-              <p className="feature-desc">
-                Booking confirmations, 24h and 1h reminders, follow-ups. Gmail API integration with WhatsApp and SMS notifications.
-              </p>
-            </div>
-
-            {/* AI Session Intelligence */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M10 2a6 6 0 00-6 6c0 2.2 1.2 4.1 3 5.2V15a1 1 0 001 1h4a1 1 0 001-1v-1.8c1.8-1.1 3-3 3-5.2a6 6 0 00-6-6zm-1 15a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">AI Session Intelligence</h3>
-              <p className="feature-desc">
-                Auto-generated session summaries, Q&A extraction, and improvement suggestions. Saved to Google Docs with NotebookLM integration.
-              </p>
-            </div>
-
-            {/* Revenue Analytics */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2 16h16v1H2v-1zm1-1V9h2v6H3zm4 0V5h2v10H7zm4 0V7h2v8h-2zm4 0V3h2v12h-2z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">Revenue Analytics</h3>
-              <p className="feature-desc">
-                Real-time dashboard with revenue tracking, booking funnel, and customer LTV. BigQuery pipeline with Looker Studio reports.
-              </p>
-            </div>
-
-            {/* Marketing Automation */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M18 3a1 1 0 00-1.45-.9L3.1 8.57a1 1 0 00.05 1.83l4.79 1.8 1.8 4.79a1 1 0 001.83.05L18 3.45A1 1 0 0018 3z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">Marketing Automation</h3>
-              <p className="feature-desc">
-                AI generates campaigns across 8 channels. UTM tracking, CEO approval workflow, Google Ads, LinkedIn, Facebook, and email.
-              </p>
-            </div>
-
-            {/* Customer Retention */}
-            <div className="feature-card">
-              <div className="feature-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M4 2a2 2 0 00-2 2v1h16V4a2 2 0 00-2-2H4zm13.7 7.3a1 1 0 00-1.4 0L10 15.6l-2.3-2.3a1 1 0 00-1.4 1.4l3 3a1 1 0 001.4 0l7-7a1 1 0 000-1.4z"/>
-                </svg>
-              </div>
-              <h3 className="feature-title">Customer Retention</h3>
-              <p className="feature-desc">
-                AI recommends next sessions, handles no-show follow-ups, re-booking CTAs, and automated drip sequences to maximise LTV.
-              </p>
-            </div>
-          </div>
+          <motion.div
+            className="feature-grid"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            variants={staggerContainer}
+          >
+            {features.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <motion.div
+                  key={i}
+                  variants={fadeUpItem}
+                  className="feature-card gradient-border-card"
+                >
+                  <div className="feature-icon">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="feature-title">{f.title}</h3>
+                  <p className="feature-desc">{f.desc}</p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </div>
       </section>
 
-      {/* Industry Segments */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 16 }}>Built for Australian Service Businesses</h2>
-        <p style={{ color: '#888', marginBottom: 48 }}>From solo practitioners to multi-location teams</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
-          {[
-            { icon: '\u{1F3E5}', name: 'Allied Health', desc: 'Physio, psychology, speech therapy' },
-            { icon: '\u{1F487}', name: 'Beauty & Wellness', desc: 'Hair, nails, massage, spa' },
-            { icon: '\u{1F3E0}', name: 'NDIS & Home Care', desc: 'Disability, aged care, support' },
-            { icon: '\u{1F4BC}', name: 'Professional Services', desc: 'Consulting, legal, accounting' },
-            { icon: '\u{1F3CB}\u{FE0F}', name: 'Fitness & Coaching', desc: 'PT, yoga, life coaching' },
-          ].map((s, i) => (
-            <div key={i} style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '24px 16px' }}>
-              <div style={{ fontSize: '2rem', marginBottom: 8 }}>{s.icon}</div>
-              <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: 4 }}>{s.name}</div>
-              <div style={{ color: '#666', fontSize: '0.75rem' }}>{s.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How it works */}
+      {/* How It Works */}
       <section id="how-it-works" className="section">
         <div className="container">
-          <div style={{ textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{ textAlign: 'center' }}
+          >
             <h2 className="section-title">Go live in 3 steps</h2>
             <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
               From signup to live AI in under 30 minutes. No engineering team required.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="steps">
-            <div>
-              <div className="step-num">1</div>
-              <h3 className="step-title">Connect your services</h3>
-              <p className="step-desc">
-                Add your services, pricing, and availability. Connect Google Workspace for calendar, email, and docs.
-              </p>
-            </div>
-            <div>
-              <div className="step-num">2</div>
-              <h3 className="step-title">Customise your brand</h3>
-              <p className="step-desc">
-                Brand your chatbot, booking page, and meeting rooms. Use your custom domain for a seamless experience.
-              </p>
-            </div>
-            <div>
-              <div className="step-num">3</div>
-              <h3 className="step-title">Launch &amp; grow</h3>
-              <p className="step-desc">
-                Go live instantly. AI handles customer interactions 24/7 while you focus on delivering great service.
-              </p>
-            </div>
-          </div>
+          <motion.div
+            className="steps"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            {steps.map((s, i) => (
+              <motion.div key={i} variants={fadeUpItem}>
+                <div className="step-num">{s.num}</div>
+                <h3 className="step-title">{s.title}</h3>
+                <p className="step-desc">{s.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* Pricing */}
       <section id="pricing" className="section section-dark">
         <div className="container">
-          <div style={{ textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{ textAlign: 'center' }}
+          >
             <h2 className="section-title">Simple, transparent pricing</h2>
             <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
-              Start small. Scale as you grow. No hidden fees.
+              Start free. Scale as you grow. No hidden fees.
             </p>
-          </div>
 
-          <div className="pricing-grid">
-            {/* Starter */}
-            <div className="pricing-card">
-              <div className="pricing-name">Starter</div>
-              <div className="pricing-price">A$29<span>/mo</span></div>
-              <p className="pricing-desc">Perfect for solo practitioners. Up to 50 bookings per month.</p>
-              <ul className="pricing-features">
-                <li><span className="check">&#10003;</span> AI Chatbot (1 language)</li>
-                <li><span className="check">&#10003;</span> Booking page</li>
-                <li><span className="check">&#10003;</span> Stripe payments</li>
-                <li><span className="check">&#10003;</span> Email confirmations</li>
-                <li><span className="check">&#10003;</span> Google Meet links</li>
-                <li><span className="check">&#10003;</span> 50 bookings/month</li>
-              </ul>
-              <a href="#signup" className="btn btn-secondary btn-full" style={{ marginTop: 24 }}>Start 14-Day Trial</a>
+            {/* Billing toggle */}
+            <div className="flex justify-center mt-8">
+              <Tabs defaultValue="monthly" onValueChange={(v: string) => setBillingCycle(v as 'monthly' | 'annual')}>
+                <TabsList className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)]">
+                  <TabsTrigger value="monthly" className="data-[state=active]:bg-[var(--primary)] data-[state=active]:text-white">
+                    Monthly
+                  </TabsTrigger>
+                  <TabsTrigger value="annual" className="data-[state=active]:bg-[var(--primary)] data-[state=active]:text-white">
+                    Annual
+                    <Badge variant="secondary" className="ml-2 text-[0.65rem] px-1.5 py-0 bg-[rgba(34,197,94,0.15)] text-[#22c55e] border-0">
+                      Save 20%
+                    </Badge>
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
+          </motion.div>
 
-            {/* Growth */}
-            <div className="pricing-card featured">
-              <div className="pricing-badge">Most Popular</div>
-              <div className="pricing-name">Growth</div>
-              <div className="pricing-price">A$79<span>/mo</span></div>
-              <p className="pricing-desc">For growing businesses. Unlimited bookings.</p>
-              <ul className="pricing-features">
-                <li><span className="check">&#10003;</span> AI Chatbot (3 languages)</li>
-                <li><span className="check">&#10003;</span> Custom booking domain</li>
-                <li><span className="check">&#10003;</span> Stripe + QR payments</li>
-                <li><span className="check">&#10003;</span> AI session notes</li>
-                <li><span className="check">&#10003;</span> Marketing Agent</li>
-                <li><span className="check">&#10003;</span> WhatsApp integration</li>
-                <li><span className="check">&#10003;</span> Xero integration</li>
-                <li><span className="check">&#10003;</span> Afterpay/Zip ready</li>
-                <li><span className="check">&#10003;</span> Unlimited bookings</li>
-                <li><span className="check">&#10003;</span> Analytics dashboard</li>
-                <li><span className="check">&#10003;</span> Priority support</li>
-              </ul>
-              <a href="#signup" className="btn btn-primary btn-full" style={{ marginTop: 24 }} onClick={() => trackEvent('start_trial')}>Start 14-Day Trial</a>
-            </div>
+          <motion.div
+            className="pricing-grid"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            {pricingPlans.map((plan, i) => (
+              <motion.div key={i} variants={fadeUpItem}>
+                <Card className={`pricing-card-upgraded ${plan.featured ? 'featured' : ''}`}>
+                  {plan.featured && (
+                    <Badge className="pricing-badge-upgraded">
+                      <Star className="mr-1 h-3 w-3" />
+                      Most Popular
+                    </Badge>
+                  )}
+                  <CardContent className="p-0">
+                    <div className="pricing-name">{plan.name}</div>
+                    <div className="pricing-price">
+                      {billingCycle === 'monthly' ? plan.monthlyPrice : plan.annualPrice}
+                      {plan.period && <span>{plan.period}</span>}
+                    </div>
+                    <p className="pricing-desc">{plan.desc}</p>
+                    <ul className="pricing-features">
+                      {plan.features.map((f, j) => (
+                        <li key={j}>
+                          <Check className="h-4 w-4 text-[#22c55e] flex-shrink-0" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    {plan.name === 'Enterprise' ? (
+                      <a href="mailto:ceo@longcare.au?subject=BookedAI Enterprise" onClick={() => trackEvent('contact_sales')}>
+                        <Button variant="outline" className="w-full mt-6 border-[rgba(255,255,255,0.1)] text-[var(--text)] hover:bg-[var(--bg-card)]">
+                          {plan.cta} <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </a>
+                    ) : (
+                      <a href="#signup" onClick={() => trackEvent('start_trial')}>
+                        <Button className={`w-full mt-6 ${plan.featured ? 'shimmer-button' : ''}`} variant={plan.featured ? 'default' : 'outline'}>
+                          {plan.cta} <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </a>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
 
-            {/* Enterprise */}
-            <div className="pricing-card">
-              <div className="pricing-name">Enterprise</div>
-              <div className="pricing-price">A$199<span>/mo</span></div>
-              <p className="pricing-desc">For large teams. White-label and API access.</p>
-              <ul className="pricing-features">
-                <li><span className="check">&#10003;</span> Everything in Growth</li>
-                <li><span className="check">&#10003;</span> White-label branding</li>
-                <li><span className="check">&#10003;</span> Custom AI training</li>
-                <li><span className="check">&#10003;</span> API access</li>
-                <li><span className="check">&#10003;</span> Multi-location support</li>
-                <li><span className="check">&#10003;</span> Dedicated account manager</li>
-                <li><span className="check">&#10003;</span> MYOB integration</li>
-                <li><span className="check">&#10003;</span> SOC 2 compliance</li>
-                <li><span className="check">&#10003;</span> Australian data residency</li>
-                <li><span className="check">&#10003;</span> SLA guarantee</li>
-                <li><span className="check">&#10003;</span> Commission model option</li>
-              </ul>
-              <a href="mailto:ceo@longcare.au?subject=BookedAI Enterprise" className="btn btn-secondary btn-full" style={{ marginTop: 24 }} onClick={() => trackEvent('contact_sales')}>Contact Sales</a>
-            </div>
-          </div>
-
-          <p style={{ textAlign: 'center', color: '#888', fontSize: '0.8rem', marginTop: '1.5rem' }}>
-            All prices in AUD, GST inclusive &middot; Australian-built, data stays in Sydney &middot;<br/>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '1.5rem' }}>
+            All prices in AUD, GST inclusive &middot; Australian-built, data stays in Sydney &middot;<br />
             Commission model: A$0/mo + 5% per booking &middot; 14-day free trial on all plans
           </p>
         </div>
       </section>
 
-      {/* Case Study */}
+      {/* Integrations */}
       <section className="section">
         <div className="container">
-          <div style={{ textAlign: 'center' }}>
-            <h2 className="section-title">See BookedAI in action</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{ textAlign: 'center' }}
+          >
+            <h2 className="section-title">Integrations</h2>
             <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
-              Real businesses, real results. See how BookedAI powers end-to-end revenue automation.
+              Connects to the tools you already use. Google-first, enterprise-ready.
             </p>
-          </div>
+          </motion.div>
 
-          <a href="https://longcare.au" className="case-study-card" style={{ display: 'block' }}>
-            <div className="case-study-label">Live Case Study</div>
-            <h3 className="case-study-title">Longcare AU -- AI Mentoring Platform</h3>
-            <p className="case-study-desc">
-              Longcare AU uses BookedAI to power their entire mentoring business: AI chat in English, Vietnamese, and Mandarin,
-              automated booking and payments, Google Meet sessions with AI-generated notes, and a full marketing pipeline.
-            </p>
-            <span className="case-study-link">Visit longcare.au &rarr;</span>
-          </a>
+          <motion.div
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12, marginTop: 48 }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            {integrations.map((name, i) => (
+              <motion.div
+                className="integration-badge"
+                key={i}
+                variants={fadeUpItem}
+              >
+                <Globe className="inline h-3.5 w-3.5 mr-1.5 opacity-50" />
+                {name}
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* CTA / Signup */}
       <section id="signup" className="section section-dark">
         <div className="container">
-          <div style={{ textAlign: 'center' }}>
-            <h2 className="section-title">Ready to automate?</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{ textAlign: 'center' }}
+          >
+            <h2 className="section-title">Start Your Free Trial Today</h2>
             <p className="section-subtitle" style={{ margin: '16px auto 0' }}>
               Join service businesses already using BookedAI to grow revenue on autopilot.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="signup-form">
-            <input
-              type="text"
-              placeholder="Business name"
-              className="signup-input"
-              value={formData.business}
-              onChange={(e) => setFormData({ ...formData, business: e.target.value })}
-            />
-            <input
-              type="email"
-              placeholder="Email address"
-              className="signup-input"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-            <input
-              type="tel"
-              placeholder="Phone / WhatsApp"
-              className="signup-input"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            />
-            <button
-              className="btn btn-primary btn-full btn-lg"
-              disabled={signupStatus === 'loading'}
-              onClick={handleSignup}
-            >
-              {signupStatus === 'loading' ? 'Submitting...' : 'Start Free Trial'}
-            </button>
-            {signupStatus === 'success' && (
-              <p style={{ textAlign: 'center', color: '#10b981', fontSize: '0.85rem', marginTop: 12 }}>{signupMessage}</p>
-            )}
-            {signupStatus === 'error' && (
-              <p style={{ textAlign: 'center', color: '#ef4444', fontSize: '0.85rem', marginTop: 12 }}>{signupMessage}</p>
-            )}
-            {signupStatus === 'idle' && (
-              <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: 12 }}>
-                14-day free trial &middot; No credit card &middot; Cancel anytime
-              </p>
-            )}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <Card className="signup-form-card">
+              <CardContent className="p-8">
+                <div className="space-y-3">
+                  <Input
+                    type="text"
+                    placeholder="Business name"
+                    className="signup-input-upgraded"
+                    value={formData.business}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, business: e.target.value })}
+                  />
+                  <Input
+                    type="email"
+                    placeholder="Email address"
+                    className="signup-input-upgraded"
+                    value={formData.email}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                  <Input
+                    type="tel"
+                    placeholder="Phone / WhatsApp"
+                    className="signup-input-upgraded"
+                    value={formData.phone}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, phone: e.target.value })}
+                  />
+                  <Button
+                    className="w-full shimmer-button text-base py-6"
+                    size="lg"
+                    disabled={signupStatus === 'loading'}
+                    onClick={handleSignup}
+                  >
+                    {signupStatus === 'loading' ? 'Submitting...' : 'Start Free Trial'}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+                {signupStatus === 'success' && (
+                  <p className="text-center text-[#22c55e] text-sm mt-3">
+                    <Check className="inline h-4 w-4 mr-1" />
+                    {signupMessage}
+                  </p>
+                )}
+                {signupStatus === 'error' && (
+                  <p className="text-center text-[#ef4444] text-sm mt-3">{signupMessage}</p>
+                )}
+                {signupStatus === 'idle' && (
+                  <p className="text-center text-[var(--text-tertiary)] text-xs mt-3">
+                    <Shield className="inline h-3 w-3 mr-1" />
+                    14-day free trial &middot; No credit card &middot; Cancel anytime
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </section>
 
@@ -472,7 +611,7 @@ export default function Home() {
         <div className="footer-grid">
           <div>
             <div style={{ marginBottom: 4 }}>
-              <img src="/logo-light.png" alt="BookedAI" style={{ height: 32 }} />
+              <img src="/logo.png" alt="LongCare.au — Long Term Care. AI Powered. Future Ready." className="h-12 w-auto brightness-0 invert" />
             </div>
             <p className="footer-brand-desc">
               AI Revenue Engine Platform for service businesses.<br />
@@ -481,7 +620,7 @@ export default function Home() {
           </div>
           <div>
             <h4 className="footer-heading">Product</h4>
-            <a href="/features" className="footer-link">Features</a>
+            <a href="#features" className="footer-link">Features</a>
             <a href="#pricing" className="footer-link">Pricing</a>
             <a href="/integrations" className="footer-link">Integrations</a>
             <a href="/security" className="footer-link">Security</a>

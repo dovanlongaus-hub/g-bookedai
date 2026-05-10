@@ -1,92 +1,99 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Outfit } from 'next/font/google';
-import { LocalBusinessSchema } from '../components/schema-markup';
+import { Inter, Poppins } from 'next/font/google';
+import { LocalBusinessSchema, FAQSchema } from '../components/schema-markup';
 import { Analytics } from '../components/analytics';
 import { Nav } from '../components/nav';
-import { ChatWidget } from '../components/chat-widget';
+import { SiteFooter } from '../components/site-footer';
+// Chat widget + exit-intent are lazy-loaded with ssr:false; they live behind
+// a client boundary in `global-overlays` because Next 15 disallows
+// `ssr: false` dynamic imports inside server components.
+import { GlobalOverlays } from '../components/global-overlays';
+import { SocialProofToast } from '../components/social-proof-toast';
+import { FloatingCTABar, DesktopStickyCTA } from '../components/floating-cta-bar';
+import { ResourceHints } from '../components/resource-hints';
+import { cn } from "@/lib/utils";
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-outfit',
+  variable: '--font-sans',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-heading',
 });
 
 export const metadata: Metadata = {
-  title: 'Longcare — AI Mentor & Learning Platform',
+  title: 'Longcare — AI Training & Implementation for Australian SMEs',
   description:
-    'AI-powered mentoring sessions and personalised learning programs for individuals and SMEs. Book expert sessions with smart scheduling, progress tracking, and AI-generated insights.',
+    'Australia\'s SME-focused AI services studio. Mentor sessions, strategy sprints, and full-stack agent implementation. From $29 courses to enterprise deployment — GST-inclusive.',
   metadataBase: new URL('https://longcare.au'),
   keywords: [
-    'AI mentoring',
-    'online learning',
-    'AI tutor',
-    'smart booking',
-    'personalised learning',
-    'Melbourne mentor',
-    'SME training',
+    'AI training Australia',
+    'AI implementation SME',
+    'AI consulting Melbourne',
+    'AI mentor sessions',
+    'AI strategy consulting',
+    'agentic AI deployment',
+    'AI for small business',
     'Longcare',
   ],
   authors: [{ name: 'Longcare' }],
   openGraph: {
-    title: 'Longcare — AI Mentor & Learning',
-    description:
-      'AI-powered mentoring sessions and learning programs for individuals and SMEs in Australia.',
+    title: 'Longcare — AI Training & Implementation for Australian SMEs',
+    description: 'Mentor sessions, strategy sprints, and agent implementation for SMEs across Australia.',
     url: 'https://longcare.au',
     siteName: 'Longcare AU',
     locale: 'en_AU',
     type: 'website',
-    images: [
-      {
-        url: 'https://longcare.au/api/og?title=AI-Powered+Mentoring&subtitle=From+$29+AUD',
-        width: 1200,
-        height: 630,
-        alt: 'Longcare — AI Mentor & Learning',
-      },
-    ],
+    images: [{
+      url: 'https://longcare.au/api/og?title=AI+Training+%26+Implementation&subtitle=For+Australian+SMEs',
+      width: 1200, height: 630,
+      alt: 'Longcare — AI Training & Implementation',
+    }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Longcare — AI Mentor & Learning',
-    description:
-      'Personalised AI mentoring from $29 AUD. Google Meet + AI notes.',
-    images: ['/og-image.png'],
+    title: 'Longcare — AI Training & Implementation',
+    description: 'AI mentoring from $29 AUD. Strategy sprints. Full agent deployment. GST-inclusive.',
+    images: ['/api/og?title=Longcare%20%E2%80%94%20AI%20Training%20%26%20Implementation'],
   },
-  icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  },
+  icons: { icon: '/favicon.ico', apple: '/apple-touch-icon.png' },
   robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+    index: true, follow: true,
+    googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${outfit.variable} dark`}>
+    <html lang="en" className={cn(inter.variable, poppins.variable, "font-sans")}>
       <head>
+        {/* Resource hints — preconnect/dns-prefetch for GTM, GA4,
+            book.longcare.au, app.longcare.au, Google Fonts. Rendering
+            early in <head> warms DNS/TLS before any analytics or CTA fires.
+            Server Component, no hydration cost. */}
+        <ResourceHints />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#050510" />
+        <meta name="theme-color" content="#F8FAFC" />
       </head>
-      <body className="font-body antialiased bg-[#050510] text-[#f8f9fa]" style={{ paddingTop: '64px' }}>
+      <body className="antialiased bg-[#F8FAFC] text-[#334155]" style={{ paddingTop: '64px' }}>
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         <Nav />
         <Analytics />
         <LocalBusinessSchema />
+        <FAQSchema />
         {children}
-        <ChatWidget />
+        <SiteFooter />
+        <GlobalOverlays />
+        <SocialProofToast />
+        <FloatingCTABar />
+        <DesktopStickyCTA />
         <script dangerouslySetInnerHTML={{ __html: `
           if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
+import { CONTACT_EMAIL } from '@/lib/site-config';
+import { getPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Contact — Longcare AU',
-  description: 'Get in touch with Longcare AU for AI mentoring enquiries.',
-};
+export const metadata: Metadata = getPageMetadata({
+  title: 'Contact — LongCare AU',
+  description: 'Get in touch with LongCare AU for AI mentoring enquiries. Email, WhatsApp, and AI chat support across Australia.',
+  path: '/contact',
+});
 
 export default function ContactPage() {
   return (
@@ -14,7 +17,9 @@ export default function ContactPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '3rem' }}>
         <div className="card">
           <h3 className="card-title">Email</h3>
-          <p style={{ color: 'var(--accent)', fontSize: '1.1rem' }}>ceo@longcare.au</p>
+          <p style={{ color: 'var(--accent)', fontSize: '1.1rem' }}>
+            <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'inherit' }}>{CONTACT_EMAIL}</a>
+          </p>
           <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>We respond within 24 hours</p>
         </div>
 

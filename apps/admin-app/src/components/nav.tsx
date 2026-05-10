@@ -20,9 +20,8 @@ export function AdminNav() {
     }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 56 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <a href="https://admin.longcare.au" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-            <img src="/logo.svg" alt="Longcare" style={{ height: 26 }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-            <span style={{ fontWeight: 700, fontSize: '1rem', color: '#fff' }}>Longcare Admin</span>
+          <a href="https://admin.longcare.au" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src="/logo.png" alt="LongCare.au — Long Term Care. AI Powered. Future Ready." className="h-10 w-auto" />
           </a>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>powered by BookedAI</span>
         </div>

@@ -1,0 +1,189 @@
+{
+  "site": {
+    "name": "LongCare AU",
+    "tagline": "为澳大利亚中小企业打造的实用AI",
+    "description": "AI 辅导、智能体落地实施、为澳大利亚企业带来可衡量的投资回报。"
+  },
+  "nav": {
+    "services": "服务",
+    "academy": "学院",
+    "solutions": "解决方案",
+    "agents": "智能体",
+    "toolkit": "工具集",
+    "resources": "资源",
+    "blog": "博客",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "bookConsult": "预约咨询"
+  },
+  "footer": {
+    "services": "服务",
+    "learnAndAssess": "学习与评估",
+    "company": "公司",
+    "rightsReserved": "版权所有",
+    "abnNote": "已注册 ABN 的澳大利亚企业",
+    "compliance": "价格含 GST · 符合 APP 1-13 · WCAG 2.2 AA"
+  },
+  "cta": {
+    "primary": "预约咨询",
+    "secondary": "了解更多",
+    "joinWaitlist": "加入候补名单",
+    "viewPricing": "查看定价",
+    "getStarted": "立即开始",
+    "talkToMentor": "与导师对话",
+    "downloadGuide": "下载指南"
+  },
+  "common": {
+    "comingSoon": "即将推出",
+    "freeFirstLesson": "首课免费",
+    "gstInclusive": "含 GST",
+    "earlyAccess": "抢先体验",
+    "applyForPilot": "申请试点项目",
+    "loading": "加载中…",
+    "readMore": "阅读更多",
+    "backToTop": "返回顶部",
+    "search": "搜索",
+    "yes": "是",
+    "no": "否",
+    "minutes": "分钟",
+    "hours": "小时"
+  },
+  "homepage": {
+    "heroTitle": "能创造价值的 AI —— 为澳大利亚中小企业而生",
+    "heroSubtitle": "辅导、智能体落地实施,首周即可衡量投资回报。",
+    "trustStrip": "深受澳大利亚医疗、零售、餐饮、房产、建筑、教育和专业服务等行业中小企业的信赖。",
+    "valuePropTitle": "澳大利亚中小企业为何选择 LongCare",
+    "valuePropPractical": "实用至上,拒绝空谈",
+    "valuePropMeasurable": "首日即可衡量投资回报",
+    "valuePropCompliant": "符合澳大利亚隐私法及 GST 要求"
+  },
+  "services": {
+    "hubTitle": "AI 辅导与智能体服务",
+    "hubSubtitle": "从 30 分钟入门到数月的落地合作伙伴关系。",
+    "starterName": "30 分钟 AI 入门会谈",
+    "starterTagline": "您的第一次实用 AI 辅导体验",
+    "mentorName": "1 小时 AI 导师会谈",
+    "mentorTagline": "针对具体业务问题的深度指导",
+    "packagesName": "AI 辅导套餐",
+    "packagesTagline": "多次会谈结合落地实施支持"
+  },
+  "academy": {
+    "hubTitle": "LongCare AI 学院",
+    "hubSubtitle": "为澳大利亚中小企业和专业人士提供实用 AI 培训。",
+    "courseCatalog": "课程目录",
+    "certifications": "认证",
+    "freeFirstLesson": "首课始终免费"
+  },
+  "solutions": {
+    "hubTitle": "行业解决方案",
+    "hubSubtitle": "在澳大利亚中小企业各垂直行业经过验证的 AI 模式。",
+    "exploreVertical": "探索此行业"
+  },
+  "resources": {
+    "hubTitle": "面向澳大利亚中小企业的 AI 资源",
+    "hubSubtitle": "框架、模板与评估——全部免费。",
+    "assessmentName": "AI 就绪度评估",
+    "assessmentTagline": "12 道题,6 分钟,获取成熟度评分与 ROI 估算",
+    "templatesName": "模板与框架",
+    "guidesName": "落地实施指南"
+  },
+  "blog": {
+    "hubTitle": "洞察与实战手记",
+    "hubSubtitle": "来自采用 AI 的澳大利亚中小企业的真实经验。",
+    "readTime": "阅读约 {minutes} 分钟",
+    "publishedOn": "发布于 {date}"
+  },
+  "contact": {
+    "title": "联系 LongCare",
+    "subtitle": "请告诉我们您的业务情况,我们将在一个工作日内回复。",
+    "nameLabel": "您的姓名",
+    "emailLabel": "电子邮箱",
+    "phoneLabel": "电话(选填)",
+    "messageLabel": "我们能为您做什么?",
+    "submit": "发送消息",
+    "success": "感谢您 —— 我们将尽快与您联系。"
+  },
+  "errors": {
+    "generic": "发生错误,请重试。",
+    "network": "网络错误,请检查您的连接。",
+    "validation": "请检查标记的字段。",
+    "rateLimit": "请求过多,请一分钟后再试。",
+    "notFound": "未找到该页面。",
+    "serverError": "服务器遇到问题,我们正在处理。"
+  },
+  "about": {
+    "heroTitle": "关于 LongCare",
+    "heroSubtitle": "让 AI 落地变得务实 —— 助力澳大利亚中小企业拥抱 AI",
+    "heroBody": "LongCare AU 致力于弥合 AI 宣传与真实业务成果之间的差距。我们将经验丰富的人类导师与 AI 学习工具相结合,帮助澳大利亚的个人与中小企业以安全、负责任且可衡量投资回报的方式落地 AI。",
+    "missionTitle": "我们的使命",
+    "missionBody": "让每个人都能用上 AI —— 无论是为下一个十年的工作充电的个人,还是寻求数字化转型的中小企业。我们将个性化的一对一辅导与 AI 学习工具相结合,带来可衡量的成果:节省的时间、服务的客户、获得的收入。",
+    "founderSectionTitle": "创始人介绍",
+    "founderName": "杜龙博士",
+    "founderRole": "创始人兼首席 AI 导师",
+    "founderBio1": "凭借 15 年以上的科技行业经验,杜龙博士创立 LongCare AU 与 BookedAI,致力于让每一位澳大利亚专业人士与中小企业都能用上 AI。他的辅导聚焦于实用的 AI 集成 —— 提示工程、流程自动化与负责任的部署 —— 将前沿研究转化为体现在您损益表上的真实成果。",
+    "founderLanguages": "语言:英语、越南语。",
+    "team": {
+      "title": "我们的团队",
+      "subtitle": "面向您目标量身定制的专家指导 —— 从动手式 AI 辅导到 24/7 学习支持。",
+      "languagesLabel": "语言:",
+      "founder": {
+        "name": "杜龙博士",
+        "title": "创始人兼首席 AI 导师",
+        "bio": "凭借 15 年以上的科技行业经验,杜龙博士创立 LongCare AU 与 BookedAI,让 AI 触手可及。他擅长帮助专业人士与中小企业将 AI 融入真实工作流程,带来务实可衡量的成果。",
+        "languages": "英语、越南语",
+        "ctaLabel": "预约杜龙博士",
+        "expertise1": "AI 战略",
+        "expertise2": "提示工程",
+        "expertise3": "业务自动化"
+      },
+      "assistant": {
+        "name": "AI 学习助手",
+        "title": "由 Gemini 驱动",
+        "bio": "全天 24 小时可用,支持英语、越南语与中文。在每次辅导后自动生成会谈笔记、Q&A 摘录及个性化的下一步建议。",
+        "languages": "EN / VI / ZH",
+        "ctaLabel": "立即对话",
+        "expertise1": "会谈笔记",
+        "expertise2": "Q&A 摘录",
+        "expertise3": "改进建议"
+      },
+      "guests": {
+        "name": "客座导师",
+        "title": "行业专家(即将推出)",
+        "bio": "来自金融、医疗、教育与运营等领域的客座导师轮值阵容。加入候补名单,我们将在专题工作坊开放时通知您。",
+        "languages": "多语种",
+        "ctaLabel": "加入候补名单",
+        "expertise1": "行业工作坊",
+        "expertise2": "专题主题",
+        "expertise3": "轮值专家"
+      }
+    },
+    "values": {
+      "title": "我们的价值观",
+      "practical": {
+        "title": "务实的 AI",
+        "desc": "拒绝空谈。每次会谈都交付您周一早上即可使用的工作流。"
+      },
+      "smeFirst": {
+        "title": "中小企业优先",
+        "desc": "专为澳大利亚中小企业打造 —— 而非企业级预算。"
+      },
+      "responsibleAI": {
+        "title": "负责任的 AI",
+        "desc": "符合澳大利亚隐私法。您的数据始终属于您自己。"
+      },
+      "australian": {
+        "title": "聚焦澳大利亚",
+        "desc": "价格含 GST、符合澳大利亚合规要求,导师熟悉本地市场。"
+      }
+    },
+    "whyTitle": "为何选择 LongCare",
+    "why1": "通过 Google Meet 实时进行会谈 —— 人类辅导与 AI 笔记相结合。",
+    "why2": "每次会谈后提供 AI 摘要、Q&A 摘录与个性化的下一步建议。",
+    "why3": "所有会谈材料保存在 Google Docs,可从您的仪表板访问。",
+    "why4": "基于 Google Cloud 与 Gemini AI 构建 —— 安全、快速,符合澳大利亚隐私法。",
+    "why5": "多语种支持(英语 / 越南语 / 中文),契合澳大利亚多元的中小企业格局。",
+    "cta": {
+      "button": "预约 AI 导师会谈"
+    }
+  }
+}

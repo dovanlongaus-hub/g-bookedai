@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookedAI — Complete Flows & UI Visualization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1; --primary-hover: #4f46e5; --primary-light: #818cf8; --primary-dark: #3730a3;
+      --secondary: #06b6d4; --accent: #14b8a6; --accent-hover: #0d9488;
+      --success: #22c55e; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+      --bg-deep: #050510; --bg-surface: #0a0a1a; --bg-elevated: #111127;
+      --border: #1e1e3a; --text-muted: #8b92a5; --text-main: #e2e8f0; --text-bright: #f8fafc;
+      --glass-bg: rgba(255,255,255,0.04); --glass-border: rgba(255,255,255,0.08);
+      --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Outfit',sans-serif; background:var(--bg-deep); color:var(--text-main); line-height:1.6; }
+
+    /* Nav */
+    .nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(5,5,16,0.95); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1400px; margin:0 auto; display:flex; align-items:center; height:56px; padding:0 16px; gap:4px; overflow-x:auto; }
+    .nav-title { font-weight:700; font-size:15px; margin-right:12px; background:linear-gradient(135deg,var(--primary-light),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; white-space:nowrap; }
+    .nav-btn { padding:6px 12px; border-radius:var(--radius-md); border:none; background:transparent; color:var(--text-muted); cursor:pointer; font-family:'Outfit'; font-size:13px; white-space:nowrap; transition:all .2s; }
+    .nav-btn:hover { color:var(--text-bright); background:var(--glass-bg); }
+    .nav-btn.active { background:var(--primary); color:#fff; }
+
+    .section { display:none; padding:72px 20px 40px; min-height:100vh; }
+    .section.active { display:block; }
+    .inner { max-width:1200px; margin:0 auto; }
+    h1.title { font-size:2rem; font-weight:700; color:var(--text-bright); margin-bottom:4px; }
+    .subtitle { font-size:1rem; color:var(--text-muted); margin-bottom:32px; }
+
+    /* Flow diagram */
+    .flow-container { overflow-x:auto; padding:16px 0; }
+    .flow { display:flex; align-items:flex-start; gap:0; min-width:max-content; }
+    .flow-step { display:flex; flex-direction:column; align-items:center; min-width:140px; max-width:160px; }
+    .flow-box {
+      background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:var(--radius-lg);
+      padding:16px 12px; text-align:center; width:100%; transition:all .3s; cursor:default;
+    }
+    .flow-box:hover { border-color:var(--primary); box-shadow:0 0 15px rgba(99,102,241,.2); }
+    .flow-box.highlight { border-color:var(--primary); background:rgba(99,102,241,.08); }
+    .flow-box.success-box { border-color:var(--success); background:rgba(34,197,94,.06); }
+    .flow-box.warning-box { border-color:var(--warning); background:rgba(245,158,11,.06); }
+    .flow-box.danger-box { border-color:var(--danger); background:rgba(239,68,68,.06); }
+    .flow-icon { font-size:24px; margin-bottom:8px; }
+    .flow-label { font-size:13px; font-weight:600; color:var(--text-bright); margin-bottom:4px; }
+    .flow-desc { font-size:11px; color:var(--text-muted); line-height:1.4; }
+    .flow-arrow { display:flex; align-items:center; padding:0 4px; color:var(--text-muted); font-size:20px; margin-top:30px; }
+    .flow-notif { margin-top:8px; display:flex; gap:4px; justify-content:center; flex-wrap:wrap; }
+    .flow-notif span { font-size:10px; padding:2px 6px; border-radius:9999px; }
+    .notif-email { background:rgba(59,130,246,.15); color:var(--info); }
+    .notif-whatsapp { background:rgba(34,197,94,.15); color:var(--success); }
+    .notif-push { background:rgba(245,158,11,.15); color:var(--warning); }
+    .notif-sms { background:rgba(168,85,247,.15); color:#a855f7; }
+    .notif-admin { background:rgba(239,68,68,.15); color:var(--danger); }
+
+    /* Branch */
+    .flow-branch { display:flex; flex-direction:column; gap:12px; align-items:center; }
+    .branch-label { font-size:11px; color:var(--accent); font-weight:500; }
+
+    /* Sitemap */
+    .sitemap { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+    @media(max-width:900px) { .sitemap { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:600px) { .sitemap { grid-template-columns:1fr; } }
+    .site-app {
+      background:var(--glass-bg); border:1px solid var(--glass-border);
+      border-radius:var(--radius-xl); padding:20px; transition:all .3s;
+    }
+    .site-app:hover { border-color:var(--primary); }
+    .site-app-title { font-size:14px; font-weight:700; color:var(--text-bright); margin-bottom:4px; }
+    .site-app-domain { font-size:12px; color:var(--accent); margin-bottom:12px; font-family:'JetBrains Mono'; }
+    .site-page { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.03); font-size:13px; }
+    .site-page:last-child { border-bottom:none; }
+    .site-page-path { color:var(--text-muted); font-family:'JetBrains Mono'; font-size:11px; min-width:120px; }
+    .site-page-name { color:var(--text-main); }
+    .quality-dot { width:8px; height:8px; border-radius:50%; margin-left:auto; flex-shrink:0; }
+    .q-high { background:var(--success); }
+    .q-mid { background:var(--warning); }
+    .q-low { background:var(--danger); }
+
+    /* Page preview cards */
+    .preview-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+    @media(max-width:768px) { .preview-grid { grid-template-columns:1fr; } }
+    .preview-card {
+      background:var(--bg-surface); border:1px solid var(--border);
+      border-radius:var(--radius-xl); overflow:hidden; transition:all .3s;
+    }
+    .preview-card:hover { border-color:var(--primary); transform:translateY(-2px); }
+    .preview-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+    .preview-dots { display:flex; gap:4px; }
+    .preview-dots span { width:8px; height:8px; border-radius:50%; }
+    .preview-url { font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono'; }
+    .preview-body { padding:16px 20px; min-height:180px; }
+    .preview-body h4 { font-size:14px; color:var(--text-bright); margin-bottom:8px; }
+    .preview-body p { font-size:12px; color:var(--text-muted); margin-bottom:8px; }
+    .preview-el { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:8px 12px; margin:4px 0; font-size:11px; color:var(--text-main); }
+    .preview-btn { display:inline-block; padding:6px 14px; border-radius:var(--radius-md); font-size:11px; font-weight:500; }
+    .preview-btn-p { background:var(--primary); color:#fff; }
+    .preview-btn-s { border:1px solid var(--border); color:var(--text-main); }
+    .preview-badge { display:inline-block; padding:2px 8px; border-radius:9999px; font-size:10px; font-weight:600; }
+
+    /* Admin pages */
+    .admin-preview { display:grid; grid-template-columns:180px 1fr; min-height:250px; }
+    .admin-side { background:var(--bg-surface); border-right:1px solid var(--border); padding:12px 0; }
+    .admin-side-item { padding:6px 16px; font-size:12px; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:6px; }
+    .admin-side-item.active { color:var(--text-bright); background:rgba(99,102,241,.1); border-left:2px solid var(--primary); }
+    .admin-main { padding:16px; }
+
+    /* Notification matrix */
+    .matrix-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .matrix-table th { padding:8px 6px; text-align:center; color:var(--text-muted); font-weight:500; border-bottom:1px solid var(--border); font-size:11px; }
+    .matrix-table td { padding:6px; text-align:center; border-bottom:1px solid rgba(255,255,255,.03); }
+    .matrix-table td:first-child { text-align:left; color:var(--text-main); font-size:12px; }
+    .matrix-check { color:var(--success); }
+    .matrix-dash { color:var(--border); }
+
+    /* Status flow */
+    .status-flow { display:flex; align-items:center; gap:4px; flex-wrap:wrap; padding:12px 0; }
+    .status-node { padding:6px 14px; border-radius:var(--radius-md); font-size:12px; font-weight:500; }
+    .status-arrow { color:var(--text-muted); font-size:14px; }
+
+    /* Stats */
+    .stat-row { display:flex; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+    .stat-box { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:var(--radius-lg); padding:16px 20px; flex:1; min-width:120px; }
+    .stat-num { font-size:1.5rem; font-weight:700; color:var(--text-bright); }
+    .stat-lbl { font-size:12px; color:var(--text-muted); }
+
+    .tag { display:inline-block; padding:2px 8px; border-radius:var(--radius-sm); font-size:11px; margin:2px; }
+    .tag-p { background:rgba(99,102,241,.15); color:var(--primary-light); }
+    .tag-s { background:rgba(6,182,212,.15); color:var(--secondary); }
+    .tag-a { background:rgba(20,184,166,.15); color:var(--accent); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-title">BookedAI Flows</span>
+    <button class="nav-btn active" onclick="show('overview')">Overview</button>
+    <button class="nav-btn" onclick="show('sitemap')">All 53 Pages</button>
+    <button class="nav-btn" onclick="show('flow1')">Discovery→Booking</button>
+    <button class="nav-btn" onclick="show('flow2')">Session Lifecycle</button>
+    <button class="nav-btn" onclick="show('flow3')">Admin Operations</button>
+    <button class="nav-btn" onclick="show('flow4')">Partner Onboarding</button>
+    <button class="nav-btn" onclick="show('flow5')">Learning Journey</button>
+    <button class="nav-btn" onclick="show('flow6')">Error & Edge Cases</button>
+    <button class="nav-btn" onclick="show('pages-saas')">SaaS Pages</button>
+    <button class="nav-btn" onclick="show('pages-tenant')">Tenant Pages</button>
+    <button class="nav-btn" onclick="show('pages-admin')">Admin Pages</button>
+    <button class="nav-btn" onclick="show('notifications')">Notifications</button>
+    <button class="nav-btn" onclick="show('status')">Booking Status</button>
+  </div>
+</nav>
+
+<!-- ===== OVERVIEW ===== -->
+<section id="overview" class="section active">
+  <div class="inner">
+    <h1 class="title">BookedAI — Complete UI/UX Flow Map</h1>
+    <p class="subtitle">53 pages, 6 apps, 8 user journey flows, 20 notification events</p>
+
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num">53</div><div class="stat-lbl">Total Pages</div></div>
+      <div class="stat-box"><div class="stat-num">6</div><div class="stat-lbl">Live Apps</div></div>
+      <div class="stat-box"><div class="stat-num">8</div><div class="stat-lbl">User Flows</div></div>
+      <div class="stat-box"><div class="stat-num">50+</div><div class="stat-lbl">API Endpoints</div></div>
+      <div class="stat-box"><div class="stat-num">20</div><div class="stat-lbl">Notification Events</div></div>
+      <div class="stat-box"><div class="stat-num">8.2</div><div class="stat-lbl">Avg Quality /10</div></div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin-bottom:16px">App Distribution</h3>
+    <div style="display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap">
+      <div style="flex:15;min-width:60px;background:var(--primary);padding:12px;border-radius:var(--radius-md);text-align:center">
+        <div style="font-weight:700;font-size:18px">15</div><div style="font-size:11px;opacity:.7">g.bookedai.au</div>
+      </div>
+      <div style="flex:19;min-width:60px;background:var(--secondary);padding:12px;border-radius:var(--radius-md);text-align:center">
+        <div style="font-weight:700;font-size:18px">19</div><div style="font-size:11px;opacity:.7">longcare.au</div>
+      </div>
+      <div style="flex:4;min-width:60px;background:var(--accent);padding:12px;border-radius:var(--radius-md);text-align:center">
+        <div style="font-weight:700;font-size:18px">4</div><div style="font-size:11px;opacity:.7">book.*</div>
+      </div>
+      <div style="flex:2;min-width:60px;background:var(--warning);padding:12px;border-radius:var(--radius-md);text-align:center;color:#000">
+        <div style="font-weight:700;font-size:18px">2</div><div style="font-size:11px;opacity:.7">meet.*</div>
+      </div>
+      <div style="flex:4;min-width:60px;background:var(--info);padding:12px;border-radius:var(--radius-md);text-align:center">
+        <div style="font-weight:700;font-size:18px">4</div><div style="font-size:11px;opacity:.7">app.*</div>
+      </div>
+      <div style="flex:9;min-width:60px;background:var(--danger);padding:12px;border-radius:var(--radius-md);text-align:center">
+        <div style="font-weight:700;font-size:18px">9</div><div style="font-size:11px;opacity:.7">admin.*</div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin-bottom:16px">Primary Revenue Flow (High-Level)</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128270;</div><div class="flow-label">Discover</div><div class="flow-desc">Google Ads, SEO, Social, Referral</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#127968;</div><div class="flow-label">Landing</div><div class="flow-desc">longcare.au hero, services, pricing</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128172;</div><div class="flow-label">AI Chat</div><div class="flow-desc">Intent detection, service recommendation</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128197;</div><div class="flow-label">Book</div><div class="flow-desc">Service → Time → Details → Payment</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128179;</div><div class="flow-label">Pay</div><div class="flow-desc">Stripe, QR, Bank, Pay Later</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#9989;</div><div class="flow-label">Confirm</div><div class="flow-desc">Email + Calendar + WhatsApp</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#127917;</div><div class="flow-label">Meet</div><div class="flow-desc">Lobby → Google Meet → Session</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#129504;</div><div class="flow-label">AI Notes</div><div class="flow-desc">Summary, Q&A, Recommendations</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128257;</div><div class="flow-label">Rebook</div><div class="flow-desc">Package upsell, next course</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ALL 53 PAGES SITEMAP ===== -->
+<section id="sitemap" class="section">
+  <div class="inner">
+    <h1 class="title">Complete Sitemap — 53 Pages</h1>
+    <p class="subtitle">All pages across 6 apps with quality indicators (<span style="color:var(--success)">&#9679;</span> 8+/10 &nbsp; <span style="color:var(--warning)">&#9679;</span> 7/10 &nbsp; <span style="color:var(--danger)">&#9679;</span> &lt;7)</p>
+    <div class="sitemap">
+      <div class="site-app">
+        <div class="site-app-title">SaaS Platform</div>
+        <div class="site-app-domain">g.longcare.au (15 pages)</div>
+        <div class="site-page"><span class="site-page-path">/</span><span class="site-page-name">Landing</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/features</span><span class="site-page-name">Features</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/integrations</span><span class="site-page-name">Integrations</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/security</span><span class="site-page-name">Security</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/partners</span><span class="site-page-name">Partners</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/onboarding</span><span class="site-page-name">Wizard (4-step)</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/docs</span><span class="site-page-name">Documentation</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/docs/guide</span><span class="site-page-name">API Guide</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/api-docs</span><span class="site-page-name">API Reference</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/demo</span><span class="site-page-name">Live Demo</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/admin</span><span class="site-page-name">Platform Admin</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/login</span><span class="site-page-name">Auth (Dual)</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/auth/callback</span><span class="site-page-name">OAuth Callback</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/admin/email</span><span class="site-page-name">Email Preview</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/admin/openai</span><span class="site-page-name">OpenAI Auth</span><span class="quality-dot q-mid"></span></div>
+      </div>
+
+      <div class="site-app">
+        <div class="site-app-title">Tenant Landing</div>
+        <div class="site-app-domain">longcare.au (19 pages)</div>
+        <div class="site-page"><span class="site-page-path">/</span><span class="site-page-name">Landing</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/services</span><span class="site-page-name">All Services</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/services/ai-starter</span><span class="site-page-name">AI Starter Detail</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/services/ai-mentor</span><span class="site-page-name">AI Mentor Detail</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/services/packages</span><span class="site-page-name">Packages Detail</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/pricing</span><span class="site-page-name">Pricing Compare</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/how-it-works</span><span class="site-page-name">6-Step Process</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/faq</span><span class="site-page-name">FAQ</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/mentors</span><span class="site-page-name">Mentors</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/testimonials</span><span class="site-page-name">Testimonials</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/blog</span><span class="site-page-name">Blog (3 posts)</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/courses</span><span class="site-page-name">Courses</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/about</span><span class="site-page-name">About</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/contact</span><span class="site-page-name">Contact</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/terms</span><span class="site-page-name">Terms of Service</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/privacy</span><span class="site-page-name">Privacy Policy</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/get-started</span><span class="site-page-name">Ads Landing</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/search</span><span class="site-page-name">Search</span><span class="quality-dot q-low"></span></div>
+        <div class="site-page"><span class="site-page-path">/blog/[slug]</span><span class="site-page-name">Blog Post</span><span class="quality-dot q-high"></span></div>
+      </div>
+
+      <div class="site-app">
+        <div class="site-app-title">Booking</div>
+        <div class="site-app-domain">book.longcare.au (4 pages)</div>
+        <div class="site-page"><span class="site-page-path">/</span><span class="site-page-name">Booking Flow</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/booking/success</span><span class="site-page-name">Payment Success</span><span class="quality-dot q-high"></span></div>
+        <div class="site-page"><span class="site-page-path">/booking/cancel</span><span class="site-page-name">Payment Cancel</span><span class="quality-dot q-mid"></span></div>
+        <div class="site-page"><span class="site-page-path">/manage/[ref]</span><span class="site-page-name">Manage Booking</span><span class="quality-dot q-high"></span></div>
+
+        <div style="margin-top:16px">
+          <div class="site-app-title">Meeting</div>
+          <div class="site-app-domain">meet.longcare.au (2 pages)</div>
+          <div class="site-page"><span class="site-page-path">/</span><span class="site-page-name">Redirect</span><span class="quality-dot q-mid"></span></div>
+          <div class="site-page"><span class="site-page-path">/[ref]</span><span class="site-page-name">Meeting Lobby</span><span class="quality-dot q-mid"></span></div>
+        </div>
+
+        <div style="margin-top:16px">
+          <div class="site-app-title">User Dashboard</div>
+          <div class="site-app-domain">app.longcare.au (4 pages)</div>
+          <div class="site-page"><span class="site-page-path">/</span><span class="site-page-name">Dashboard</span><span class="quality-dot q-high"></span></div>
+          <div class="site-page"><span class="site-page-path">/settings</span><span class="site-page-name">Settings</span><span class="quality-dot q-high"></span></div>
+          <div class="site-page"><span class="site-page-path">/notifications</span><span class="site-page-name">Notifications</span><span class="quality-dot q-mid"></span></div>
+          <div class="site-page"><span class="site-page-path">/login</span><span class="site-page-name">Auth</span><span class="quality-dot q-high"></span></div>
+        </div>
+      </div>
+
+      <div class="site-app" style="grid-column:1/-1">
+        <div class="site-app-title">Admin Dashboard</div>
+        <div class="site-app-domain">admin.longcare.au (9 pages)</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div class="site-page"><span class="site-page-path">/</span><span class="site-page-name">Dashboard</span><span class="quality-dot q-high"></span></div>
+          <div class="site-page"><span class="site-page-path">/bookings</span><span class="site-page-name">Booking Mgmt</span><span class="quality-dot q-high"></span></div>
+          <div class="site-page"><span class="site-page-path">/users</span><span class="site-page-name">User Mgmt</span><span class="quality-dot q-high"></span></div>
+          <div class="site-page"><span class="site-page-path">/marketing</span><span class="site-page-name">Campaigns</span><span class="quality-dot q-high"></span></div>
+          <div class="site-page"><span class="site-page-path">/emails</span><span class="site-page-name">Email Templates</span><span class="quality-dot q-mid"></span></div>
+          <div class="site-page"><span class="site-page-path">/health</span><span class="site-page-name">System Health</span><span class="quality-dot q-high"></span></div>
+          <div class="site-page"><span class="site-page-path">/webhooks</span><span class="site-page-name">Webhook Log</span><span class="quality-dot q-mid"></span></div>
+          <div class="site-page"><span class="site-page-path">/analytics</span><span class="site-page-name">Analytics</span><span class="quality-dot q-mid"></span></div>
+          <div class="site-page"><span class="site-page-path">/login</span><span class="site-page-name">Admin Auth</span><span class="quality-dot q-high"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW 1: DISCOVERY → BOOKING ===== -->
+<section id="flow1" class="section">
+  <div class="inner">
+    <h1 class="title">Flow 1: Discovery → Booking → Confirmation</h1>
+    <p class="subtitle">The primary revenue flow — from first visit to confirmed booking</p>
+
+    <h3 style="color:var(--text-bright);margin:16px 0">Phase 1: Acquisition</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128270;</div><div class="flow-label">Google Ads</div><div class="flow-desc">/get-started landing</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#127760;</div><div class="flow-label">Social Media</div><div class="flow-desc">LinkedIn, Facebook, YouTube</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128279;</div><div class="flow-label">Referral</div><div class="flow-desc">/referral/:code tracking</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128241;</div><div class="flow-label">WhatsApp</div><div class="flow-desc">AI auto-reply intent</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#127968;</div><div class="flow-label">longcare.au</div><div class="flow-desc">Landing page with chat widget</div></div>
+        <div class="flow-notif"><span class="notif-push">GA4 page_view</span></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:24px 0 16px">Phase 2: Consideration</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128196;</div><div class="flow-label">/services</div><div class="flow-desc">4 service cards, Schema.org markup</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128214;</div><div class="flow-label">/services/ai-mentor</div><div class="flow-desc">Detail + FAQ + comparison</div></div>
+        <div class="flow-notif"><span class="notif-push">GA4 view_service</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128176;</div><div class="flow-label">/pricing</div><div class="flow-desc">6 options, comparison table</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128172;</div><div class="flow-label">AI Chat</div><div class="flow-desc">"Help me choose" → recommendation</div></div>
+        <div class="flow-notif"><span class="notif-push">GA4 open_chat</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#11088;</div><div class="flow-label">/testimonials</div><div class="flow-desc">Customer success stories</div></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:24px 0 16px">Phase 3: Booking (book.longcare.au)</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128204;</div><div class="flow-label">Step 1: Service</div><div class="flow-desc">5 cards with badges, expand details, curriculum</div></div>
+        <div class="flow-notif"><span class="notif-push">GA4 select_service</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128197;</div><div class="flow-label">Step 2: Schedule</div><div class="flow-desc">8-week calendar, time slots, multi-session for packs</div></div>
+        <div class="flow-notif"><span class="notif-push">GA4 select_time</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128221;</div><div class="flow-label">Step 3: Details</div><div class="flow-desc">Name*, Email*, Phone, Terms checkbox</div></div>
+        <div class="flow-notif"><span class="notif-push">HOLD created (10min)</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="flow-branch">
+            <div class="flow-box" style="margin-bottom:8px"><div class="flow-icon">&#128179;</div><div class="flow-label">Step 4: Payment</div><div class="flow-desc">Order summary + GST</div></div>
+            <div style="display:flex;gap:6px">
+              <div class="flow-box" style="min-width:80px;padding:8px"><div style="font-size:10px;color:var(--text-bright)">&#128179; Stripe</div></div>
+              <div class="flow-box" style="min-width:80px;padding:8px"><div style="font-size:10px;color:var(--text-bright)">&#128248; QR Code</div></div>
+              <div class="flow-box" style="min-width:80px;padding:8px"><div style="font-size:10px;color:var(--text-bright)">&#9200; Pay Later</div></div>
+            </div>
+          </div>
+          <div class="flow-notif"><span class="notif-push">GA4 begin_checkout</span></div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#127881;</div><div class="flow-label">Success!</div><div class="flow-desc">QR ref, Calendar add, WhatsApp link, Dashboard</div></div>
+        <div class="flow-notif">
+          <span class="notif-email">Email</span>
+          <span class="notif-whatsapp">WhatsApp</span>
+          <span class="notif-push">GA4 purchase</span>
+          <span class="notif-admin">Admin</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW 2: SESSION LIFECYCLE ===== -->
+<section id="flow2" class="section">
+  <div class="inner">
+    <h1 class="title">Flow 2: Session Lifecycle</h1>
+    <p class="subtitle">From 24h reminder to post-session AI notes and rebooking</p>
+
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128231;</div><div class="flow-label">T-24h</div><div class="flow-desc">Email reminder with prep materials</div></div>
+        <div class="flow-notif"><span class="notif-email">Email</span><span class="notif-whatsapp">WhatsApp</span><span class="notif-sms">SMS</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128276;</div><div class="flow-label">T-1h</div><div class="flow-desc">Push notification "Starting soon"</div></div>
+        <div class="flow-notif"><span class="notif-push">Push</span><span class="notif-whatsapp">WhatsApp</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#127917;</div><div class="flow-label">T-15m: Lobby</div><div class="flow-desc">meet.longcare.au/[ref] Equipment check, countdown</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#127909;</div><div class="flow-label">T=0: Session</div><div class="flow-desc">Google Meet auto-join, AI transcription running</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#11088;</div><div class="flow-label">T+0: Feedback</div><div class="flow-desc">Star rating, tags, optional comment</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#129504;</div><div class="flow-label">AI Notes</div><div class="flow-desc">Gemini summary, Q&A, Google Docs</div></div>
+        <div class="flow-notif"><span class="notif-email">Email</span><span class="notif-push">Push</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128257;</div><div class="flow-label">Next Step</div><div class="flow-desc">AI recommendation, package upsell, course suggestion</div></div>
+        <div class="flow-notif"><span class="notif-email">Drip email</span></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:32px 0 16px">No-Show Detection Flow</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box warning-box"><div class="flow-icon">&#9888;</div><div class="flow-label">T+5m</div><div class="flow-desc">Push: "Session started, join now!"</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box warning-box"><div class="flow-icon">&#128241;</div><div class="flow-label">T+10m</div><div class="flow-desc">WhatsApp: "We're waiting for you"</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box danger-box"><div class="flow-icon">&#10060;</div><div class="flow-label">T+15m</div><div class="flow-desc">Marked NO_SHOW, auto-email with reschedule link</div></div>
+        <div class="flow-notif"><span class="notif-email">Email</span><span class="notif-admin">Admin alert</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW 3: ADMIN OPERATIONS ===== -->
+<section id="flow3" class="section">
+  <div class="inner">
+    <h1 class="title">Flow 3: Admin Daily Operations</h1>
+    <p class="subtitle">CEO/Admin workflow across admin.longcare.au</p>
+
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128202;</div><div class="flow-label">Dashboard</div><div class="flow-desc">KPIs: Revenue, Bookings, Users, Health</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box warning-box"><div class="flow-icon">&#128179;</div><div class="flow-label">/bookings</div><div class="flow-desc">Approve bank transfers, confirm pending</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128101;</div><div class="flow-label">/users</div><div class="flow-desc">Search, filter by role, export CSV</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128227;</div><div class="flow-label">/marketing</div><div class="flow-desc">Review 5 channels, approve campaigns</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128200;</div><div class="flow-label">/analytics</div><div class="flow-desc">Funnel, revenue by service, channels</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128147;</div><div class="flow-label">/health</div><div class="flow-desc">6 services status, latency, uptime</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#128203;</div><div class="flow-label">CEO Report</div><div class="flow-desc">Auto-generated Google Docs via Drive Sync</div></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:32px 0 16px">Admin Sub-Pages Detail</h3>
+    <div class="preview-grid">
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">admin.longcare.au/bookings</span></div>
+        <div class="preview-body">
+          <h4>Booking Management</h4>
+          <div style="display:flex;gap:8px;margin:8px 0"><span class="preview-badge" style="background:var(--primary);color:#fff">All (8)</span><span class="preview-badge" style="background:rgba(34,197,94,.2);color:var(--success)">Confirmed (4)</span><span class="preview-badge" style="background:rgba(245,158,11,.2);color:var(--warning)">Pending (2)</span><span class="preview-badge" style="background:rgba(239,68,68,.2);color:var(--danger)">Cancelled (2)</span></div>
+          <div class="preview-el">Ref | Client | Service | Date | Status | Amount | Actions</div>
+          <div class="preview-el">Actions: Confirm | Approve Payment | Cancel | Details</div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">admin.longcare.au/marketing</span></div>
+        <div class="preview-body">
+          <h4>Marketing Campaigns</h4>
+          <p>5-channel content management with approval workflow</p>
+          <div class="preview-el">Google Ads | LinkedIn | Facebook | Email | GBP</div>
+          <div class="preview-el">Each: Headline + Body + CTA + UTM + Copy/Approve/Reject</div>
+          <div style="margin-top:8px"><span class="preview-badge" style="background:rgba(245,158,11,.2);color:var(--warning)">Draft</span> <span class="preview-badge" style="background:rgba(59,130,246,.2);color:var(--info)">Review</span> <span class="preview-badge" style="background:rgba(34,197,94,.2);color:var(--success)">Published</span></div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">admin.longcare.au/health</span></div>
+        <div class="preview-body">
+          <h4>System Health</h4>
+          <p>6 services real-time monitoring</p>
+          <div class="preview-el"><span style="color:var(--success)">&#9679;</span> API Gateway — 45ms — 99.9%</div>
+          <div class="preview-el"><span style="color:var(--success)">&#9679;</span> PostgreSQL — 12ms — 99.9%</div>
+          <div class="preview-el"><span style="color:var(--warning)">&#9679;</span> Gemini AI — 850ms — 98.5%</div>
+          <div class="preview-el"><span style="color:var(--success)">&#9679;</span> Stripe — 200ms — 99.9%</div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">admin.longcare.au/analytics</span></div>
+        <div class="preview-body">
+          <h4>Analytics Dashboard</h4>
+          <p>Booking funnel, revenue metrics, channel attribution</p>
+          <div class="preview-el">Funnel: Visit (1000) → Chat (300) → Book (100) → Pay (68)</div>
+          <div class="preview-el">Revenue by Service: Mentor $4.2k | Package $3.6k | Starter $580</div>
+          <div class="preview-el">Channels: Google 45% | Direct 25% | Social 20% | Referral 10%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW 4: PARTNER ONBOARDING ===== -->
+<section id="flow4" class="section">
+  <div class="inner">
+    <h1 class="title">Flow 4: Partner/Tenant Onboarding</h1>
+    <p class="subtitle">New business signing up on g.bookedai.au → Tenant creation</p>
+
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#127968;</div><div class="flow-label">SaaS Landing</div><div class="flow-desc">g.longcare.au — Hero, 9 features, 3-tier pricing</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128269;</div><div class="flow-label">/features</div><div class="flow-desc">6 deep-dive sections with capabilities</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128176;</div><div class="flow-label">/partners</div><div class="flow-desc">Benefits, revenue models, application form</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">1</div><div class="flow-label">Business Info</div><div class="flow-desc">Name, Industry, Website, Description</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">2</div><div class="flow-label">Services</div><div class="flow-desc">Add services: Name, Price, Duration</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">3</div><div class="flow-label">Branding</div><div class="flow-desc">Color picker, subdomain, live preview</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">4</div><div class="flow-label">Review</div><div class="flow-desc">Summary cards, Launch button</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#127881;</div><div class="flow-label">Platform Ready!</div><div class="flow-desc">Domain generated, "Contact in 24h"</div></div>
+        <div class="flow-notif"><span class="notif-email">Welcome email</span><span class="notif-admin">Admin review</span></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:32px 0 16px">Supporting Pages</h3>
+    <div class="preview-grid">
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">g.longcare.au/security</span></div>
+        <div class="preview-body">
+          <h4>Security Page (9/10)</h4>
+          <div class="preview-el">Infrastructure: Cloud Run, Cloudflare, Docker</div>
+          <div class="preview-el">Data Protection: PostgreSQL, encryption, backups</div>
+          <div class="preview-el">Auth: Firebase + RBAC (4 roles)</div>
+          <div class="preview-el">Compliance: Privacy Act, GDPR-ready, PCI DSS</div>
+          <div class="preview-el">Trust stats: 99.9% SLA, 256-bit SSL, SOC 2</div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">g.longcare.au/docs</span></div>
+        <div class="preview-body">
+          <h4>API Documentation (8/10)</h4>
+          <div class="preview-el">Getting Started: 3-step (Sign Up → Configure → Go Live)</div>
+          <div class="preview-el">7 API endpoints with method/auth badges</div>
+          <div class="preview-el">/docs/guide — cURL, Node.js, Python examples</div>
+          <div class="preview-el">/api-docs — 17 endpoints with filter tabs</div>
+          <div class="preview-el">OpenAPI 3.1 spec download</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW 5: LEARNING JOURNEY ===== -->
+<section id="flow5" class="section">
+  <div class="inner">
+    <h1 class="title">Flow 5: Learning Journey</h1>
+    <p class="subtitle">Course catalog → Enrollment → Lessons → Certificate</p>
+
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128218;</div><div class="flow-label">/courses</div><div class="flow-desc">Track A: AI Foundations (5 lessons)</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#127381;</div><div class="flow-label">Lesson 1</div><div class="flow-desc">FREE — Intro to AI</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box warning-box"><div class="flow-icon">&#128274;</div><div class="flow-label">Paywall</div><div class="flow-desc">$19/lesson or $79/module</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128214;</div><div class="flow-label">Lessons 2-5</div><div class="flow-desc">Prompts → Tools → Ethics → Strategy</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128221;</div><div class="flow-label">Quiz</div><div class="flow-desc">Auto-generated assessment</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#127942;</div><div class="flow-label">Certificate</div><div class="flow-desc">PDF + LinkedIn share</div></div>
+        <div class="flow-notif"><span class="notif-email">Email</span><span class="notif-whatsapp">WhatsApp</span></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#128161;</div><div class="flow-label">Next Track</div><div class="flow-desc">AI recommends Track B: AI for Business</div></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:32px 0 16px">User Dashboard Learning View</h3>
+    <div class="preview-card" style="max-width:600px">
+      <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">app.longcare.au</span></div>
+      <div class="preview-body">
+        <h4>Learning Progress</h4>
+        <div style="display:flex;gap:8px;margin:12px 0">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff">&#10003;</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff">&#10003;</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff">&#10003;</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff">4</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-muted)">5</div>
+        </div>
+        <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:8px 0"><div style="width:60%;height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:4px"></div></div>
+        <p style="font-size:12px;color:var(--text-muted)">Track A: 60% complete &middot; 3 of 5 lessons done</p>
+        <div class="preview-el" style="margin-top:12px">
+          <strong style="color:var(--accent)">RECOMMENDED:</strong> Track B: AI for Business
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW 6: ERROR & EDGE CASES ===== -->
+<section id="flow6" class="section">
+  <div class="inner">
+    <h1 class="title">Flow 6: Error & Edge Cases</h1>
+    <p class="subtitle">Payment failures, hold expiry, no-shows, refunds, conflicts</p>
+
+    <h3 style="color:var(--text-bright);margin-bottom:16px">Payment Failed → Recovery</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box danger-box"><div class="flow-icon">&#10060;</div><div class="flow-label">Card Declined</div><div class="flow-desc">/booking/cancel page</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box warning-box"><div class="flow-icon">&#128257;</div><div class="flow-label">Try Again</div><div class="flow-desc">Different card or method</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="flow-branch">
+            <div class="branch-label">Alternative methods</div>
+            <div class="flow-box" style="margin-bottom:4px"><div style="font-size:11px">&#128248; QR Code Payment</div></div>
+            <div class="flow-box" style="margin-bottom:4px"><div style="font-size:11px">&#127974; Bank Transfer</div></div>
+            <div class="flow-box"><div style="font-size:11px">&#9200; Pay Later</div></div>
+          </div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128172;</div><div class="flow-label">WhatsApp</div><div class="flow-desc">Manual support fallback</div></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:32px 0 16px">Hold Expiry (10 minutes)</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box highlight"><div class="flow-icon">&#9200;</div><div class="flow-label">Hold Created</div><div class="flow-desc">Slot reserved, 10min timer starts</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box warning-box"><div class="flow-icon">&#9888;</div><div class="flow-label">T-2min Warning</div><div class="flow-desc">Push: "Your hold expires in 2 min"</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box danger-box"><div class="flow-icon">&#10060;</div><div class="flow-label">Hold Expired</div><div class="flow-desc">Slot released, cron job fires</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128260;</div><div class="flow-label">Re-select</div><div class="flow-desc">Return to time selection, slot may be taken</div></div></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:32px 0 16px">Refund Process</h3>
+    <div class="flow-container">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128221;</div><div class="flow-label">Request</div><div class="flow-desc">/manage/[ref] → Cancel with reason</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">
+          <div class="flow-branch">
+            <div class="flow-box success-box" style="margin-bottom:4px"><div style="font-size:11px;color:var(--success)">&gt;24h: 100% refund</div></div>
+            <div class="flow-box warning-box" style="margin-bottom:4px"><div style="font-size:11px;color:var(--warning)">&lt;24h: 50% refund</div></div>
+            <div class="flow-box danger-box"><div style="font-size:11px;color:var(--danger)">No-show: 0% refund</div></div>
+          </div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box"><div class="flow-icon">&#128179;</div><div class="flow-label">Stripe Refund</div><div class="flow-desc">API call, webhook confirms</div></div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-box success-box"><div class="flow-icon">&#128231;</div><div class="flow-label">Confirmed</div><div class="flow-desc">Email: refund processed</div></div>
+        <div class="flow-notif"><span class="notif-email">Email</span><span class="notif-admin">Admin</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SAAS PAGES ===== -->
+<section id="pages-saas" class="section">
+  <div class="inner">
+    <h1 class="title">SaaS Platform Pages — g.longcare.au</h1>
+    <p class="subtitle">15 pages for the BookedAI SaaS marketing site</p>
+    <div class="preview-grid">
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">g.longcare.au/</span></div>
+        <div class="preview-body">
+          <h4>Landing Page (8/10)</h4>
+          <div class="preview-el">Hero: "The AI Revenue Engine" + 3-lang + AU trust badges</div>
+          <div class="preview-el">Stats: 500+ sessions | 99.9% uptime | $50k+ revenue</div>
+          <div class="preview-el">9 Feature cards | 5 Industries | 3 Pricing tiers</div>
+          <div class="preview-el">Case study: Longcare AU | CTA signup form</div>
+          <div style="margin-top:8px"><span class="tag tag-a">ADD: video demo</span><span class="tag tag-a">ADD: testimonials</span></div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">g.longcare.au/integrations</span></div>
+        <div class="preview-body">
+          <h4>Integrations (8/10)</h4>
+          <div class="preview-el">17 integrations: Google suite, Stripe, WhatsApp, Firebase...</div>
+          <div class="preview-el">Color-coded icons | Active/Coming Soon badges</div>
+          <div class="preview-el">CTA: "Need custom?" → Start Trial / Contact Sales</div>
+          <div style="margin-top:8px"><span class="tag tag-a">ADD: setup guides</span></div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">g.longcare.au/onboarding</span></div>
+        <div class="preview-body">
+          <h4>Partner Onboarding Wizard (9/10)</h4>
+          <div class="preview-el">Step 1: Business Info (name, industry, website, desc)</div>
+          <div class="preview-el">Step 2: Services (dynamic add, name/price/duration)</div>
+          <div class="preview-el">Step 3: Branding (color picker, subdomain, live preview)</div>
+          <div class="preview-el">Step 4: Review (summary cards, Launch button)</div>
+          <div class="preview-el">Success: "Platform Ready!" + domain + "Contact in 24h"</div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">g.longcare.au/demo</span></div>
+        <div class="preview-body">
+          <h4>Interactive Demo (8/10)</h4>
+          <div class="preview-el">Live iframe: longcare.au embedded</div>
+          <div class="preview-el">Chat demo: Full AI chat interface with /api/chat</div>
+          <div class="preview-el">Booking CTA: Opens book.longcare.au</div>
+          <div class="preview-el">Video placeholder: "Coming soon"</div>
+          <div style="margin-top:8px"><span class="tag tag-a">ADD: recorded demo video</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TENANT PAGES ===== -->
+<section id="pages-tenant" class="section">
+  <div class="inner">
+    <h1 class="title">Tenant Pages — longcare.au</h1>
+    <p class="subtitle">19 pages for the first tenant landing site</p>
+    <div class="preview-grid">
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">longcare.au/services/ai-mentor</span></div>
+        <div class="preview-body">
+          <h4>AI Mentor Detail (9/10)</h4>
+          <div class="preview-el">Badge: MOST POPULAR | Price: $99 AUD/session</div>
+          <div class="preview-el">4 benefit cards: 60min 1-on-1, Custom AI, Summary, Path</div>
+          <div class="preview-el">6 use cases | Comparison table: Starter vs Mentor</div>
+          <div class="preview-el">5 FAQ items | Schema.org Service + FAQPage markup</div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">longcare.au/pricing</span></div>
+        <div class="preview-body">
+          <h4>Pricing Page (9/10)</h4>
+          <div class="preview-el">4 Mentoring tiers: $29 / $99 / $450 / $850</div>
+          <div class="preview-el">Business Transformation: $1,500-$3,000+ custom</div>
+          <div class="preview-el">Self-Paced: $19-$29/lesson | $79-$149/module</div>
+          <div class="preview-el">9-feature comparison table across 4 tiers</div>
+          <div style="margin-top:8px"><span class="tag tag-a">ADD: annual discount</span><span class="tag tag-a">ADD: ROI calculator</span></div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">longcare.au/mentors</span></div>
+        <div class="preview-body">
+          <h4>Mentors Page (7/10)</h4>
+          <div class="preview-el">Mentor profiles with name and expertise</div>
+          <div style="margin-top:8px"><span class="tag tag-a">ADD: photo/video</span><span class="tag tag-a">ADD: credentials</span><span class="tag tag-a">ADD: certifications</span><span class="tag tag-a">ADD: reviews</span></div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-header"><div class="preview-dots"><span style="background:var(--danger)"></span><span style="background:var(--warning)"></span><span style="background:var(--success)"></span></div><span class="preview-url">longcare.au/search</span></div>
+        <div class="preview-body">
+          <h4>Search Page (6/10)</h4>
+          <div class="preview-el">Search across services, blog, pages</div>
+          <div style="margin-top:8px"><span class="tag tag-a">ADD: filters</span><span class="tag tag-a">ADD: categories</span><span class="tag tag-a">ADD: suggestions</span><span class="tag tag-a">ADD: empty state</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ADMIN PAGES ===== -->
+<section id="pages-admin" class="section">
+  <div class="inner">
+    <h1 class="title">Admin Dashboard Pages</h1>
+    <p class="subtitle">9 admin pages with sidebar navigation</p>
+    <div class="preview-card" style="max-width:900px">
+      <div class="admin-preview">
+        <div class="admin-side">
+          <div style="padding:8px 16px;font-weight:700;font-size:13px;color:var(--text-bright);border-bottom:1px solid var(--border);margin-bottom:8px">BookedAI Admin</div>
+          <div class="admin-side-item active">&#128202; Dashboard</div>
+          <div class="admin-side-item">&#128197; Bookings <span style="margin-left:auto;font-size:10px;background:rgba(99,102,241,.2);color:var(--primary-light);padding:1px 6px;border-radius:9999px">12</span></div>
+          <div class="admin-side-item">&#128101; Users <span style="margin-left:auto;font-size:10px;background:rgba(99,102,241,.2);color:var(--primary-light);padding:1px 6px;border-radius:9999px">156</span></div>
+          <div class="admin-side-item">&#128179; Payments <span style="margin-left:auto;font-size:10px;background:rgba(245,158,11,.2);color:var(--warning);padding:1px 6px;border-radius:9999px">3</span></div>
+          <div class="admin-side-item">&#128227; Marketing</div>
+          <div class="admin-side-item">&#128218; Learning</div>
+          <div style="height:1px;background:var(--border);margin:8px 16px"></div>
+          <div class="admin-side-item">&#128200; Analytics</div>
+          <div class="admin-side-item">&#128154; Health <span style="margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--success)"></span></div>
+          <div class="admin-side-item">&#128279; Webhooks</div>
+          <div class="admin-side-item">&#9993; Emails</div>
+          <div style="height:1px;background:var(--border);margin:8px 16px"></div>
+          <div class="admin-side-item">&#9881; Settings</div>
+        </div>
+        <div class="admin-main">
+          <h4 style="color:var(--text-bright);margin-bottom:12px">Dashboard — Real DB Data</h4>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+            <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:10px;text-align:center">
+              <div style="font-size:16px;font-weight:700;color:var(--success)">$2.4k</div>
+              <div style="font-size:10px;color:var(--text-muted)">Revenue</div>
+            </div>
+            <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:10px;text-align:center">
+              <div style="font-size:16px;font-weight:700;color:var(--text-bright)">47</div>
+              <div style="font-size:10px;color:var(--text-muted)">Bookings</div>
+            </div>
+            <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:10px;text-align:center">
+              <div style="font-size:16px;font-weight:700;color:var(--text-bright)">156</div>
+              <div style="font-size:10px;color:var(--text-muted)">Users</div>
+            </div>
+            <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:10px;text-align:center">
+              <div style="font-size:16px;font-weight:700;color:var(--accent)">68%</div>
+              <div style="font-size:10px;color:var(--text-muted)">Conversion</div>
+            </div>
+          </div>
+          <div class="preview-el">Revenue by Service: Mentor $4.2k | Package $3.6k | Starter $580</div>
+          <div class="preview-el">Recent: 6 bookings with status badges + approve actions</div>
+          <div class="preview-el">Marketing: 3 campaigns with approve/reject workflow</div>
+          <div class="preview-el">Health: 6 services with latency + uptime monitoring</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NOTIFICATION MATRIX ===== -->
+<section id="notifications" class="section">
+  <div class="inner">
+    <h1 class="title">Notification Matrix</h1>
+    <p class="subtitle">20 events across 6 channels — complete trigger map</p>
+    <div style="overflow-x:auto">
+      <table class="matrix-table">
+        <thead>
+          <tr><th style="text-align:left;min-width:160px">Event</th><th>Email</th><th>WhatsApp</th><th>SMS</th><th>Push</th><th>In-App</th><th>Admin</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Booking Confirmed</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>Booking Cancelled</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>Booking Rescheduled</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>24h Reminder</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>1h Reminder</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>Payment Received</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>Payment Failed</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>Bank Transfer Pending</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>Refund Processed</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>Session Summary</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>Course Enrolled</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>Certificate Earned</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>Welcome New User</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>No-Show Detected</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>Hold Expiring (2min)</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>Package Balance Low</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
+          <tr><td>Marketing Campaign</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>System Health Alert</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>CEO Daily Summary</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td></tr>
+          <tr><td>New Partner Applied</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-check">&#10003;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BOOKING STATUS ===== -->
+<section id="status" class="section">
+  <div class="inner">
+    <h1 class="title">Booking Status Machine</h1>
+    <p class="subtitle">Complete state transitions with triggers and actions</p>
+
+    <div class="status-flow">
+      <span class="status-node" style="background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-muted)">DRAFT</span>
+      <span class="status-arrow">&rarr;</span>
+      <span class="status-node" style="background:rgba(245,158,11,.15);color:var(--warning)">HOLD (10min)</span>
+      <span class="status-arrow">&rarr;</span>
+      <span class="status-node" style="background:rgba(59,130,246,.15);color:var(--info)">PENDING_PAYMENT</span>
+      <span class="status-arrow">&rarr;</span>
+      <span class="status-node" style="background:rgba(34,197,94,.15);color:var(--success)">CONFIRMED</span>
+    </div>
+
+    <div style="margin:24px 0">
+      <h3 style="color:var(--text-bright);margin-bottom:12px">From CONFIRMED:</h3>
+      <div class="status-flow">
+        <span class="status-node" style="background:rgba(34,197,94,.15);color:var(--success)">CONFIRMED</span>
+        <span class="status-arrow">&rarr;</span>
+        <span class="status-node" style="background:rgba(6,182,212,.15);color:var(--secondary)">RESCHEDULED</span>
+      </div>
+      <div class="status-flow">
+        <span class="status-node" style="background:rgba(34,197,94,.15);color:var(--success)">CONFIRMED</span>
+        <span class="status-arrow">&rarr;</span>
+        <span class="status-node" style="background:rgba(239,68,68,.15);color:var(--danger)">CANCELLED</span>
+        <span class="status-arrow">&rarr;</span>
+        <span class="status-node" style="background:rgba(168,85,247,.15);color:#a855f7">REFUNDED</span>
+      </div>
+      <div class="status-flow">
+        <span class="status-node" style="background:rgba(34,197,94,.15);color:var(--success)">CONFIRMED</span>
+        <span class="status-arrow">&rarr;</span>
+        <span class="status-node" style="background:rgba(239,68,68,.15);color:var(--danger)">NO_SHOW</span>
+      </div>
+    </div>
+
+    <h3 style="color:var(--text-bright);margin:32px 0 12px">Triggers & Actions per Transition</h3>
+    <div style="overflow-x:auto">
+      <table class="matrix-table">
+        <thead><tr><th style="text-align:left">Transition</th><th style="text-align:left">Trigger</th><th style="text-align:left">Actions</th></tr></thead>
+        <tbody>
+          <tr><td>DRAFT → HOLD</td><td style="text-align:left">POST /booking/hold</td><td style="text-align:left">Reserve slot, start 10min timer (cron)</td></tr>
+          <tr><td>HOLD → expired</td><td style="text-align:left">Cron: /cron/expire-holds</td><td style="text-align:left">Release slot, delete hold</td></tr>
+          <tr><td>HOLD → PENDING</td><td style="text-align:left">Payment initiated</td><td style="text-align:left">Stripe checkout or bank transfer started</td></tr>
+          <tr><td>PENDING → CONFIRMED</td><td style="text-align:left">Stripe webhook / Admin approve</td><td style="text-align:left">Email, Calendar, Meet link, WhatsApp, audit log</td></tr>
+          <tr><td>CONFIRMED → RESCHEDULED</td><td style="text-align:left">POST /booking/reschedule</td><td style="text-align:left">Update Calendar, notify, audit log</td></tr>
+          <tr><td>CONFIRMED → CANCELLED</td><td style="text-align:left">POST /booking/cancel</td><td style="text-align:left">Release slot, refund check, email, audit log</td></tr>
+          <tr><td>CANCELLED → REFUNDED</td><td style="text-align:left">Stripe refund API</td><td style="text-align:left">Credit note, email, Xero sync</td></tr>
+          <tr><td>CONFIRMED → NO_SHOW</td><td style="text-align:left">T+15min auto-detect</td><td style="text-align:left">Email, reschedule offer, admin alert</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

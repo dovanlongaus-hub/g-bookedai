@@ -39,3 +39,10 @@ upload/
 
 # Google Service Account
 credentials/
+
+# Backup env files (never commit secrets)
+.env.bak
+.env.*.bak
+
+# Claude Code local state
+.claude/

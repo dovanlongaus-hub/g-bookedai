@@ -1,9 +1,13 @@
 # BookedAI — Enterprise UI/UX Design System & Implementation Plan
 
-> **Version:** 1.0 | **Date:** 2026-05-06
-> **Based on:** Competitive research (14 platforms), UX best practices (2025-2026), Codebase audit
+> **Version:** 2.0 | **Date:** 2026-05-06
+> **Based on:** Competitive research (14 platforms), UX best practices (2025-2026), Codebase audit (47 pages)
 > **Synced with:** IMPLEMENTATION_ROADMAP.md Phase 7, IMPLEMENTATION_PLAN.md Phase 5-8
 > **Target:** UI/UX Maturity 7.5/10 -> 9.5/10
+> **Companion Docs:**
+> - [UI_UX_COMPLETE_FLOWS.md](UI_UX_COMPLETE_FLOWS.md) — All 53 pages spec, 8 user journey flows, notification matrix, status machine
+> - [ui-visualization.html](ui-visualization.html) — Interactive design system preview (7 sections)
+> - [ui-flows-visualization.html](ui-flows-visualization.html) — Complete flow visualization (13 sections, all pages)
 
 ---
 

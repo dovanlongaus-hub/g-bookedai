@@ -1,91 +1,159 @@
-import type { Metadata } from 'next';
-import { Breadcrumbs } from '../../components/breadcrumbs';
+import { ArrowRight, Clock } from 'lucide-react';
+import { NewsletterForm } from '@/components/newsletter-form';
+import { getPageMetadata } from '@/lib/metadata';
+import { getSortedPosts } from '@/data/blog-posts';
 
-export const metadata: Metadata = {
-  title: 'Blog — Longcare AU',
-  description: 'AI mentoring insights, tips, and guides from Longcare AU. Learn about prompt engineering, business automation, and AI strategy.',
-};
+export const metadata = getPageMetadata({
+  title: 'Blog — AI Insights for Australian SMEs | Longcare',
+  description:
+    'Practical AI guides for Australian businesses. Tutorials, tool comparisons, and strategy for SMEs ready to ship — not just plan.',
+  path: '/blog',
+});
 
-const posts = [
-  {
-    title: 'Getting Started with AI: A Beginner\'s Guide',
-    date: 'May 2026',
-    preview:
-      'Artificial Intelligence is no longer just for tech giants. In this guide, we break down the fundamentals of AI and show you how to start using tools like ChatGPT, Gemini, and Claude to boost your productivity — no coding required.',
-    tags: ['AI', 'Beginners', 'Guide'],
-    slug: '/blog/getting-started-with-ai',
-  },
-  {
-    title: '5 Ways AI Can Transform Your Small Business',
-    date: 'May 2026',
-    preview:
-      'Small businesses in Australia are discovering that AI tools can level the playing field against larger competitors. From automated customer support to smart scheduling, here are five practical ways to get started today.',
-    tags: ['SME', 'Business', 'AI Tools'],
-    slug: '/blog/5-ways-ai-transforms-business',
-  },
-  {
-    title: 'How to Write Effective AI Prompts',
-    date: 'May 2026',
-    preview:
-      'The difference between a good and bad AI output often comes down to how you write your prompt. Learn the CRAFT framework for structuring prompts that consistently deliver high-quality results across any AI model.',
-    tags: ['Prompt Engineering', 'Tips'],
-    slug: '/blog/effective-ai-prompts',
-  },
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
-export default function BlogPage() {
-  return (
-    <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
-      <Breadcrumbs items={[{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog' }]} />
-      <h1 className="hero-title" style={{ fontSize: '3rem' }}>Blog</h1>
-      <p className="hero-subtitle">
-        Insights, tips, and guides to help you make the most of AI in your work and business.
-      </p>
+function formatPublishedDate(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  if (!y || !m || !d) return iso;
+  return `${d} ${MONTHS[m - 1]} ${y}`;
+}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '3rem', maxWidth: 800, margin: '3rem auto 0' }}>
-        {posts.map((post) => (
-          <a key={post.title} href={post.slug} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="card" style={{ transition: 'transform 0.2s, border-color 0.2s', cursor: 'pointer' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{post.date}</span>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  {post.tags.map((tag) => (
-                    <span key={tag} style={{
-                      fontSize: '0.75rem', color: 'var(--accent, #66fcf1)', fontWeight: 600,
-                      background: 'rgba(102, 252, 241, 0.08)', padding: '0.25rem 0.6rem',
-                      borderRadius: 10,
-                    }}>
+export default function BlogPage() {
+  const posts = getSortedPosts();
+  const featured = posts[0];
+  const rest = posts.slice(1);
+
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    '@id': 'https://longcare.au/blog',
+    name: 'LongCare AU Blog',
+    description: 'Practical AI guides and case studies for Australian SMEs.',
+    url: 'https://longcare.au/blog',
+    publisher: {
+      '@type': 'Organization',
+      name: 'LongCare AU',
+      logo: { '@type': 'ImageObject', url: 'https://longcare.au/logo.png' },
+    },
+    blogPost: posts.map((p) => ({
+      '@type': 'BlogPosting',
+      headline: p.title,
+      description: p.excerpt,
+      url: `https://longcare.au/blog/${p.slug}`,
+      keywords: p.tags.join(', '),
+      datePublished: p.publishedAt,
+      dateModified: p.updatedAt ?? p.publishedAt,
+      author: { '@type': 'Person', name: p.author.name },
+    })),
+  };
+
+  return (
+    <main className="bg-[#F8FAFC] min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
+      />
+      <div className="mx-auto max-w-[1120px] px-8 sm:px-10 py-16 sm:py-24">
+        {/* Header */}
+        <div className="max-w-2xl mb-14">
+          <span className="eyebrow">Blog</span>
+          <h1 className="mt-4 font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+            Practical AI insights for Australian businesses.
+          </h1>
+          <p className="mt-5 text-lg leading-relaxed text-slate-600">
+            Industry-specific guides, tool comparisons, and tutorials. No hype — just what works.
+          </p>
+        </div>
+
+        {/* Featured post */}
+        {featured && (
+          <a href={`/blog/${featured.slug}`} className="block no-underline mb-10 group">
+            <article className="trust-card p-8 sm:p-10 bg-gradient-to-br from-white to-slate-50">
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <span className="trust-badge bg-sky-50 text-sky-700 border border-sky-200">Featured</span>
+                <span className="trust-badge bg-slate-50 border border-slate-200 text-slate-600">
+                  {featured.category}
+                </span>
+                <span className="text-[13px] text-slate-500">{formatPublishedDate(featured.publishedAt)}</span>
+                <span className="inline-flex items-center gap-1 text-[13px] text-slate-500">
+                  <Clock className="size-3.5" aria-hidden /> {featured.readTimeMinutes} min read
+                </span>
+              </div>
+              <h2 className="font-heading text-2xl sm:text-3xl font-bold text-slate-900 group-hover:text-sky-700 transition-colors mb-4">
+                {featured.title}
+              </h2>
+              <p className="text-[15px] leading-relaxed text-slate-600 max-w-[70ch] mb-6">{featured.excerpt}</p>
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <div className="flex flex-wrap gap-2">
+                  {featured.tags.map((tag) => (
+                    <span key={tag} className="trust-badge bg-slate-50 border border-slate-200 text-slate-600">
                       {tag}
                     </span>
                   ))}
                 </div>
+                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-sky-700 group-hover:gap-2.5 transition-all">
+                  Read article <ArrowRight className="size-4" />
+                </span>
               </div>
-
-              <h2 className="card-title" style={{ fontSize: '1.4rem', marginBottom: '0.75rem' }}>
-                {post.title}
-              </h2>
-
-              <p className="card-desc" style={{ marginBottom: '1rem' }}>
-                {post.preview}
-              </p>
-
-              <span style={{
-                color: 'var(--accent, #66fcf1)', fontWeight: 600, fontSize: '0.9rem',
-                display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-              }}>
-                Read More <span aria-hidden="true">&rarr;</span>
-              </span>
-            </div>
+            </article>
           </a>
-        ))}
-      </div>
+        )}
 
-      <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-          More articles coming soon. Want to stay updated?
-        </p>
-        <a href="/contact" className="btn btn-outline">Subscribe to Updates</a>
+        {/* Post grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {rest.map((post) => (
+            <a key={post.slug} href={`/blog/${post.slug}`} className="block no-underline group">
+              <article className="trust-card p-7 h-full flex flex-col">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <span className="trust-badge bg-slate-50 border border-slate-200 text-slate-600 text-[10px]">
+                    {post.category}
+                  </span>
+                  <span className="text-[12px] text-slate-500">{formatPublishedDate(post.publishedAt)}</span>
+                  <span className="inline-flex items-center gap-1 text-[12px] text-slate-500">
+                    <Clock className="size-3" aria-hidden /> {post.readTimeMinutes} min
+                  </span>
+                </div>
+                <h2 className="font-heading text-lg font-semibold text-slate-900 group-hover:text-sky-700 transition-colors mb-3 leading-snug">
+                  {post.title}
+                </h2>
+                <p className="text-[14px] leading-relaxed text-slate-600 flex-grow mb-5">{post.excerpt}</p>
+                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-slate-100">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] font-semibold uppercase tracking-wider text-slate-400"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            </a>
+          ))}
+        </div>
+
+        {/* Newsletter CTA */}
+        <div className="mt-14 trust-card p-8 sm:p-10 text-center bg-slate-900 text-white border-slate-800">
+          <h3 className="font-heading text-2xl font-bold text-white mb-3">Get AI insights every fortnight</h3>
+          <p className="text-sm text-slate-400 mb-6 max-w-md mx-auto">
+            Practical AI tips, Australian case studies, and new guides — straight to your inbox. No spam, unsubscribe anytime.
+          </p>
+          <NewsletterForm />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

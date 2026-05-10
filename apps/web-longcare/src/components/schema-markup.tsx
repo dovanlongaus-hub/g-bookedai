@@ -1,11 +1,12 @@
 export function LocalBusinessSchema() {
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@longcare.au';
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: 'Longcare AU',
     description: 'AI-powered mentoring sessions and learning programs for individuals and SMEs',
     url: 'https://longcare.au',
-    email: 'ceo@longcare.au',
+    email: contactEmail,
     areaServed: { '@type': 'Country', name: 'Australia' },
     priceRange: '$29 - $3,000+',
     paymentAccepted: ['Credit Card', 'Bank Transfer', 'PayID'],

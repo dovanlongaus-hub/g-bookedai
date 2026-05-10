@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { redirectAfterLogin } from '../../lib/auth-redirect';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.g.bookedai.au';
 
@@ -46,10 +47,10 @@ export default function LoginPage() {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      // Store token and redirect
+      // Store token and redirect (supports cross-domain via ?redirect= param)
       localStorage.setItem('auth_token', idToken);
       localStorage.setItem('auth_provider', 'firebase');
-      window.location.href = '/';
+      redirectAfterLogin(idToken, 'firebase');
     } catch (err) {
       console.error('Firebase auth failed, showing OpenAI fallback', err);
       setFirebaseError(true);
@@ -57,8 +58,12 @@ export default function LoginPage() {
   };
 
   const handleOpenAILogin = () => {
-    // Redirect to API's OpenAI OAuth endpoint
-    const returnUrl = window.location.origin;
+    // Redirect to API's OpenAI OAuth endpoint, preserving redirect param
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
+    const returnUrl = redirect
+      ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`
+      : window.location.origin;
     window.location.href = `${API_URL}/auth/openai/login?returnUrl=${encodeURIComponent(returnUrl)}`;
   };
 

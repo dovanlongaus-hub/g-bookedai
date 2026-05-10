@@ -1,0 +1,189 @@
+{
+  "site": {
+    "name": "LongCare AU",
+    "tagline": "Practical AI for Australian SMEs",
+    "description": "AI mentoring, agentic implementation, measurable ROI for Australian businesses."
+  },
+  "nav": {
+    "services": "Services",
+    "academy": "Academy",
+    "solutions": "Solutions",
+    "agents": "Agents",
+    "toolkit": "Toolkit",
+    "resources": "Resources",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "bookConsult": "Book a consult"
+  },
+  "footer": {
+    "services": "Services",
+    "learnAndAssess": "Learn & assess",
+    "company": "Company",
+    "rightsReserved": "All rights reserved",
+    "abnNote": "ABN-registered Australian business",
+    "compliance": "GST-inclusive pricing · APP 1-13 compliant · WCAG 2.2 AA"
+  },
+  "cta": {
+    "primary": "Book your consultation",
+    "secondary": "Learn more",
+    "joinWaitlist": "Join the waitlist",
+    "viewPricing": "View pricing",
+    "getStarted": "Get started",
+    "talkToMentor": "Talk to a mentor",
+    "downloadGuide": "Download the guide"
+  },
+  "common": {
+    "comingSoon": "Coming soon",
+    "freeFirstLesson": "First lesson free",
+    "gstInclusive": "GST-inclusive",
+    "earlyAccess": "Early access",
+    "applyForPilot": "Apply for the pilot",
+    "loading": "Loading…",
+    "readMore": "Read more",
+    "backToTop": "Back to top",
+    "search": "Search",
+    "yes": "Yes",
+    "no": "No",
+    "minutes": "min",
+    "hours": "hr"
+  },
+  "homepage": {
+    "heroTitle": "AI that earns its keep — for Australian SMEs",
+    "heroSubtitle": "Mentoring, agentic implementation, and measurable ROI from week one.",
+    "trustStrip": "Trusted by Australian SMEs across health, retail, hospitality, real estate, trades, education and professional services.",
+    "valuePropTitle": "Why Australian SMEs choose LongCare",
+    "valuePropPractical": "Practical, not theoretical",
+    "valuePropMeasurable": "Measurable ROI from day one",
+    "valuePropCompliant": "Australian Privacy Act & GST compliant"
+  },
+  "services": {
+    "hubTitle": "AI Mentoring & Agentic Services",
+    "hubSubtitle": "From a 30-minute starter to a multi-month implementation partnership.",
+    "starterName": "30-Min AI Starter Session",
+    "starterTagline": "Your first taste of practical AI mentoring",
+    "mentorName": "1-Hour AI Mentor Session",
+    "mentorTagline": "Deep-dive guidance for a specific business problem",
+    "packagesName": "AI Mentoring Packages",
+    "packagesTagline": "Multi-session journeys with implementation support"
+  },
+  "academy": {
+    "hubTitle": "LongCare AI Academy",
+    "hubSubtitle": "Practical AI training for Australian SMEs and professionals.",
+    "courseCatalog": "Course catalog",
+    "certifications": "Certifications",
+    "freeFirstLesson": "First lesson is always free"
+  },
+  "solutions": {
+    "hubTitle": "Industry Solutions",
+    "hubSubtitle": "AI patterns proven across Australian SME verticals.",
+    "exploreVertical": "Explore this vertical"
+  },
+  "resources": {
+    "hubTitle": "AI Resources for Australian SMEs",
+    "hubSubtitle": "Frameworks, templates and assessments — all free.",
+    "assessmentName": "AI Readiness Assessment",
+    "assessmentTagline": "12 questions, 6 minutes, get your maturity score and ROI estimate",
+    "templatesName": "Templates & Frameworks",
+    "guidesName": "Implementation Guides"
+  },
+  "blog": {
+    "hubTitle": "Insights & Field Notes",
+    "hubSubtitle": "Real lessons from Australian SMEs adopting AI.",
+    "readTime": "{minutes} min read",
+    "publishedOn": "Published on {date}"
+  },
+  "contact": {
+    "title": "Talk to LongCare",
+    "subtitle": "Tell us about your business and we'll respond within one business day.",
+    "nameLabel": "Your name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone (optional)",
+    "messageLabel": "How can we help?",
+    "submit": "Send message",
+    "success": "Thanks — we'll be in touch shortly."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Check your connection.",
+    "validation": "Please check the highlighted fields.",
+    "rateLimit": "Too many requests. Try again in a minute.",
+    "notFound": "We couldn't find that page.",
+    "serverError": "Our server hit a snag. We're on it."
+  },
+  "about": {
+    "heroTitle": "About LongCare",
+    "heroSubtitle": "AI Adoption Made Practical — Empowering Australian SMEs with AI",
+    "heroBody": "LongCare AU exists to close the gap between AI hype and real business outcomes. We pair experienced human mentors with AI-powered learning tools so that individuals and SMEs in Australia can adopt AI safely, responsibly, and with measurable ROI.",
+    "missionTitle": "Our Mission",
+    "missionBody": "Make AI accessible for everyone — from individuals upskilling for the next decade of work, to SMEs seeking digital transformation. We combine personalised 1-on-1 mentoring with AI learning tools to deliver outcomes you can measure: hours saved, customers served, revenue earned.",
+    "founderSectionTitle": "Meet Our Founder",
+    "founderName": "Dr. Long Do",
+    "founderRole": "Founder & Lead AI Mentor",
+    "founderBio1": "With 15+ years in technology, Dr. Long founded LongCare AU and BookedAI to make AI accessible to every Australian professional and SME. His mentoring focuses on practical AI integration — prompt engineering, workflow automation, and responsible deployment — translating cutting-edge research into outcomes that show up in your P&L.",
+    "founderLanguages": "Languages: English, Vietnamese.",
+    "team": {
+      "title": "Our Team",
+      "subtitle": "Expert guidance tailored to your goals — from hands-on AI mentoring to 24/7 learning support.",
+      "languagesLabel": "Languages:",
+      "founder": {
+        "name": "Dr. Long Do",
+        "title": "Founder & Lead AI Mentor",
+        "bio": "With 15+ years in tech, Dr. Long founded LongCare AU and BookedAI to make AI accessible for everyone. He specialises in helping professionals and SMEs integrate AI into real workflows with measurable, practical outcomes.",
+        "languages": "English, Vietnamese",
+        "ctaLabel": "Book with Dr. Long",
+        "expertise1": "AI Strategy",
+        "expertise2": "Prompt Engineering",
+        "expertise3": "Business Automation"
+      },
+      "assistant": {
+        "name": "AI Learning Assistant",
+        "title": "Powered by Gemini",
+        "bio": "Available 24/7 across English, Vietnamese, and Chinese. Generates session notes, Q&A extracts, and personalised next-step recommendations after every mentoring session.",
+        "languages": "EN / VI / ZH",
+        "ctaLabel": "Chat Now",
+        "expertise1": "Session Notes",
+        "expertise2": "Q&A Extraction",
+        "expertise3": "Improvement Suggestions"
+      },
+      "guests": {
+        "name": "Guest Mentors",
+        "title": "Industry Experts (Coming Soon)",
+        "bio": "A rotating roster of guest mentors across finance, healthcare, education, and operations. Join the waitlist to be notified when specialised workshops open.",
+        "languages": "Various",
+        "ctaLabel": "Join Waitlist",
+        "expertise1": "Industry Workshops",
+        "expertise2": "Specialised Topics",
+        "expertise3": "Rotating Experts"
+      }
+    },
+    "values": {
+      "title": "Our Values",
+      "practical": {
+        "title": "Practical AI",
+        "desc": "No hype. Every session ships a workflow you can use on Monday morning."
+      },
+      "smeFirst": {
+        "title": "SME-first",
+        "desc": "Built for Australian small and mid-sized businesses — not enterprise budgets."
+      },
+      "responsibleAI": {
+        "title": "Responsible AI",
+        "desc": "Australian Privacy Act aligned. Your data stays your data."
+      },
+      "australian": {
+        "title": "Australian-focused",
+        "desc": "GST-inclusive pricing, AU compliance, and mentors who know the local market."
+      }
+    },
+    "whyTitle": "Why LongCare",
+    "why1": "Sessions delivered live via Google Meet — pair human mentoring with AI-generated notes.",
+    "why2": "AI summary, Q&A extracts, and a personalised next-step recommendation after every session.",
+    "why3": "All session materials saved to Google Docs and accessible from your dashboard.",
+    "why4": "Built on Google Cloud with Gemini AI — secure, fast, and aligned with the Australian Privacy Act.",
+    "why5": "Multilingual (English / Vietnamese / Chinese) for AU's diverse SME landscape.",
+    "cta": {
+      "button": "Book AI Mentor Session"
+    }
+  }
+}

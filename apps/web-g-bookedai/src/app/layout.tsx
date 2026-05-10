@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Outfit, Geist } from 'next/font/google';
 import './globals.css';
 import { Analytics } from '../components/analytics';
 import { ChatWidget } from '../components/chat-widget';
+import { cn } from "@/lib/utils";
 
-const inter = Inter({
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
+const outfit = Outfit({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-outfit',
 });
 
 export const metadata: Metadata = {
@@ -45,7 +48,7 @@ export const metadata: Metadata = {
     icon: '/favicon.svg',
     apple: '/logo-icon.svg',
   },
-  themeColor: '#0070f3',
+  themeColor: '#6366f1',
   manifest: '/manifest.json',
 };
 
@@ -55,8 +58,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="antialiased notranslate" style={{ fontFamily: 'var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif' }} translate="no">
+    <html lang="en" className={cn("font-sans", geist.variable)}>
+      <body className="antialiased notranslate" style={{ fontFamily: 'var(--font-outfit), -apple-system, BlinkMacSystemFont, sans-serif' }} translate="no">
         <Analytics />
         <div className="translate" translate="yes">
           {children}

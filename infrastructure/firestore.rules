@@ -1,0 +1,143 @@
+rules_version = '2';
+
+// LongCare.au — Firestore security rules.
+// Default-deny. Every collection is gated by ownership or explicit role.
+// Sprint P1 baseline; tighten per-feature when collection schemas land.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------------
+    // Helpers
+    // ---------------------------------------------------------------------
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function hasRole(role) {
+      return isSignedIn()
+        && request.auth.token.role != null
+        && request.auth.token.role == role;
+    }
+
+    function isAdmin() {
+      return hasRole('admin') || hasRole('superadmin');
+    }
+
+    function isMentor() {
+      return hasRole('mentor') || isAdmin();
+    }
+
+    function tenantMatches(tenantId) {
+      return isSignedIn()
+        && request.auth.token.tenant != null
+        && request.auth.token.tenant == tenantId;
+    }
+
+    // ---------------------------------------------------------------------
+    // /users/{uid} — profile owned by the signed-in user. Admins can read.
+    // ---------------------------------------------------------------------
+
+    match /users/{uid} {
+      allow read:   if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+
+      // Sub-collections under user (e.g., devices, sessions index).
+      match /{sub=**} {
+        allow read, write: if isOwner(uid) || isAdmin();
+      }
+    }
+
+    // ---------------------------------------------------------------------
+    // /mentor_sessions/{sessionId} — created by user, can be read by user
+    // or assigned mentor. ownerUid is required on every doc.
+    // ---------------------------------------------------------------------
+
+    match /mentor_sessions/{sessionId} {
+      allow create: if isSignedIn()
+                    && request.resource.data.ownerUid == request.auth.uid;
+      allow read:   if resource.data.ownerUid == request.auth.uid
+                    || (isMentor() && resource.data.mentorUid == request.auth.uid)
+                    || isAdmin();
+      allow update: if (resource.data.ownerUid == request.auth.uid)
+                    || (isMentor() && resource.data.mentorUid == request.auth.uid)
+                    || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------------
+    // /assessments/{id} — owner read/write only.
+    // ---------------------------------------------------------------------
+
+    match /assessments/{id} {
+      allow read, write: if isSignedIn()
+                         && (
+                              (resource == null && request.resource.data.ownerUid == request.auth.uid)
+                              || (resource != null && resource.data.ownerUid == request.auth.uid)
+                              || isAdmin()
+                            );
+    }
+
+    // ---------------------------------------------------------------------
+    // /lesson_progress/{uid}_{lessonId} — composite-keyed; owner only.
+    // Uid is the prefix of the doc id, so we can guard without a fetch.
+    // ---------------------------------------------------------------------
+
+    match /lesson_progress/{progressId} {
+      function progressOwner() {
+        return progressId.split('_')[0];
+      }
+
+      allow read:   if isOwner(progressOwner()) || isAdmin();
+      allow create: if isOwner(progressOwner())
+                    && request.resource.data.uid == request.auth.uid;
+      allow update: if isOwner(progressOwner())
+                    && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------------
+    // /agents/{tenantId}/... — tenant-scoped agent registry & memory.
+    // Only members of the tenant (token.tenant claim) can read/write.
+    // ---------------------------------------------------------------------
+
+    match /agents/{tenantId}/{document=**} {
+      allow read:  if tenantMatches(tenantId) || isAdmin();
+      allow write: if (tenantMatches(tenantId) && isMentor()) || isAdmin();
+    }
+
+    // ---------------------------------------------------------------------
+    // /public/{document=**} — read-only marketing / catalogue data.
+    // Writes are admin-only.
+    // ---------------------------------------------------------------------
+
+    match /public/{document=**} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------------
+    // /audit_logs/{id} — append-only. Functions write via Admin SDK only.
+    // Clients can never read or write directly.
+    // ---------------------------------------------------------------------
+
+    match /audit_logs/{id} {
+      allow read, write: if false;
+    }
+
+    // ---------------------------------------------------------------------
+    // Default deny — everything not explicitly granted above is rejected.
+    // ---------------------------------------------------------------------
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

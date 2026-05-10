@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { buildAuthRedirectUrl } from '../../../lib/auth-redirect';
 
 function CallbackHandler() {
   const searchParams = useSearchParams();
@@ -19,7 +20,14 @@ function CallbackHandler() {
     if (token) {
       localStorage.setItem('auth_token', token);
       localStorage.setItem('auth_provider', provider || 'openai');
-      window.location.href = '/';
+
+      // Support cross-domain redirect if ?redirect= param is present
+      const redirect = searchParams.get('redirect');
+      if (redirect) {
+        window.location.href = buildAuthRedirectUrl(redirect, token, provider || 'openai');
+      } else {
+        window.location.href = '/';
+      }
     } else {
       window.location.href = '/login?error=no_token';
     }

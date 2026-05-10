@@ -44,7 +44,12 @@ BookedAI la nen tang AI tu dong hoa hanh trinh khach hang cho cac doanh nghiep d
 | Domain | Vai tro | Doi tuong | Doanh thu |
 |--------|---------|-----------|-----------|
 | **g.bookedai.au** | SaaS Platform ban cho SME | Owner doanh nghiep | Subscription A$0-199/thang + 5% commission |
-| **longcare.au** | Tenant dau tien, AI Mentoring | Hoc vien, khach hang | Dich vu A$29-850/session |
+| **longcare.au** | AI Training, Mentorship & Implementation Ecosystem | **Individuals + Startups + SMEs + Organisations** | Dich vu A$29-3,000+/engagement |
+
+> **Longcare.au scope** (per [docs/longcare/VISION.md](./longcare/VISION.md) v2.0):
+> 7 trụ cột — AI Learning & Mentorship · SME Transformation · Agent Marketplace · Governance & Compliance · Community & Ecosystem · **Startup Mentorship & Advisory** · **Cloud & Infrastructure Advisory**.
+> Đối tượng: Individuals (career changers, AI learners) · Startups (founders, MVP, fundraising) · SMEs (retail, services, agencies) · Organisations (innovation/transformation teams).
+> Định vị: "Trusted AI ecosystem partner across Australia and APAC", aligned with Google Cloud for Startups.
 
 ### 1.3 Pricing — g.bookedai.au (SaaS)
 
@@ -427,21 +432,31 @@ notification.sent, approval.requested, approval.processed
 
 ## 6. Thiet Ke UI/UX
 
-### 6.1 Design System
+### 6.1 Design System (Light & Friendly Theme)
 
 | Token | Value |
 |-------|-------|
-| Primary | Indigo #4F46E5 |
-| Secondary | Cyan #06B6D4 |
-| Accent | Teal #14B8A6 |
+| Background | Off-white #F8FAFC (nền chính sáng, dịu mắt) |
+| Surface | White #FFFFFF (card, modal, vùng chứa nội dung) |
+| Primary | Blue #3B82F6 (xanh thân thiện, tạo sự tin tưởng) |
+| Secondary | Sky #0EA5E9 (xanh dương nhạt, tươi sáng) |
+| Accent | Coral #FF7F50 hoặc Teal #14B8A6 (điểm nhấn nổi bật) |
+| Text | Slate #334155 (xám đậm, dễ đọc trên nền sáng, không dùng đen tuyền) |
 | Success | Green #22C55E |
 | Warning | Amber #F59E0B |
 | Error | Red #EF4444 |
-| Font Heading | Outfit |
-| Font Body | Outfit |
+| Font Heading | Quicksand hoặc Outfit (tròn trịa, hiện đại, thân thiện) |
+| Font Body | Inter hoặc Outfit |
 | Font Code | JetBrains Mono |
-| Border Radius | 8px (cards), 6px (buttons), 4px (inputs) |
+| Border Radius | 16px (cards), 12px (buttons), 8px (inputs) - bo tròn mềm mại |
+| Shadows | Soft diffuse (0 4px 20px rgba(0,0,0,0.05)) |
 | Spacing | 4px grid (0.25rem increments) |
+
+#### Định hướng UI/UX (Redesign cho longcare.au):
+- **Giao diện thân thiện:** Ưu tiên thiết kế bo góc lớn, sử dụng bóng đổ mềm (soft shadows) để tạo cảm giác các khối nổi nhẹ trên nền trắng, tránh viền cứng nhắc.
+- **Nền màu sáng (Light-themed):** Đảm bảo độ tương phản (contrast) chuẩn WCAG với chữ xám đậm trên nền trắng/off-white. Tạo không gian mở, thoáng đãng.
+- **Hình ảnh minh hoạ:** Sử dụng các hình minh hoạ (illustrations) 2D phong cách tươi sáng, hoặc ảnh chân dung mentor có nụ cười tự nhiên, nền trong suốt/sáng.
+- **Trải nghiệm tích cực:** Màu sắc ấm, các micro-interactions (hiệu ứng hover, click) cần mượt mà (transition ~0.2s - 0.3s).
 
 ### 6.2 Component Library (@bookedai/ui)
 

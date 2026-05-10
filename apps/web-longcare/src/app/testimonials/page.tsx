@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
+import { getPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
+export const metadata = getPageMetadata({
   title: 'Testimonials — Longcare AU',
   description: 'Read what our clients say about Longcare AI mentoring sessions. Real stories from professionals and SMEs across Australia.',
-};
+  path: '/testimonials',
+});
 
 const testimonials = [
   {
@@ -69,8 +70,37 @@ const testimonials = [
 ];
 
 export default function TestimonialsPage() {
+  const ratingSum = testimonials.reduce((sum, t) => sum + t.stars, 0);
+  const ratingValue = (ratingSum / testimonials.length).toFixed(1);
+  const aggregateSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'LongCare AU',
+    url: 'https://longcare.au',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue,
+      reviewCount: String(testimonials.length),
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: testimonials.map((t) => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: t.name },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: String(t.stars),
+        bestRating: '5',
+        worstRating: '1',
+      },
+      reviewBody: t.quote,
+      itemReviewed: { '@type': 'Service', name: t.service },
+    })),
+  };
+
   return (
     <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aggregateSchema) }} />
       <h1 className="hero-title" style={{ fontSize: '3rem' }}>What Our Clients Say</h1>
       <p className="hero-subtitle">
         Real stories from professionals and SMEs who transformed their workflows with AI mentoring.

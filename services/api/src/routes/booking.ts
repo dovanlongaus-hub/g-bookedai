@@ -16,6 +16,29 @@ import { randomUUID } from 'crypto';
 
 export const bookingRouter = Router();
 
+// Get user's bookings
+bookingRouter.get('/my', authenticate, async (req, res, next) => {
+  try {
+    const userId = req.auth!.userId;
+    const tenantId = req.auth!.tenantId;
+
+    const result = await query(
+      `SELECT b.*, s.name as service_name, s.duration_minutes,
+              a.starts_at, a.ends_at, b.google_meet_url
+       FROM bookings b
+       JOIN services s ON b.service_id = s.id
+       LEFT JOIN availability_slots a ON b.slot_id = a.id
+       WHERE b.user_id = $1 AND b.tenant_id = $2
+       ORDER BY a.starts_at DESC NULLS LAST`,
+      [userId, tenantId],
+    );
+
+    res.json({ success: true, data: result.rows });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Hold a slot
 bookingRouter.post('/hold', authenticate, validate(holdBookingSchema), async (req, res, next) => {
   try {
