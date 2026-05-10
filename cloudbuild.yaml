@@ -42,7 +42,31 @@ steps:
     waitFor: ['test']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:${SHORT_SHA}', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:latest', '--build-arg', 'NEXT_PUBLIC_API_URL=https://api-g-bookedai-${_CLOUD_RUN_SUFFIX}.run.app', 'apps/booking-web']
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:${SHORT_SHA}'
+      - '-t'
+      - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/booking-web:latest'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_API_URL=https://api-g-bookedai-${_CLOUD_RUN_SUFFIX}.run.app'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_BANK_NAME=${_BANK_NAME}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_BANK_PAYID=${_BANK_PAYID}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_BANK_BSB=${_BANK_BSB}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_BANK_ACCOUNT_NUMBER=${_BANK_ACCOUNT_NUMBER}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_BANK_ACCOUNT_NAME=${_BANK_ACCOUNT_NAME}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_VIETQR_BANK_CODE=${_VIETQR_BANK_CODE}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_VIETQR_ACCOUNT_NUMBER=${_VIETQR_ACCOUNT_NUMBER}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_VIETQR_ACCOUNT_NAME=${_VIETQR_ACCOUNT_NAME}'
+      - 'apps/booking-web'
     id: 'build-booking'
     waitFor: ['test']
 
@@ -107,8 +131,8 @@ steps:
       - '--cpu=1'
       - '--min-instances=0'
       - '--max-instances=10'
-      - '--set-env-vars=NODE_ENV=production,ALLOWED_ORIGINS=https://g.bookedai.au,https://longcare.au,https://book.longcare.au,https://app.longcare.au,https://admin.longcare.au'
-      - '--set-secrets=GEMINI_API_KEY=GEMINI_API_KEY:latest,DATABASE_URL=DATABASE_URL:latest,STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest,STRIPE_WEBHOOK_SECRET=STRIPE_WEBHOOK_SECRET:latest'
+      - '--set-env-vars=NODE_ENV=production,ALLOWED_ORIGINS=https://g.bookedai.au,https://longcare.au,https://book.longcare.au,https://app.longcare.au,https://admin.longcare.au,STRIPE_PAYMENT_METHODS=${_STRIPE_PAYMENT_METHODS},BANK_TRANSFER_BANK_NAME=${_BANK_NAME},BANK_TRANSFER_PAYID=${_BANK_PAYID},BANK_TRANSFER_ACCOUNT_NAME=${_BANK_ACCOUNT_NAME},PAY_ON_ARRIVAL_ENABLED=${_PAY_ON_ARRIVAL_ENABLED}'
+      - '--set-secrets=GEMINI_API_KEY=GEMINI_API_KEY:latest,DATABASE_URL=DATABASE_URL:latest,STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest,STRIPE_WEBHOOK_SECRET=STRIPE_WEBHOOK_SECRET:latest,BANK_TRANSFER_BSB=BANK_TRANSFER_BSB:latest,BANK_TRANSFER_ACCOUNT_NUMBER=BANK_TRANSFER_ACCOUNT_NUMBER:latest,BPAY_BILLER_CODE=BPAY_BILLER_CODE:latest,VIETQR_BANK_BIN=VIETQR_BANK_BIN:latest,VIETQR_ACCOUNT_NUMBER=VIETQR_ACCOUNT_NUMBER:latest,VIETQR_ACCOUNT_NAME=VIETQR_ACCOUNT_NAME:latest'
     id: 'deploy-api'
     waitFor: ['push-api']
 
@@ -159,6 +183,22 @@ substitutions:
   _REGISTRY: 'australia-southeast1-docker.pkg.dev'
   _REGION: 'australia-southeast1'
   _CLOUD_RUN_SUFFIX: 'uc.a.run.app'
+  # ===== Payment configuration =====
+  # All values below are EMPTY in the public repo. Real values live in the
+  # Cloud Build trigger config: `gcloud builds triggers update <NAME> --substitutions=KEY=val,...`
+  # so they never appear in git history. Backend secrets (BSB, account number,
+  # BPAY biller, Stripe keys) are loaded separately from Secret Manager — see
+  # the --set-secrets line on the deploy-api step.
+  _STRIPE_PAYMENT_METHODS: 'card'         # set to 'card,afterpay_clearpay' once enabled in Stripe Dashboard
+  _BANK_NAME: 'Westpac'
+  _BANK_PAYID: ''
+  _BANK_ACCOUNT_NAME: ''
+  _BANK_BSB: ''
+  _BANK_ACCOUNT_NUMBER: ''
+  _VIETQR_BANK_CODE: 'VCB'
+  _VIETQR_ACCOUNT_NUMBER: ''
+  _VIETQR_ACCOUNT_NAME: ''
+  _PAY_ON_ARRIVAL_ENABLED: 'true'
 
 images:
   - '${_REGISTRY}/${PROJECT_ID}/bookedai-services/api:${SHORT_SHA}'

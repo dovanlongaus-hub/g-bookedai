@@ -15,12 +15,26 @@ const envSchema = z.object({
   // Stripe
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  // Comma-separated. Each must be enabled in Stripe Dashboard → Payment methods first.
+  STRIPE_PAYMENT_METHODS: z.string().default('card'),
 
-  // Bank transfer
+  // Bank transfer — PayID / BSB+Account (Westpac, NAB, etc.)
   BANK_TRANSFER_PAYID: z.string().default('ceo@longcare.au'),
   BANK_TRANSFER_BSB: z.string().optional(),
   BANK_TRANSFER_ACCOUNT_NUMBER: z.string().optional(),
   BANK_TRANSFER_ACCOUNT_NAME: z.string().default('Longcare AU'),
+  BANK_TRANSFER_BANK_NAME: z.string().default('Westpac'),
+
+  // BPAY
+  BPAY_BILLER_CODE: z.string().optional(),
+
+  // VietQR (Vietnamese bank only — see https://api.vietqr.io for bank BIN list)
+  VIETQR_BANK_BIN: z.string().optional(),
+  VIETQR_ACCOUNT_NUMBER: z.string().optional(),
+  VIETQR_ACCOUNT_NAME: z.string().optional(),
+
+  // Pay-on-arrival — toggle to enable "Book now, pay at appointment" flow
+  PAY_ON_ARRIVAL_ENABLED: z.coerce.boolean().default(false),
 
   // URLs
   APP_BASE_URL: z.string().default('http://localhost:3000'),
@@ -58,6 +72,26 @@ export function getEnv(): Env {
       process.exit(1);
     }
     _env = result.data;
+    assertStripeModeMatchesEnv(_env);
   }
   return _env;
+}
+
+// Refuse to boot if a live Stripe key is used outside production, or a test key in production.
+// This prevents accidental real charges in dev/staging and accidental missed charges in prod.
+function assertStripeModeMatchesEnv(env: Env): void {
+  const key = env.STRIPE_SECRET_KEY;
+  if (!key) return;
+  const isLiveKey = key.startsWith('sk_live_') || key.startsWith('rk_live_');
+  const isTestKey = key.startsWith('sk_test_') || key.startsWith('rk_test_');
+  if (!isLiveKey && !isTestKey) return; // unrecognised — let Stripe SDK reject at call time
+
+  if (isLiveKey && env.NODE_ENV !== 'production') {
+    console.error(`FATAL: Stripe LIVE key detected in NODE_ENV=${env.NODE_ENV}. Refusing to start.`);
+    process.exit(1);
+  }
+  if (isTestKey && env.NODE_ENV === 'production') {
+    console.error('FATAL: Stripe TEST key detected in NODE_ENV=production. Refusing to start.');
+    process.exit(1);
+  }
 }
