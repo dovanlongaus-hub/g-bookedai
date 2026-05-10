@@ -290,10 +290,12 @@ function HeroBanner() {
             style={{ left: '4%', top: '63.5%', width: '19%', height: '6.2%' }}
           />
 
-          {/* Secondary CTA overlay — Watch Video (jump to intro video below) */}
+          {/* Secondary CTA overlay — Watch Video (opens the 60-second intro mp4) */}
           <a
-            href="#intro-video"
-            aria-label="Watch the introduction video — how LongCare works"
+            href="/longcare-intro.mp4"
+            target="_blank"
+            rel="noopener"
+            aria-label="Watch the 60-second introduction video — how LongCare works"
             className="absolute hover:bg-sky-50/30 rounded-full transition-colors cursor-pointer"
             style={{ left: '23%', top: '63.5%', width: '15%', height: '6.2%' }}
           />
@@ -396,36 +398,13 @@ function HeroBanner() {
             <Rocket className="size-4" aria-hidden /> Start Your AI Journey
           </a>
           <a
-            href="#intro-video"
+            href="/longcare-intro.mp4"
+            target="_blank"
+            rel="noopener"
             className="cursor-pointer btn-outline inline-flex items-center gap-2 px-6 py-3 text-[14px] font-semibold rounded-full no-underline"
           >
             <PlayCircle className="size-4" aria-hidden /> Watch Video
           </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function HeroVideo() {
-  return (
-    <section id="intro-video" className="bg-[#F8FAFC] scroll-mt-20">
-      <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-6 pt-8 sm:pt-10 pb-2">
-        <div className="text-[11px] font-semibold tracking-[0.18em] text-slate-500 mb-3 text-center uppercase">
-          Watch the 60-second intro
-        </div>
-        <div className="relative overflow-hidden rounded-2xl shadow-[0_20px_60px_-20px_rgba(15,23,42,0.25)] ring-1 ring-slate-200/60 bg-black">
-          <video
-            controls
-            preload="metadata"
-            playsInline
-            poster="/longcare-intro-poster.jpg"
-            className="block w-full h-auto"
-            aria-label="Longcare 60-second introduction video"
-          >
-            <source src="/longcare-intro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
         </div>
       </div>
     </section>
@@ -1526,7 +1505,6 @@ export default function HomePage() {
   return (
     <main id="main-content" className="bg-[#F8FAFC]">
       <HeroBanner />
-      <HeroVideo />
       <WhoWeServe />
       <StatStrip />
       <CareJourney />
