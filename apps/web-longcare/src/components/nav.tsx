@@ -72,8 +72,7 @@ export function Nav() {
             </a>
           ))}
           <a
-            href="https://book.longcare.au"
-            rel="noopener noreferrer"
+            href="/discovery-call"
             className="cursor-pointer btn-cta inline-flex items-center gap-1.5 px-5 py-2.5 text-[13px] font-semibold rounded-full no-underline"
           >
             Book a consult
@@ -102,8 +101,8 @@ export function Nav() {
             </a>
           ))}
           <a
-            href="https://book.longcare.au"
-            rel="noopener noreferrer"
+            href="/discovery-call"
+            onClick={() => setOpen(false)}
             className="block mt-3 btn-cta px-5 py-3 text-sm font-semibold rounded-full text-center no-underline cursor-pointer"
           >
             Book a consult
