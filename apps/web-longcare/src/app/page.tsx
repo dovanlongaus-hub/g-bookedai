@@ -245,7 +245,7 @@ function HeroBanner() {
       <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         <div className="relative rounded-2xl overflow-hidden shadow-[0_20px_60px_-30px_rgba(15,23,42,0.25)] border border-slate-200">
           <Image
-            src="/longcare.au_banner_10%20may_latest.png"
+            src="/banner-hero.png"
             alt="LongCare.au — AI Transformation for the Next Generation of Businesses. Learn AI. Build Faster. Grow Smarter. Helping individuals, SMEs, and organisations across Australia with practical AI education, consulting, implementation, and scalable automation. Built on Google Cloud, proudly Australian."
             width={1536}
             height={1024}
@@ -483,7 +483,7 @@ function Hero() {
 
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-3">
               <a
-                href="/discovery"
+                href="/discovery-call"
                 className="cursor-pointer inline-flex items-center gap-2 px-7 py-3.5 text-[14px] font-semibold rounded-full text-white no-underline transition-all"
                 style={{
                   background: 'linear-gradient(135deg, #7C3AED 0%, #2563EB 50%, #0284C7 100%)',
@@ -539,7 +539,7 @@ function Hero() {
             </a>
 
             <a
-              href="/discovery"
+              href="/discovery-call"
               className="absolute -top-3 -right-6 z-20 trust-card !bg-white/95 backdrop-blur-sm px-3.5 py-2.5 flex items-center gap-2.5 no-underline cursor-pointer hover:scale-[1.02] transition-transform shadow-[0_8px_30px_-8px_rgba(15,23,42,0.18)]"
               aria-label="AI Strategy Consulting"
             >
@@ -1179,7 +1179,7 @@ function CareJourney() {
             </div>
           </div>
           <a
-            href="/discovery"
+            href="/discovery-call"
             className="cursor-pointer btn-cta inline-flex items-center gap-2 px-5 py-3 text-[14px] font-semibold rounded-full no-underline whitespace-nowrap"
           >
             Start the journey <ArrowRight className="size-4" />
@@ -1428,7 +1428,7 @@ function FAQ() {
             <motion.p variants={fadeUp} className="mt-5 text-lg leading-relaxed text-slate-600">
               Six things operators ask before booking the first call.
             </motion.p>
-            <motion.a variants={fadeUp} href="/discovery" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-sky-700 hover:text-sky-800 transition-colors no-underline cursor-pointer">
+            <motion.a variants={fadeUp} href="/discovery-call" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-sky-700 hover:text-sky-800 transition-colors no-underline cursor-pointer">
               Still unsure? Book a free assessment <ArrowRight className="size-4" />
             </motion.a>
           </motion.div>
@@ -1474,7 +1474,7 @@ function FinalCTA() {
             Start with a 30-minute consult. We will tell you the truth about whether AI fits your problem — and what to do first if it does.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
-            <a href="/discovery" className="cursor-pointer btn-cta inline-flex items-center gap-2 px-7 py-4 text-[15px] font-semibold rounded-full no-underline">
+            <a href="/discovery-call" className="cursor-pointer btn-cta inline-flex items-center gap-2 px-7 py-4 text-[15px] font-semibold rounded-full no-underline">
               Free 30-min AI assessment <ArrowRight className="size-4" />
             </a>
             <a href="/referral" className="cursor-pointer btn-outline inline-flex items-center gap-2 px-7 py-4 text-[15px] font-semibold rounded-full no-underline">

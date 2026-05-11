@@ -197,7 +197,7 @@ export function ROICalculator() {
             </div>
 
             <a
-              href="/discovery"
+              href="/discovery-call"
               className="cursor-pointer btn-cta w-full py-4 rounded-xl text-[15px] font-semibold inline-flex items-center justify-center gap-2 no-underline"
             >
               Get your free AI assessment <ArrowRight className="size-4" />
