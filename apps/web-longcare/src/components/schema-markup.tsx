@@ -40,6 +40,33 @@ export function LocalBusinessSchema() {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 }
 
+export function WebsiteSchema() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': 'https://longcare.au/#website',
+    name: 'LongCare AU',
+    alternateName: 'Longcare',
+    url: 'https://longcare.au',
+    inLanguage: 'en-AU',
+    publisher: {
+      '@type': 'Organization',
+      name: 'LongCare AU',
+      url: 'https://longcare.au',
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://longcare.au/search?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
+}
+
 export function FAQSchema() {
   const schema = {
     '@context': 'https://schema.org',

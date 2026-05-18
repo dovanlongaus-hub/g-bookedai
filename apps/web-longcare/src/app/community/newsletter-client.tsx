@@ -44,6 +44,7 @@ export function CommunityNewsletter({ source = 'community' }: { source?: string 
       />
       <button
         type="submit"
+        aria-busy={loading}
         disabled={loading}
         className="bg-sky-600 hover:bg-sky-500 text-white px-6 py-3 rounded-full text-sm font-semibold cursor-pointer flex-shrink-0 disabled:opacity-60"
       >

@@ -104,3 +104,55 @@ guestBookingRouter.post('/', validate(guestBookingSchema), async (req, res, next
     next(err);
   }
 });
+
+/**
+ * Look up a single booking by its public reference (BOOK-XXXXXXXX).
+ *
+ * The reference is the first 8 hex chars of the booking UUID (see how
+ * `bookingRef` is built above), so we match on that prefix. The ref is
+ * treated as a bearer secret here — anyone with the link can view it
+ * (that's already how the QR / "manage" link works). Read-only.
+ */
+guestBookingRouter.get('/by-ref/:ref', async (req, res, next) => {
+  try {
+    const raw = String(req.params.ref || '').trim();
+    // Accept "BOOK-A9F0F695", "book-a9f0f695" or just "a9f0f695".
+    const prefix = raw.replace(/^book-/i, '').toLowerCase();
+    if (!/^[0-9a-f]{8}$/.test(prefix)) {
+      res.status(400).json({ success: false, error: { code: 'BAD_REF', message: 'Invalid booking reference' } });
+      return;
+    }
+
+    const result = await query(
+      `SELECT b.id, b.status, b.total_cents, b.created_at, b.google_meet_url,
+              s.name AS service_name
+       FROM bookings b
+       JOIN services s ON b.service_id = s.id
+       WHERE substring(b.id::text from 1 for 8) = $1
+       ORDER BY b.created_at DESC
+       LIMIT 1`,
+      [prefix],
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ success: false, data: null, error: { code: 'BOOKING_NOT_FOUND', message: 'Booking not found' } });
+      return;
+    }
+
+    const r: any = result.rows[0];
+    res.json({
+      success: true,
+      data: {
+        ref: `BOOK-${String(r.id).slice(0, 8).toUpperCase()}`,
+        service: r.service_name,
+        status: r.status,
+        amountCents: r.total_cents,
+        amountAud: (Number(r.total_cents) / 100).toFixed(2),
+        meetUrl: r.google_meet_url,
+        createdAt: r.created_at,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});

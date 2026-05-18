@@ -7,6 +7,13 @@ export type PageMetaInput = {
   image?: string;         // optional override; defaults to /api/og?title=...
   noIndex?: boolean;
   type?: 'website' | 'article';
+  /**
+   * Optional hreflang map for i18n. Keys are BCP 47 language tags
+   * (e.g. 'en-AU', 'vi', 'zh-CN', 'x-default'). Values are absolute URLs.
+   * Defaults to a single 'en-AU' + 'x-default' pointing at the canonical.
+   * Phase 2 i18n will add 'vi' and 'zh-CN' variants.
+   */
+  languages?: Record<string, string>;
 };
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://longcare.au';
@@ -15,11 +22,18 @@ const SITE_NAME = 'LongCare AU';
 export function getPageMetadata(input: PageMetaInput): Metadata {
   const url = `${SITE_URL}${input.path}`;
   const ogImage = input.image ?? `/api/og?title=${encodeURIComponent(input.title)}`;
+  const languages = input.languages ?? {
+    'en-AU': url,
+    'x-default': url,
+  };
   return {
     title: input.title,
     description: input.description,
     metadataBase: new URL(SITE_URL),
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages,
+    },
     openGraph: {
       title: input.title,
       description: input.description,

@@ -22,7 +22,7 @@ import { InfographicTimeline } from '@/components/illustrations/infographic-time
 export const metadata: Metadata = getPageMetadata({
   title: 'Free AI Lessons — LongCare Academy | LongCare AU',
   description:
-    'Free lessons across all 5 AI learning paths — eight free lessons per path, 40 in total. Full curriculum launching Q3 2026.',
+    'Free lessons across all 5 AI learning paths — fourteen free lessons per path, 70 in total. Advanced bootcamps and certifications landing Q4 2026.',
   path: '/academy/lessons',
 });
 
@@ -145,6 +145,84 @@ const FREE_LESSONS: FreeLesson[] = [
       'Eight common AI myths AU SMEs believe in 2026 with the reality check for each — OAIC and ASIC stance, 2026 capability snapshot, three things AI still cannot do.',
   },
   {
+    pathSlug: 'beginner-ai-9',
+    pathName: 'Beginner AI',
+    pathHref: '/academy/beginner-ai',
+    Icon: Sparkles,
+    level: 'Beginner',
+    lessonNumber: 9,
+    title: 'Your first AI workflow — from idea to live in 30 minutes',
+    href: '/academy/beginner-ai/lessons/your-first-ai-workflow',
+    duration: '25 min',
+    description:
+      'Pick one daily task, map trigger to AI step to action, ship a working automation today using only the Zapier free tier — with the common first-time gotchas.',
+  },
+  {
+    pathSlug: 'beginner-ai-10',
+    pathName: 'Beginner AI',
+    pathHref: '/academy/beginner-ai',
+    Icon: Sparkles,
+    level: 'Beginner',
+    lessonNumber: 10,
+    title: 'AI for Australians — local context, local wins',
+    href: '/academy/beginner-ai/lessons/ai-for-australians',
+    duration: '25 min',
+    description:
+      'Australian English, BAS/Fair Work/Medicare use cases, APP 1-13 in practice, AU-built AI tools and the local community to plug into for 2026.',
+  },
+  {
+    pathSlug: 'beginner-ai-11',
+    pathName: 'Beginner AI',
+    pathHref: '/academy/beginner-ai',
+    Icon: Sparkles,
+    level: 'Beginner',
+    lessonNumber: 11,
+    title: 'Working with AI images — generate, edit, use responsibly',
+    href: '/academy/beginner-ai/lessons/working-with-ai-images',
+    duration: '25 min',
+    description:
+      'DALL-E 3, Gemini Imagen 3 and Midjourney basics with AUD pricing — five SME use cases, prompt techniques, AU copyright basics and disclosure rules.',
+  },
+  {
+    pathSlug: 'beginner-ai-12',
+    pathName: 'Beginner AI',
+    pathHref: '/academy/beginner-ai',
+    Icon: Sparkles,
+    level: 'Beginner',
+    lessonNumber: 12,
+    title: 'Top 10 AI pitfalls — and how to fix them',
+    href: '/academy/beginner-ai/lessons/ai-pitfalls-and-fixes',
+    duration: '25 min',
+    description:
+      'Hallucination, prompt injection, bias, drift, scope creep, vendor lock-in, over-reliance, missing context, output bugs and cost spikes — each paired with a working fix.',
+  },
+  {
+    pathSlug: 'beginner-ai-13',
+    pathName: 'Beginner AI',
+    pathHref: '/academy/beginner-ai',
+    Icon: Sparkles,
+    level: 'Beginner',
+    lessonNumber: 13,
+    title: 'Your 30-day AI routine — from curiosity to habit',
+    href: '/academy/beginner-ai/lessons/your-30-day-ai-routine',
+    duration: '25 min',
+    description:
+      'A day-by-day 30-day plan with a prompt journal, weekly retrospective, anti-burnout pacing and AU AI meetup links to turn experimentation into a real daily habit.',
+  },
+  {
+    pathSlug: 'beginner-ai-14',
+    pathName: 'Beginner AI',
+    pathHref: '/academy/beginner-ai',
+    Icon: Sparkles,
+    level: 'Beginner',
+    lessonNumber: 14,
+    title: 'AI capstone — build & ship your first real AI project',
+    href: '/academy/beginner-ai/lessons/ai-capstone-mini-project',
+    duration: '30 min',
+    description:
+      'Pick a small AI project (CRM, email triage, social calendar, study buddy), write a one-page spec, ship in two days and share the result publicly.',
+  },
+  {
     pathSlug: 'ai-for-business',
     pathName: 'AI for Business',
     pathHref: '/academy/ai-for-business',
@@ -247,6 +325,84 @@ const FREE_LESSONS: FreeLesson[] = [
     duration: '25 min',
     description:
       'Four ROI dimensions, baseline-to-90-day measurement, common overclaims to avoid, and a worked AUD example for retail customer support AI.',
+  },
+  {
+    pathSlug: 'ai-for-business-9',
+    pathName: 'AI for Business',
+    pathHref: '/academy/ai-for-business',
+    Icon: Building2,
+    level: 'SME owners',
+    lessonNumber: 9,
+    title: 'Team AI rollout — change management that sticks',
+    href: '/academy/ai-for-business/lessons/team-rollout-and-change-management',
+    duration: '30 min',
+    description:
+      'Why 70% of SME AI rollouts fail and the 30/60/90-day fix — AI champions, comms template, resistance scripts, adoption metrics, AU compliance briefings.',
+  },
+  {
+    pathSlug: 'ai-for-business-10',
+    pathName: 'AI for Business',
+    pathHref: '/academy/ai-for-business',
+    Icon: Building2,
+    level: 'SME owners',
+    lessonNumber: 10,
+    title: 'AI vendor selection — cut through the hype',
+    href: '/academy/ai-for-business/lessons/ai-vendor-selection',
+    duration: '25 min',
+    description:
+      'Seven-criteria framework, red/green flags, a sample 3-vendor comparison, procurement checklist and the build-vs-buy decision tree for AU SMEs.',
+  },
+  {
+    pathSlug: 'ai-for-business-11',
+    pathName: 'AI for Business',
+    pathHref: '/academy/ai-for-business',
+    Icon: Building2,
+    level: 'SME owners',
+    lessonNumber: 11,
+    title: 'Measuring team productivity with AI',
+    href: '/academy/ai-for-business/lessons/measuring-team-productivity',
+    duration: '30 min',
+    description:
+      'Five metrics that matter and five that mislead, baseline to 30/60/90 day tracking, AU Privacy Act on monitoring vs measuring, and the culture risks of surveillance.',
+  },
+  {
+    pathSlug: 'ai-for-business-12',
+    pathName: 'AI for Business',
+    pathHref: '/academy/ai-for-business',
+    Icon: Building2,
+    level: 'SME owners',
+    lessonNumber: 12,
+    title: 'AI procurement policy for SMEs',
+    href: '/academy/ai-for-business/lessons/ai-procurement-policy',
+    duration: '25 min',
+    description:
+      'Seven-criteria procurement framework, Privacy Act and Notifiable Data Breach implications, a 1-page template, 10-question RFP and approved-vendor-list governance.',
+  },
+  {
+    pathSlug: 'ai-for-business-13',
+    pathName: 'AI for Business',
+    pathHref: '/academy/ai-for-business',
+    Icon: Building2,
+    level: 'SME owners',
+    lessonNumber: 13,
+    title: 'AI budget approval — stakeholder buy-in in 30 days',
+    href: '/academy/ai-for-business/lessons/ai-budget-and-stakeholder-buy-in',
+    duration: '30 min',
+    description:
+      'Three framing styles (cost-cutter, growth, risk), 1-page proposal template, stakeholder mapping, AUD inc GST math, AU procurement realities and the 60/25/15 pilot allocation.',
+  },
+  {
+    pathSlug: 'ai-for-business-14',
+    pathName: 'AI for Business',
+    pathHref: '/academy/ai-for-business',
+    Icon: Building2,
+    level: 'SME owners',
+    lessonNumber: 14,
+    title: 'Building an AI ROI business case the board will approve',
+    href: '/academy/ai-for-business/lessons/ai-roi-business-case',
+    duration: '30 min',
+    description:
+      'Four-pillar ROI model, three AU AUD case studies, conservative 50/30 projections, sensitivity analysis, payback months and pre-written answers to the five board questions.',
   },
   {
     pathSlug: 'ai-productivity',
@@ -353,6 +509,84 @@ const FREE_LESSONS: FreeLesson[] = [
       'Notion, Obsidian, Mem.ai, Roam, Heptabase and NotebookLM compared — capture-process-connect-retrieve loop, three starter templates, AU privacy notes.',
   },
   {
+    pathSlug: 'ai-productivity-9',
+    pathName: 'AI Productivity',
+    pathHref: '/academy/ai-productivity',
+    Icon: Zap,
+    level: 'Professionals',
+    lessonNumber: 9,
+    title: 'AI for decisions — help, don’t replace, your judgement',
+    href: '/academy/ai-productivity/lessons/ai-for-decisions',
+    duration: '25 min',
+    description:
+      'AI as a thinking partner — four decision types, five prompts that sharpen judgement, when to stop, decision journaling, and the AU regulatory line.',
+  },
+  {
+    pathSlug: 'ai-productivity-10',
+    pathName: 'AI Productivity',
+    pathHref: '/academy/ai-productivity',
+    Icon: Zap,
+    level: 'Professionals',
+    lessonNumber: 10,
+    title: 'Keeping up with AI — without burnout',
+    href: '/academy/ai-productivity/lessons/keeping-up-with-ai-changes',
+    duration: '20 min',
+    description:
+      'Three-newsletter diet, 15-minute test-not-read rule, four weekly check-ins, AU news sources, the FOMO antidote and the 90-day stack review cadence.',
+  },
+  {
+    pathSlug: 'ai-productivity-11',
+    pathName: 'AI Productivity',
+    pathHref: '/academy/ai-productivity',
+    Icon: Zap,
+    level: 'Professionals',
+    lessonNumber: 11,
+    title: 'Learning new skills 3x faster with AI',
+    href: '/academy/ai-productivity/lessons/ai-for-learning-new-skills',
+    duration: '25 min',
+    description:
+      'The tutor pattern, Feynman with AI, spaced repetition prompts, a five-step skill loop, three case studies (React, Spanish, public speaking) and AU course platforms.',
+  },
+  {
+    pathSlug: 'ai-productivity-12',
+    pathName: 'AI Productivity',
+    pathHref: '/academy/ai-productivity',
+    Icon: Zap,
+    level: 'Professionals',
+    lessonNumber: 12,
+    title: 'Build your personal AI assistant in 60 minutes',
+    href: '/academy/ai-productivity/lessons/personal-ai-assistant-build',
+    duration: '30 min',
+    description:
+      'Custom GPT vs Gem vs Project compared with AUD pricing, six context fields, calendar/email injection, four persona templates and a maintenance cadence.',
+  },
+  {
+    pathSlug: 'ai-productivity-13',
+    pathName: 'AI Productivity',
+    pathHref: '/academy/ai-productivity',
+    Icon: Zap,
+    level: 'Professionals',
+    lessonNumber: 13,
+    title: 'Deep research with AI — like having a junior analyst',
+    href: '/academy/ai-productivity/lessons/ai-for-research-deep-mode',
+    duration: '25 min',
+    description:
+      'Perplexity Pro, ChatGPT Deep Research, Gemini Deep Research compared with AUD pricing — the research lattice, AU databases (ABS, Trove, AustLII, APO) and citation hygiene.',
+  },
+  {
+    pathSlug: 'ai-productivity-14',
+    pathName: 'AI Productivity',
+    pathHref: '/academy/ai-productivity',
+    Icon: Zap,
+    level: 'Professionals',
+    lessonNumber: 14,
+    title: 'Personal OKRs with AI as your accountability partner',
+    href: '/academy/ai-productivity/lessons/personal-okrs-with-ai',
+    duration: '25 min',
+    description:
+      'Quarterly OKRs, AI seed prompt for weekly check-ins, balancing work and personal, AU annual-leave unlocks, recovery prompts and end-of-quarter reflection.',
+  },
+  {
     pathSlug: 'prompt-engineering',
     pathName: 'Prompt Engineering',
     pathHref: '/academy/prompt-engineering',
@@ -455,6 +689,84 @@ const FREE_LESSONS: FreeLesson[] = [
     duration: '25 min',
     description:
       'Best multimodal models in 2026 (Gemini 2.0, GPT-4o, Claude), AUD pricing per input type, five SME use cases and a hands-on photo-to-invoice extraction.',
+  },
+  {
+    pathSlug: 'prompt-engineering-9',
+    pathName: 'Prompt Engineering',
+    pathHref: '/academy/prompt-engineering',
+    Icon: MessageSquareCode,
+    level: 'Intermediate',
+    lessonNumber: 9,
+    title: 'Tool use & function calling — when AI acts, not just talks',
+    href: '/academy/prompt-engineering/lessons/tool-use-and-function-calling',
+    duration: '30 min',
+    description:
+      'Four tool-use patterns, function-calling syntax, AEST/AEDT booking sample, retry strategy and the role-based permissioning every action tool needs.',
+  },
+  {
+    pathSlug: 'prompt-engineering-10',
+    pathName: 'Prompt Engineering',
+    pathHref: '/academy/prompt-engineering',
+    Icon: MessageSquareCode,
+    level: 'Intermediate',
+    lessonNumber: 10,
+    title: 'RAG & grounding — ground AI in your real data',
+    href: '/academy/prompt-engineering/lessons/rag-and-grounding',
+    duration: '30 min',
+    description:
+      'Three RAG patterns from paste-docs to vector DB, AU-hosted options (Vertex AI Sydney, pgvector), quality metrics and when not to use RAG at all.',
+  },
+  {
+    pathSlug: 'prompt-engineering-11',
+    pathName: 'Prompt Engineering',
+    pathHref: '/academy/prompt-engineering',
+    Icon: MessageSquareCode,
+    level: 'Intermediate',
+    lessonNumber: 11,
+    title: 'Structured output — make AI return JSON reliably',
+    href: '/academy/prompt-engineering/lessons/structured-output-with-zod',
+    duration: '25 min',
+    description:
+      'Why structured output matters, OpenAI structured outputs, Zod schemas, a worked support-classifier, retry on validation fail, AUD cost notes and an AU audit-friendly use case.',
+  },
+  {
+    pathSlug: 'prompt-engineering-12',
+    pathName: 'Prompt Engineering',
+    pathHref: '/academy/prompt-engineering',
+    Icon: MessageSquareCode,
+    level: 'Intermediate',
+    lessonNumber: 12,
+    title: 'Evaluating prompt quality — move from guesswork to data',
+    href: '/academy/prompt-engineering/lessons/evaluating-prompt-quality',
+    duration: '25 min',
+    description:
+      'Four eval dimensions, five tools (Anthropic Workbench, OpenAI Evals, Langfuse, Helicone, PromptLayer), golden-set testing, production A/B and a sample rubric.',
+  },
+  {
+    pathSlug: 'prompt-engineering-13',
+    pathName: 'Prompt Engineering',
+    pathHref: '/academy/prompt-engineering',
+    Icon: MessageSquareCode,
+    level: 'Intermediate',
+    lessonNumber: 13,
+    title: 'Prompt debugging checklist — when AI gives wrong answers',
+    href: '/academy/prompt-engineering/lessons/prompt-debugging-checklist',
+    duration: '25 min',
+    description:
+      'Ten systematic debug steps, four failure modes (hallucination, format, scope, refusal), the debugging journal, rubber-duck-with-AI and when the limit is the model itself.',
+  },
+  {
+    pathSlug: 'prompt-engineering-14',
+    pathName: 'Prompt Engineering',
+    pathHref: '/academy/prompt-engineering',
+    Icon: MessageSquareCode,
+    level: 'Intermediate',
+    lessonNumber: 14,
+    title: 'Multimodal mastery — image, audio, video prompting',
+    href: '/academy/prompt-engineering/lessons/multimodal-prompting-mastery',
+    duration: '30 min',
+    description:
+      'Vision, voice and video models — five SME workflows (photo-to-invoice, screenshot-to-bug-report, audio-to-actions), AU dialect handling, AUD pricing and the latency tradeoff.',
   },
   {
     pathSlug: 'ai-automation',
@@ -560,6 +872,84 @@ const FREE_LESSONS: FreeLesson[] = [
     description:
       'Six integration patterns mapping AI to Xero, MYOB, HubSpot, Mailchimp, Outlook, Slack, M365 and Workspace — plus a decision matrix and stack-mapping exercise.',
   },
+  {
+    pathSlug: 'ai-automation-9',
+    pathName: 'AI Automation',
+    pathHref: '/academy/ai-automation',
+    Icon: Workflow,
+    level: 'Advanced',
+    lessonNumber: 9,
+    title: 'Monitoring AI workflows — see failures before customers do',
+    href: '/academy/ai-automation/lessons/monitoring-and-observability',
+    duration: '25 min',
+    description:
+      'Four monitoring dimensions, five must-have alerts, silent-failure detection, the SME on-call rota, and Helicone vs Langfuse vs Datadog compared.',
+  },
+  {
+    pathSlug: 'ai-automation-10',
+    pathName: 'AI Automation',
+    pathHref: '/academy/ai-automation',
+    Icon: Workflow,
+    level: 'Advanced',
+    lessonNumber: 10,
+    title: 'AU SME AI automation case studies — 5 real examples',
+    href: '/academy/ai-automation/lessons/ai-automation-case-studies-au',
+    duration: '30 min',
+    description:
+      'Logistics, hospitality, SaaS, medical, trades — five anonymised AU SME builds with architecture, results, common patterns and three anti-patterns to avoid.',
+  },
+  {
+    pathSlug: 'ai-automation-11',
+    pathName: 'AI Automation',
+    pathHref: '/academy/ai-automation',
+    Icon: Workflow,
+    level: 'Advanced',
+    lessonNumber: 11,
+    title: 'Event-driven AI workflows',
+    href: '/academy/ai-automation/lessons/event-driven-workflows',
+    duration: '30 min',
+    description:
+      'Sequential vs event-driven, four trigger types, Cloud Pub/Sub in Sydney, an AU invoice-to-Xero worked example, retries with dead-letter queues and the latency-vs-cost tradeoff.',
+  },
+  {
+    pathSlug: 'ai-automation-12',
+    pathName: 'AI Automation',
+    pathHref: '/academy/ai-automation',
+    Icon: Workflow,
+    level: 'Advanced',
+    lessonNumber: 12,
+    title: 'Scaling AI from pilot to production',
+    href: '/academy/ai-automation/lessons/scaling-from-pilot-to-production',
+    duration: '30 min',
+    description:
+      'Five maturity stages from manual to full autopilot, when to graduate each, SLAs as guardrails, cost projection at 10x/100x/1000x, AU audit trail and the rollback plan.',
+  },
+  {
+    pathSlug: 'ai-automation-13',
+    pathName: 'AI Automation',
+    pathHref: '/academy/ai-automation',
+    Icon: Workflow,
+    level: 'Advanced',
+    lessonNumber: 13,
+    title: 'AI automation security — secrets, permissions, audit',
+    href: '/academy/ai-automation/lessons/security-and-secrets',
+    duration: '30 min',
+    description:
+      'Secret managers (Google Secret Manager, AWS SSM, Vercel), 30-day rotation, least-privilege IAM, prompt injection ringfencing, AU APP 11 and the 72-hour NDB runbook.',
+  },
+  {
+    pathSlug: 'ai-automation-14',
+    pathName: 'AI Automation',
+    pathHref: '/academy/ai-automation',
+    Icon: Workflow,
+    level: 'Advanced',
+    lessonNumber: 14,
+    title: 'Disaster recovery & rollback for AI workflows',
+    href: '/academy/ai-automation/lessons/disaster-recovery-and-rollback',
+    duration: '25 min',
+    description:
+      'Four failure modes, graceful degradation in three layers, version pinning, RTO/RPO, the rollback runbook, AU SME oncall and the 30-minute blameless retro.',
+  },
 ];
 
 type ComingSoonGroup = {
@@ -575,7 +965,7 @@ const COMING_SOON: ComingSoonGroup[] = [
     pathHref: '/academy/beginner-ai',
     Icon: Sparkles,
     lessons: [
-      { id: 9, title: 'Capstone: ship one AI workflow this week', duration: '20 min' },
+      { id: 15, title: 'Advanced bootcamps + certifications coming Q4 2026', duration: 'Q4 2026' },
     ],
   },
   {
@@ -583,8 +973,7 @@ const COMING_SOON: ComingSoonGroup[] = [
     pathHref: '/academy/ai-for-business',
     Icon: Building2,
     lessons: [
-      { id: 9, title: 'Privacy, IP, and AU compliance for SME AI use', duration: '30 min' },
-      { id: 10, title: 'Capstone: pick 1 use case and draft an implementation plan', duration: '45 min' },
+      { id: 15, title: 'Advanced bootcamps + certifications coming Q4 2026', duration: 'Q4 2026' },
     ],
   },
   {
@@ -592,7 +981,7 @@ const COMING_SOON: ComingSoonGroup[] = [
     pathHref: '/academy/ai-productivity',
     Icon: Zap,
     lessons: [
-      { id: 9, title: 'AI for travel, planning, and life admin + capstone', duration: '25 min' },
+      { id: 15, title: 'Advanced bootcamps + certifications coming Q4 2026', duration: 'Q4 2026' },
     ],
   },
   {
@@ -600,8 +989,7 @@ const COMING_SOON: ComingSoonGroup[] = [
     pathHref: '/academy/prompt-engineering',
     Icon: MessageSquareCode,
     lessons: [
-      { id: 9, title: 'Hallucinations: detection and mitigation', duration: '35 min' },
-      { id: 10, title: 'Advanced: JSON mode, function calling, structured outputs', duration: '45 min' },
+      { id: 15, title: 'Advanced bootcamps + certifications coming Q4 2026', duration: 'Q4 2026' },
     ],
   },
   {
@@ -609,10 +997,7 @@ const COMING_SOON: ComingSoonGroup[] = [
     pathHref: '/academy/ai-automation',
     Icon: Workflow,
     lessons: [
-      { id: 9, title: 'Lead qualification and nurture automations', duration: '50 min' },
-      { id: 10, title: 'Customer support automation with safe deflection', duration: '50 min' },
-      { id: 11, title: 'Document processing pipeline (PDF → data → action)', duration: '55 min' },
-      { id: 12, title: 'Deployment, cost management, and scaling — capstone', duration: '55 min' },
+      { id: 15, title: 'Advanced bootcamps + certifications coming Q4 2026', duration: 'Q4 2026' },
     ],
   },
 ];
@@ -622,7 +1007,7 @@ const totalComingSoon = COMING_SOON.reduce((sum, g) => sum + g.lessons.length, 0
 const itemListSchema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'LongCare AI Academy — 40 free lessons across 5 paths',
+  name: 'LongCare AI Academy — 70 free lessons across 5 paths',
   numberOfItems: FREE_LESSONS.length,
   itemListElement: FREE_LESSONS.map((l, i) => ({
     '@type': 'ListItem',
@@ -673,8 +1058,8 @@ export default function LessonsLibraryPage() {
               Free AI Lessons
             </h1>
             <p className="mt-4 text-lg text-slate-600 max-w-2xl">
-              Eight free lessons per path. Forty in total. The remaining curriculum, certificates,
-              and live cohorts launch with the Academy in Q3 2026.
+              Fourteen free lessons per path. Seventy in total. Advanced bootcamps,
+              certifications and live AU cohorts land in Q4 2026.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-6 sm:gap-10 text-sm text-slate-600">
@@ -708,7 +1093,7 @@ export default function LessonsLibraryPage() {
             <InfographicTimeline width={720} height={180} />
           </div>
           <p className="text-sm text-slate-600 text-center mt-4">
-            Free lessons live now · full Academy with certificates and live cohorts launching Q3 2026.
+            70 free lessons live now · advanced bootcamps and certifications with live AU cohorts landing Q4 2026.
           </p>
         </div>
       </section>
@@ -717,7 +1102,7 @@ export default function LessonsLibraryPage() {
       <section className="mx-auto max-w-[1120px] px-6 sm:px-10 pb-16">
         <h2 className="text-2xl font-semibold text-slate-900 mb-2">Free lessons</h2>
         <p className="text-sm text-slate-600 mb-6">
-          Eight free lessons from every path — 40 in total. No login, no payment.
+          Fourteen free lessons from every path — 70 in total. No login, no payment.
         </p>
         <div className="grid gap-6 sm:grid-cols-2">
           {FREE_LESSONS.map(({ pathSlug, pathName, Icon, level, lessonNumber, title, href, duration, description }) => (
@@ -759,7 +1144,7 @@ export default function LessonsLibraryPage() {
       <section className="mx-auto max-w-[1120px] px-6 sm:px-10 pb-16">
         <h2 className="text-2xl font-semibold text-slate-900 mb-2">Coming soon</h2>
         <p className="text-sm text-slate-600 mb-6">
-          The full lesson set across all five paths — landing with the Academy launch in Q3 2026.
+          Advanced bootcamps and certifications with live AU cohorts — landing Q4 2026.
         </p>
         <div className="grid gap-6 lg:grid-cols-2">
           {COMING_SOON.map(({ pathName, pathHref, Icon, lessons }) => (
@@ -809,11 +1194,11 @@ export default function LessonsLibraryPage() {
             <Mail className="size-6" />
           </div>
           <h2 className="mt-4 text-2xl font-semibold text-slate-900">
-            Get notified when the full Academy launches
+            Get notified when the advanced bootcamps launch
           </h2>
           <p className="mt-2 text-slate-600 max-w-xl mx-auto">
-            We’ll email you the moment the rest of the curriculum, certificates, and live cohorts go
-            live in Q3 2026. No spam, just the launch.
+            We’ll email you the moment the certifications, live AU cohorts and advanced
+            bootcamps go live in Q4 2026. No spam, just the launch.
           </p>
           <Link
             href="/resources/ai-readiness"

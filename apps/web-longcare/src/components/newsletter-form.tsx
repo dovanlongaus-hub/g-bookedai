@@ -11,10 +11,12 @@ interface NewsletterFormProps {
 export function NewsletterForm({ source }: NewsletterFormProps = {}) {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email) return;
+    if (!email || loading) return;
+    setLoading(true);
     try {
       await fetch('/api/newsletter', {
         method: 'POST',
@@ -24,6 +26,7 @@ export function NewsletterForm({ source }: NewsletterFormProps = {}) {
       trackEvent('newsletter_signup', { source: source ?? 'unknown' });
       trackEvent('lead_submit', { source: source ?? 'newsletter' });
     } catch {}
+    setLoading(false);
     setSubmitted(true);
   }
 
@@ -46,8 +49,13 @@ export function NewsletterForm({ source }: NewsletterFormProps = {}) {
         onChange={(e) => setEmail(e.target.value)}
         className="flex-grow px-4 py-3 rounded-full border border-slate-600 bg-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
       />
-      <button type="submit" className="btn-cta px-6 py-3 rounded-full text-sm font-semibold cursor-pointer flex-shrink-0">
-        Subscribe
+      <button
+        type="submit"
+        aria-busy={loading}
+        disabled={loading}
+        className="btn-cta px-6 py-3 rounded-full text-sm font-semibold cursor-pointer flex-shrink-0 disabled:opacity-60"
+      >
+        {loading ? 'Subscribing…' : 'Subscribe'}
       </button>
     </form>
   );

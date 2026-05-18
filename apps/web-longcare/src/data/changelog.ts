@@ -24,6 +24,53 @@ export type ChangelogEntry = {
 // Reverse-chronological. Most recent first.
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-05-12',
+    version: '2026.05.4',
+    title: 'Sprint 9 — 70 lessons, husky+ESLint, GitHub-synced standalone',
+    categories: ['content', 'platform'],
+    audience: ['individual', 'sme', 'startup', 'organisation'],
+    changes: [
+      '70 free academy lessons live (14 per path, ~46,000 words total)',
+      'Standalone repo synced to GitHub (dovanlongaus-hub/longcare-au) — independent CI/CD ready',
+      'Husky pre-commit hooks activated — ESLint + Prettier + image budget check',
+      'Phase E (extraction) deliverables 100% complete',
+      'Pre-commit hooks block oversized images automatically',
+    ],
+  },
+  {
+    date: '2026-05-11',
+    version: '2026.05.3',
+    title: 'Sprint 8 — Atom RSS, AVIF, lessons 9-12, accessibility audit',
+    categories: ['content', 'platform', 'integration'],
+    audience: ['individual', 'sme', 'startup'],
+    changes: [
+      '3 Atom feeds shipped — /blog/rss.xml, /changelog/rss.xml, /case-studies/rss.xml',
+      'AVIF image format added (sharp via libvips 8.17) — 91% smaller hero image',
+      '20 new academy lessons (lessons 9-12 across 5 paths)',
+      'WebSite Schema.org with SearchAction (sitelinks search box ready)',
+      'hreflang structure added (en-AU default, vi/zh-CN slots reserved)',
+      'next.config.ts: images.formats = [avif, webp] negotiation',
+      'check-image-budget.sh CI guardrail (500 KB threshold)',
+    ],
+  },
+  {
+    date: '2026-05-10',
+    version: '2026.05.2',
+    title: 'Sprint 7 — Live site polish, image hygiene, accessibility 70+',
+    categories: ['platform', 'fix'],
+    audience: ['individual', 'sme', 'startup', 'organisation'],
+    changes: [
+      'Renamed fragile banner image (no spaces, no version suffix)',
+      '12 unused PNGs cleaned (-12.83 MB)',
+      '70 placeholder hrefs accessibilised across lesson library (aria-disabled pattern)',
+      '9 forms gained submit guards + aria-busy state',
+      'Lazy-loaded ChatWidget + ExitIntentPopup (~25 KB bundle saved)',
+      'ResourceHints (preconnect GTM/GA4/book.longcare.au/fonts) wired in <head>',
+      'Bundle analyzer setup (ANALYZE=true pnpm build)',
+      'PM2 start script auto-syncs public/ + static/ to standalone tree',
+    ],
+  },
+  {
     date: '2026-05-10',
     version: '2026.05.6',
     title:

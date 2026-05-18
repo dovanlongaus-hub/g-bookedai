@@ -120,6 +120,7 @@ export function PartnerForm() {
 
       <button
         type="submit"
+        aria-busy={loading}
         disabled={loading}
         className="w-full sm:w-auto bg-sky-700 hover:bg-sky-600 text-white px-6 py-3 rounded-full font-semibold disabled:opacity-60"
       >

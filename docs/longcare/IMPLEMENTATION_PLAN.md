@@ -1,7 +1,7 @@
 # LongCare.au — Implementation Plan
 
-Version: 1.0
-Date: 2026-05-09
+Version: 1.1
+Date: 2026-05-12
 Owner: dovanlongaus-hub
 Source documents: `docs/longcare/VISION.md`, `docs/longcare/IA_BLUEPRINT.md`
 Repo path: `apps/web-longcare/`
@@ -22,13 +22,39 @@ Every phase ships in **2-week sprints** with clear acceptance criteria and a har
 
 | Phase | Theme | Duration | Key Deliverables | Status |
 |---|---|---|---|---|
-| **P0** | Stabilisation | 2 weeks | Build unblocked, API hardened, SEO fixed, IA cleaned up | 🔴 Not started |
+| **P0** | Stabilisation | 2 weeks | Build unblocked, API hardened, SEO fixed, IA cleaned up | ✅ Complete |
+| **Phase R** | Revenue & Conversion Recovery | 2 weeks | Booking deep links, lead reliability, HTML-first homepage, sprint offer pages, attribution | 🔴 Must start next |
+| **Phase E** | Extraction & Independent Deploy | 1 week | Standalone repo, Docker pipeline, k8s/Cloud Run, independent CI/CD | 🟢 Tooling ready, pending first deploy |
 | **P1** | Foundation | 6 weeks | AI Mentor MVP, Learning Portal, AI Readiness Assessment, Onboarding | ⚪ Planned |
 | **P2** | Automation Platform | 8 weeks | Workflow builder, SME AI Toolkit (7 tools), Industry templates | ⚪ Planned |
 | **P3** | AI Agent Marketplace | 10 weeks | Agent marketplace, deployable AI employees, analytics dashboard | ⚪ Planned |
 | **P4** | AI Ecosystem | 8 weeks | API ecosystem, partner marketplace, enterprise governance, APAC | ⚪ Planned |
 
-**Total runway:** ~34 weeks (≈ 8 months) for the full vision; first commercial revenue from end of P1 (week 8).
+**Total runway:** ~34 weeks (≈ 8 months) for the full vision.
+
+**Commercial priority update (2026-05-12):** first revenue should not wait until the end of P1. Phase R moves the fastest monetisable path to the front of the roadmap: repair the booking funnel, stop false-positive lead capture, make the homepage sell three simple offers, and launch a fixed-scope AI Automation Sprint for SMEs.
+
+### 1.1 Revenue priorities
+
+| Priority | Offer | Target buyer | Price | Conversion path | Goal |
+|---|---|---|---:|---|---|
+| R1 | AI Automation Sprint | SME owner/operator with one painful workflow | A$1,500-A$3,000 | Money page → booking deep link → discovery/scope call | Fastest cash |
+| R2 | 5-Session SME Workflow Pack | SME operator who wants guided implementation | A$450 | Homepage/service card → booking deep link | Mid-ticket volume |
+| R3 | AI Starter Session | Individual, solo operator, beginner | A$29 | Homepage/service card → booking deep link | Low-friction trust |
+| R4 | Workshops / partner referrals | Accountants, Xero advisors, chambers, community groups | A$499+ | Partner page → referral form → invoice | Distribution |
+
+### 1.2 Current conversion blockers from 2026-05-12 audit
+
+| # | Blocker | Business impact | Priority | File(s) |
+|---|---|---|---|---|
+| R-B1 | Booking links pass `?service=...`, but `booking-web` does not preselect the service | Paid users must reselect service; high drop-off | P0 / Critical | `apps/booking-web/src/app/page.tsx`, `apps/web-longcare/src/app/page.tsx` |
+| R-B2 | Lead APIs can return success even when upstream `/leads` fails | Lost leads with false success messages | P0 / Critical | `src/app/api/newsletter/route.ts`, `src/app/api/guide-lead/route.ts`, `src/app/api/quiz-lead/route.ts`, `src/app/api/referral/route.ts` |
+| R-B3 | Homepage top fold is image-map driven; visible H1/CTA are inside an image | Weak SEO, weak accessibility, fragile mobile clicks | P0 / Critical | `src/app/page.tsx` |
+| R-B4 | Booking Terms/Privacy checkbox is not enforced | Compliance and chargeback risk | P0 / Critical | `apps/booking-web/src/app/page.tsx` |
+| R-B5 | Booking availability claims "Calendar synced" while slots are pseudo-random/local | Trust risk, double-booking expectation | P1 / High | `apps/booking-web/src/components/availability-calendar.tsx` |
+| R-B6 | `booking_start` and `cta_click` analytics events exist but are rarely fired | Cannot measure revenue funnel | P1 / High | `src/lib/analytics.ts`, all booking anchors |
+| R-B7 | Trust claims lack provenance (`150+`, `4.9/5`, `$2.4M`, scarcity claims) | Credibility/compliance risk | P1 / High | `src/app/page.tsx`, `src/components/floating-cta-bar.tsx`, `src/components/site-footer.tsx` |
+| R-B8 | Brand intent can be confused with aged care/NDIS because of "LongCare" and "Long Term Care" wording | Wrong SEO traffic and confused buyers | P1 / High | `src/app/layout.tsx`, `src/app/page.tsx`, footer/content |
 
 ---
 
@@ -246,9 +272,200 @@ Tasks:
 
 ---
 
+## 5.3 Phase R — Revenue & Conversion Recovery (2 weeks)
+
+**Goal:** Convert current traffic into paid bookings and qualified SME leads before building deeper platform features.
+
+**Principle:** sell the smallest valuable outcome first. The long-term ecosystem remains the vision, but the next 14 days focus on three monetisable offers:
+
+1. **AI Starter Session** — A$29, 30 minutes, beginner-friendly.
+2. **5-Session SME Workflow Pack** — A$450, guided path to ship one workflow.
+3. **AI Automation Sprint** — A$1,500-A$3,000 fixed-scope SME implementation.
+
+### 5.3.1 Priority scale
+
+| Priority | Meaning | SLA |
+|---|---|---|
+| P0 / Critical | Blocks revenue, creates false success, or creates compliance risk | Fix before campaign traffic |
+| P1 / High | Increases conversion, attribution, trust, or SEO quality | Fix within Phase R |
+| P2 / Medium | Improves scale or operational quality | Schedule after first sales loop |
+| P3 / Low | Nice-to-have polish | Defer unless bundled with nearby work |
+
+### 5.3.2 Sprint R.1 (Days 1-5) — Stop revenue leakage
+
+| # | Priority | Task | Detail | File(s) | Effort | Owner | Acceptance criteria |
+|---|---|---|---|---|---|---|---|
+| R1-1 | P0 | Booking deep link preselect | Read `service`, `ref`, `utm_*`, `source_page` from query params in `booking-web`; preselect matching service and move user to schedule step when valid | `apps/booking-web/src/app/page.tsx` | M | FE | `https://book.longcare.au?service=ai-starter` opens with AI Starter selected; invalid service falls back gracefully |
+| R1-2 | P0 | Canonical service slug map | Define one source of truth for booking slugs: `ai-starter`, `mentor-1h`, `package-5`, `package-10`, `automation-sprint`, `discovery` | `apps/booking-web`, `apps/web-longcare/src/data/sku-catalog.ts` | S | FE | All CTA URLs use supported slugs; no orphan booking service ids |
+| R1-3 | P0 | Enforce Terms/Privacy | Include `agreedTerms` in contact/payment validation; disable confirm/payment action until accepted; show inline error | `apps/booking-web/src/app/page.tsx` | S | FE | User cannot proceed to payment/confirmation without ticking Terms/Privacy |
+| R1-4 | P0 | Lead API success semantics | Check upstream `res.ok`; use timeout; log status/body excerpt without PII; return 502/503 when lead is not durably accepted | `src/app/api/newsletter/route.ts`, `src/app/api/guide-lead/route.ts`, `src/app/api/quiz-lead/route.ts`, `src/app/api/referral/route.ts` | M | BE | Frontend never shows success when upstream rejects/fails |
+| R1-5 | P0 | Client lead form error handling | Only track conversion after confirmed `res.ok`; show retryable error; keep form data on failure | `src/components/newsletter-form.tsx`, `src/app/resources/ai-readiness/assessment-client.tsx`, `src/components/review-section.tsx`, `src/app/community/newsletter-client.tsx` | M | FE | Failed lead endpoint displays clear error and no conversion event fires |
+| R1-6 | P1 | Booking attribution wrapper | Add `BookingLink` component or `/book` redirect route that appends `source_page`, `section`, `service`, `utm_*` and fires `booking_start` | `src/components`, `src/lib/analytics.ts` | M | FE | All primary booking CTAs emit `booking_start` and preserve attribution |
+| R1-7 | P1 | Fix misleading availability copy | Replace "Calendar synced" with "Indicative availability; final confirmation by email" until real calendar sync exists | `apps/booking-web/src/components/availability-calendar.tsx` | S | FE | No UI claims live sync unless a real calendar API backs it |
+
+**Sprint R.1 definition of done:**
+- Paid CTA from homepage/service page can land directly on the right booking service.
+- Failed upstream lead submission cannot produce a false success state.
+- Booking cannot complete without Terms/Privacy acceptance.
+- GA4/GTM can distinguish `booking_start` by `service` and `source_page`.
+
+### 5.3.3 Sprint R.2 (Days 6-10) — Make the site sell clearly
+
+| # | Priority | Task | Detail | File(s) | Effort | Owner | Acceptance criteria |
+|---|---|---|---|---|---|---|---|
+| R2-1 | P0 | HTML-first homepage top fold | Replace image-map-first hero with visible H1, subcopy, two CTAs, and real service cards; keep banner as supporting visual only | `src/app/page.tsx` | L | FE/Design | H1/CTA are visible HTML; keyboard users can reach all CTAs; mobile tap targets are normal buttons/cards |
+| R2-2 | P0 | Three-offer homepage section | Add cards for AI Starter, 5-Session Pack, AI Automation Sprint with price, outcome, timeline, and CTA | `src/app/page.tsx`, `src/data/sku-catalog.ts` | M | FE/GTM | A first-time visitor can understand the three buying options in under 10 seconds |
+| R2-3 | P1 | AI Automation Sprint money page | Create dedicated page for fixed-scope SME automation: pains, deliverables, examples, process, price range, FAQ, CTA | `src/app/services/automation-sprint/page.tsx` or `src/app/ai-automation-sprint/page.tsx` | L | FE/Content | Page has unique metadata, Service schema, FAQ, and booking CTA with `service=automation-sprint` |
+| R2-4 | P1 | Services page repair | Include Starter, Mentor, Packages, Automation Sprint, Discovery; fix `/services/ai-agentic` non-existent schema URL | `src/app/services/page.tsx` | M | FE/SEO | No schema points to missing routes; all cards have learn-more and book CTAs |
+| R2-5 | P1 | Trust claim audit | Remove, soften, or source claims: `150+`, `4.9/5`, `$2.4M`, scarcity slots, "APP compliant", "WCAG 2.2 AA" | `src/app/page.tsx`, `src/components/floating-cta-bar.tsx`, `src/components/site-footer.tsx`, `src/components/schema-markup.tsx` | M | Content/Legal | Every numeric/compliance claim has a source link or is rewritten as non-claim copy |
+| R2-6 | P1 | CTA copy consistency | Standardise entry offer naming: "Free 20-min AI Fit Call" OR "AI Readiness Assessment"; remove conflicting 20/30/free assessment labels | Global copy | M | Content | Primary CTA copy is consistent across homepage, nav, sticky CTA, services, FAQ |
+| R2-7 | P1 | Schema scope cleanup | Render global `WebSite`/`Organization`; render FAQ/Service/Article schema only on matching pages | `src/app/layout.tsx`, `src/components/schema-markup.tsx`, page files | M | SEO/FE | Structured data represents visible page content |
+
+**Sprint R.2 definition of done:**
+- Homepage top fold works without relying on image text or invisible hotspots.
+- Automation Sprint has a dedicated conversion page.
+- Trust claims are defensible.
+- Service discovery leads to a clear offer and a measurable booking action.
+
+### 5.3.4 Sprint R.3 (Days 11-14) — Launch first sales loop
+
+| # | Priority | Task | Detail | File(s) | Effort | Owner | Acceptance criteria |
+|---|---|---|---|---|---|---|---|
+| R3-1 | P1 | LinkedIn launch pack | Prepare 30 short posts: one SME workflow/use case per day, CTA to Automation Sprint or Readiness Assessment | `docs/longcare/gtm/` | M | Founder/Content | 30 post drafts ready; first 7 scheduled |
+| R3-2 | P1 | Partner referral page | Create page for accountants, Xero advisors, chambers, community groups; define commission/referral benefit if applicable | `src/app/partners` or `src/app/community/partners` | M | FE/GTM | Partner can submit referral and understand offer in one page |
+| R3-3 | P1 | Case study/proof blocks | Add 3 real case studies if available; otherwise label as "example workflow" and avoid fake client proof | `src/data/case-studies.ts`, homepage/money page | M | Content | No fictional proof is presented as real customer evidence |
+| R3-4 | P1 | Sales qualification form | Add optional fields: company, role, workflow pain, tools used, budget range, urgency; pass to upstream as `metadata` | Lead routes/forms | M | FE/BE | Sales lead includes qualification metadata; no fields are silently stripped by Zod |
+| R3-5 | P2 | Outreach list template | Create CSV/schema for target accounts: company, owner, industry, pain hypothesis, contact, status, next action | `docs/longcare/gtm/outreach-template.csv` | S | GTM | First 100 target prospects can be tracked |
+| R3-6 | P2 | Funnel dashboard spec | Define GA4/BigQuery funnel: page_view → cta_click → booking_start → booking_complete/lead_submit | `docs/longcare/analytics/FUNNEL_SPEC.md` | S | Analytics | Event names, params, and dashboard questions documented |
+
+**Sprint R.3 definition of done:**
+- First outbound/referral campaign can start.
+- Sales leads carry enough context to qualify quickly.
+- Founder can measure which offer, page, and channel produces bookings.
+
+### 5.3.5 Phase R success metrics
+
+| Metric | Target by day 14 |
+|---|---:|
+| Booking deep-link success rate | 100% for known service slugs |
+| False-positive lead success | 0 known cases |
+| Homepage primary CTA click-through | Baseline + 30% |
+| Visitor → booking_start | ≥ 2.5% from homepage traffic |
+| Booking_start → submitted/paid booking | ≥ 20% |
+| Qualified SME leads | ≥ 10 |
+| Paid bookings or sprint deposits | ≥ 3 |
+| Automation Sprint discovery calls | ≥ 5 |
+
+### 5.3.6 Phase R implementation order
+
+1. **Fix booking deep links** (`R1-1`, `R1-2`) before sending any traffic.
+2. **Fix lead API truthfulness** (`R1-4`, `R1-5`) before promoting lead magnets.
+3. **Fix booking compliance** (`R1-3`) before accepting paid bookings.
+4. **Add booking attribution** (`R1-6`) before homepage rewrite goes live.
+5. **Rewrite homepage top fold** (`R2-1`, `R2-2`) before GTM campaign.
+6. **Launch Automation Sprint page** (`R2-3`) before outreach.
+7. **Clean trust/schema/copy** (`R2-5`, `R2-6`, `R2-7`) before paid ads or partner referrals.
+8. **Launch outbound/referral loop** (`R3-1` to `R3-6`) only after the funnel can be measured.
+
+### 5.3.7 Go-to-market notes
+
+- Positioning: **"Ship one useful AI workflow for your SME in 2 weeks."**
+- Avoid selling "AI transformation" as the first ask; sell a concrete workflow outcome.
+- Best initial verticals: accountants/bookkeepers, mortgage brokers, migration agents, allied health clinics, tradies with admin load, hospitality groups with booking/review workflows.
+- Best channels: founder LinkedIn, accountant/Xero advisor referrals, local business chambers, direct outreach to admin-heavy SMEs.
+- Proof rule: real case studies must be labelled as real; synthetic examples must be labelled as examples.
+
+---
+
+## 5.5 Phase E — Extraction & Independent Deploy *(insert before P1 backend kick-off)*
+
+**Goal:** Split `apps/web-longcare` from the monorepo into a standalone `/home/longcare.au/` repo with its own CI/CD, Docker pipeline, and container orchestration. Run it independently *before* backend services are wired so frontend velocity is decoupled from GCP rollout.
+
+### 5.5.1 Why this comes first
+
+- **Decouple frontend velocity from backend GCP rollout.** P1 needs Vertex AI + Firebase creds; the frontend can iterate solo while creds are being approved.
+- **Clean stack for Cloud Run / Kubernetes scale-out experiments.** Single-app image is easier to right-size than a 9-service monorepo.
+- **Faster CI** — no monorepo overhead. A 9-min pipeline becomes < 5 min.
+- **Independent semver enables marketing-led releases.** Marketing can ship daily; backend services follow GCP windows.
+- **Reduces blast radius.** Backend deploys can no longer break the public marketing site.
+
+### 5.5.2 Deliverables
+
+1. ✅ New repo at `/home/longcare.au/` (extracted source — zero `@bookedai/shared` dep)
+2. ✅ Standalone `Dockerfile` (multi-stage, Node 22-slim, non-root, healthcheck, < 250 MB image)
+3. ✅ `docker-compose.yml` for local dev parity
+4. ✅ Kubernetes manifests under `k8s/` (Deployment, Service, Ingress, HPA, Kustomization with dev/staging/prod overlays)
+5. ✅ Cloud Run config under `infrastructure/`
+6. ✅ Terraform for Cloud Run + Artifact Registry
+7. ✅ GitHub Actions CI (lint/type-check/build) + 4 deploy workflows (Cloud Run, GKE, security, preview)
+8. ✅ Google Cloud Build pipeline (`cloudbuild.yaml`) as alternative
+9. ✅ Operator scripts: `init-repo.sh`, `deploy.sh`, `local-dev.sh`, `lint-fix.sh`
+10. ✅ Independent docs: `README.md`, `EXTRACTION_GUIDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`, `CHANGELOG.md`, `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`, `docs/CONTENT_AUTHORING.md`
+
+### 5.5.3 Sprint plan (1 week)
+
+| Day | Action |
+|---|---|
+| 1 | Source migration + standalone `package.json` + `tsconfig.json` + `next.config.ts` (Agent SS) |
+| 1 | Container artifacts (`Dockerfile`, `k8s/`, `infrastructure/`) (Agent TT) |
+| 1 | CI/CD + scripts (`.github/workflows/`, `cloudbuild.yaml`, `scripts/`) (Agent UU) |
+| 1 | Documentation (Agent VV) |
+| 2 | `pnpm install` + `pnpm build` independently — must pass clean |
+| 2 | `git init`, first commit, push to new GitHub repo `longcare-au/web` |
+| 3 | First Docker build: `docker build -t longcare-au .` (verify image runs) |
+| 3 | Push to Artifact Registry under `longcare-prod` project (or `auschain` temporarily) |
+| 4 | Deploy preview revision to Cloud Run with `--no-traffic --tag=preview` |
+| 5 | Switch traffic 10% → 50% → 100% with verification gates between each step |
+| 5 | Map custom domain (`longcare.au`) to standalone Cloud Run service |
+| 5 | Park monorepo PM2 process (don't kill — keep as fallback for 14 days) |
+| 6 | Customer interview round (10 users) on the independent site |
+| 7 | Retrospective + flip "DNS source-of-truth" flag in stakeholder doc |
+| 8+ | Begin P1 backend (Firebase Auth, Vertex AI) on the independent stack |
+
+### 5.5.4 Success metrics
+
+- Independent site serves 200 OK on all 154+ URLs
+- Lighthouse SEO ≥ 95, Performance ≥ 90 (parity with monorepo deploy)
+- CI build runs < 5 minutes on cold cache
+- Docker image size < 250 MB (multi-stage, standalone Next.js output)
+- 0 deploy regressions during traffic switch
+- 0 customer-visible incidents during the 14-day rollback window
+
+### 5.5.5 Risks + mitigations
+
+| Risk | Likelihood | Mitigation |
+|---|---|---|
+| DNS propagation delay during traffic switch | Medium | Schedule switch during low-traffic window (Tue/Wed 10:00–14:00 AEST). Lower TTL to 60 s 24 h before. |
+| Sub-processor changes (Cloud Run vs PM2 VM) trigger customer compliance review | Low–Medium | Notify customers of infra change in next status update; update sub-processor list at `/trust` |
+| Forgotten env var on first prod deploy | Medium | Exhaustive `.env.example`; first deploy uses `--no-traffic` so issues surface before traffic flow |
+| Build flakiness from version drift | Low | Pin Node 22 + pnpm 10.33.2 in `package.json`, `Dockerfile`, and `.nvmrc` |
+| Monorepo contributors push to deprecated `apps/web-longcare/` after extraction | Medium | Add `DEPRECATED.md` + CODEOWNERS gate in monorepo immediately after extraction |
+
+### 5.5.6 Rollback plan
+
+- **Keep monorepo `apps/web-longcare` PM2 process running for 14 days** as a hot fallback
+- Cloud DNS allows quick re-point to monorepo VM if standalone has issues (TTL 60 s, propagation ≤ 10 min globally)
+- After 14 days clean: deprecate monorepo path, point both deployments at the standalone repo, delete `apps/web-longcare/` from monorepo in a single PR
+- See `/home/longcare.au/EXTRACTION_GUIDE.md` for the detailed rollback runbook
+
+### 5.5.7 Definition of done
+
+- [ ] All deliverables (5.5.2) shipped and merged to standalone repo `main`
+- [ ] First Cloud Run revision deployed with `--no-traffic`
+- [ ] Custom domain `longcare.au` mapped to standalone service
+- [ ] All gates in `EXTRACTION_GUIDE.md` "Migration verification checklist" pass
+- [ ] Traffic at 100% on standalone for ≥ 24 h with error rate < 0.5%
+- [ ] Monorepo PM2 process parked but warm; rollback plan exercised once in dry-run
+
+Once these are green, `IMPLEMENTATION_PROGRESS.md` Phase E section flips to ✅ and P1 backend wiring begins.
+
+---
+
 ## 6. Phase 1 — Foundation (6 weeks)
 
 **Goal:** Ship the AI Mentor MVP, AI Learning Portal v1, and AI Readiness Assessment that maps to a roadmap. End of P1 = first paying SME customer onboarded through the new funnel.
+
+> **Prerequisite:** Phase E (Extraction & Independent Deploy) is done. P1 backend integration happens in the standalone repo, not in the monorepo `apps/web-longcare/`.
 
 ### 6.1 Scope
 
@@ -528,12 +745,15 @@ A phase is done when **all** of:
 
 ## 14. Immediate next steps (this week)
 
-1. **Today:** approve this plan
-2. **Day 1:** kick off Sprint 0.1 — fix `motion/react` build blocker, add rate limit/validation to API routes
-3. **Day 2:** apply for Google Cloud for Startups credits + Vertex AI quota uplift
-4. **Day 3:** create GCP project structure (`longcare-prod`, `longcare-staging`, `longcare-dev`); enable required APIs; bootstrap Secret Manager
-5. **Day 4-5:** Sprint 0.1 deliverables — see § 5.1
-6. **Day 6:** retrospective + plan Sprint 0.2
+1. **Today:** approve Version 1.1 and start **Phase R** before new platform work.
+2. **Day 1:** implement booking deep-link preselect in `apps/booking-web` for `?service=ai-starter`, `mentor-1h`, `package-5`, `package-10`, `automation-sprint`, `discovery`.
+3. **Day 1:** enforce Terms/Privacy acceptance in the booking flow before payment/confirmation.
+4. **Day 2:** fix lead API success semantics: check upstream `res.ok`, add timeout, return 502/503 on durable failure, and update clients to show retryable errors.
+5. **Day 2:** add booking attribution (`booking_start`, `service`, `source_page`, `section`, `utm_*`) via a shared `BookingLink` or `/book` redirect route.
+6. **Day 3-4:** replace homepage image-map-first top fold with HTML-first H1, copy, CTA buttons, and three offer cards.
+7. **Day 4-5:** create the AI Automation Sprint money page with price range, scope, examples, process, FAQ, schema, and booking CTA.
+8. **Day 5:** audit trust claims and standardise CTA language before sending outbound/referral traffic.
+9. **Day 6-7:** prepare LinkedIn launch pack, partner referral page/update, and first 100-prospect outreach tracker.
 
 **Deliverables tracked in:**
 - Code: `apps/web-longcare`, `services/agent`, `services/api`

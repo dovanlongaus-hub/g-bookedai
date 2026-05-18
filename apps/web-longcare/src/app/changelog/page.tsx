@@ -205,11 +205,12 @@ export default function ChangelogPage() {
               See what’s next <ArrowRight className="size-4" />
             </Link>
             <a
-              href="/changelog.rss"
-              className="inline-flex items-center gap-2 rounded-full bg-white border border-slate-300 hover:border-sky-400 hover:text-sky-700 text-slate-800 font-medium px-5 py-2.5 transition"
-              aria-label="RSS feed (coming soon)"
+              href="/changelog/rss.xml"
+              type="application/atom+xml"
+              className="inline-flex items-center gap-2 rounded-full bg-white border border-slate-200 text-slate-700 hover:text-sky-700 hover:border-sky-200 font-medium px-5 py-2.5 transition"
+              aria-label="Subscribe to the LongCare AU changelog via Atom feed"
             >
-              <Rss className="size-4" /> RSS feed (coming soon)
+              <Rss className="size-4" /> Subscribe via Atom
             </a>
           </div>
         </div>

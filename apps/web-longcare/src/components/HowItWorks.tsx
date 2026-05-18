@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { MousePointerClick, CalendarCheck, Sparkles } from "lucide-react"
-import { motion } from "motion/react"
+import { motion, MotionConfig } from "motion/react"
 
 const steps = [
   {
@@ -27,6 +27,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
+    <MotionConfig reducedMotion="user">
     <section id="how-it-works" className="py-24 bg-white">
       <div className="mx-auto max-w-[1200px] px-6">
         <motion.h2
@@ -100,5 +101,6 @@ export function HowItWorks() {
         </div>
       </div>
     </section>
+    </MotionConfig>
   );
 }

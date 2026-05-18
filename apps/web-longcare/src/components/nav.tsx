@@ -39,10 +39,9 @@ export function Nav() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-        scrolled ? 'shadow-[0_1px_3px_rgba(15,23,42,0.06)]' : ''
+      className={`fixed top-0 left-0 right-0 z-50 bg-[#F8FAFC]/95 backdrop-blur-md transition-all duration-200 ${
+        scrolled ? 'shadow-[0_1px_3px_rgba(15,23,42,0.08)] border-b border-slate-200/70' : 'border-b border-transparent'
       }`}
-      role="navigation"
       aria-label="Main navigation"
     >
       <div className="mx-auto max-w-[1120px] flex items-center justify-between h-16 px-8 sm:px-10">
@@ -82,14 +81,16 @@ export function Nav() {
         <button
           onClick={() => setOpen(!open)}
           className="md:hidden p-2 text-slate-700 cursor-pointer"
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={open}
+          aria-controls="mobile-nav-menu"
         >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          {open ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
         </button>
       </div>
 
       {open && (
-        <div className="md:hidden bg-[#F8FAFC] border-t border-slate-200 px-8 py-5 space-y-4">
+        <div id="mobile-nav-menu" className="md:hidden bg-[#F8FAFC] border-t border-slate-200 px-8 py-5 space-y-4">
           {links.map((l) => (
             <a
               key={l.href}

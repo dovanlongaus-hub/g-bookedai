@@ -27,4 +27,23 @@ export NODE_ENV=${NODE_ENV:-production}
 export PATH="$PATH:/home/dovanlong/.nvm/versions/node/v24.15.0/bin"
 
 STANDALONE="$ROOT/$APP_DIR/.next/standalone"
+
+# Sync public/ + .next/static/ into standalone tree if not already linked.
+# Next.js standalone output doesn't auto-include these; required for static asset + image serving.
+STANDALONE_APP="$STANDALONE/$APP_DIR"
+PUBLIC_SRC="$ROOT/$APP_DIR/public"
+PUBLIC_DST="$STANDALONE_APP/public"
+STATIC_SRC="$ROOT/$APP_DIR/.next/static"
+STATIC_DST="$STANDALONE_APP/.next/static"
+
+# Use rsync (idempotent, fast) if available; fallback to cp
+if command -v rsync >/dev/null; then
+  rsync -a --delete "$PUBLIC_SRC/" "$PUBLIC_DST/" 2>/dev/null || true
+  rsync -a --delete "$STATIC_SRC/" "$STATIC_DST/" 2>/dev/null || true
+else
+  rm -rf "$PUBLIC_DST" "$STATIC_DST" 2>/dev/null
+  cp -r "$PUBLIC_SRC" "$PUBLIC_DST" 2>/dev/null || true
+  cp -r "$STATIC_SRC" "$STATIC_DST" 2>/dev/null || true
+fi
+
 exec /home/dovanlong/.nvm/versions/node/v24.15.0/bin/node "$STANDALONE/$APP_DIR/server.js"

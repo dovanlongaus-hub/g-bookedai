@@ -53,14 +53,14 @@ export const roadmapItems: RoadmapItem[] = [
     category: 'platform',
   },
   {
-    id: 'stripe-metered-billing',
-    title: 'Stripe metered billing for usage tiers',
+    id: 'github-actions-deploy',
+    title: 'GitHub Actions Cloud Run deploy on tag',
     description:
-      'Introduce per-message and per-session metering for Toolkit and Mentor sessions, with monthly GST-inclusive invoicing.',
+      'Tag-driven release pipeline (git tag v1.0.0) builds the standalone repo, pushes to Artifact Registry, and deploys to Cloud Run with WIF. Awaiting operator-supplied GCP secrets.',
     status: 'now',
     audience: ['sme', 'organisation'],
     estimatedQuarter: 'Q2 2026',
-    category: 'pricing',
+    category: 'platform',
   },
 
   // ───────────────── NEXT (next 90 days) ─────────────────
@@ -114,6 +114,16 @@ export const roadmapItems: RoadmapItem[] = [
     estimatedQuarter: 'Q3 2026',
     category: 'content',
   },
+  {
+    id: 'phase-2-i18n-server',
+    title: 'Phase 2 i18n — server-side locale routing',
+    description:
+      'Promote vi / zh-CN slots from reserved hreflang entries to live next-intl server-side routes with translated metadata and structured data.',
+    status: 'next',
+    audience: ['sme', 'organisation'],
+    estimatedQuarter: 'Q3 2026',
+    category: 'content',
+  },
 
   // ───────────────── LATER (6+ months) ─────────────────
   {
@@ -156,6 +166,26 @@ export const roadmapItems: RoadmapItem[] = [
     estimatedQuarter: 'Q4 2026',
     category: 'content',
   },
+  {
+    id: 'advanced-bootcamps-certifications',
+    title: 'Lesson 15+: Advanced bootcamps + certifications',
+    description:
+      'Extend the Academy library beyond lesson 14 with advanced bootcamps, capstone projects, and assessed certifications for AU SME practitioners.',
+    status: 'later',
+    audience: ['individual', 'sme', 'organisation'],
+    estimatedQuarter: 'Q4 2026',
+    category: 'content',
+  },
+  {
+    id: 'stripe-metered-toolkit',
+    title: 'Stripe metered billing for toolkit',
+    description:
+      'Per-run and per-token metering for Toolkit assistants with monthly GST-inclusive invoicing, budget caps, and admin approval for over-budget spend.',
+    status: 'later',
+    audience: ['sme', 'organisation'],
+    estimatedQuarter: 'Q4 2026',
+    category: 'pricing',
+  },
 
   // ───────────────── SHIPPED (recent) ─────────────────
   {
@@ -176,7 +206,7 @@ export const roadmapItems: RoadmapItem[] = [
     status: 'shipped',
     audience: ['sme', 'startup'],
     category: 'platform',
-    shippedDate: '2026-05-07',
+    shippedDate: '2026-05-09',
   },
   {
     id: 'ship-agents-marketplace',
@@ -207,5 +237,35 @@ export const roadmapItems: RoadmapItem[] = [
     audience: ['sme', 'organisation'],
     category: 'content',
     shippedDate: '2026-05-10',
+  },
+  {
+    id: 'ship-atom-rss-feeds',
+    title: 'Atom RSS feeds — blog, changelog, case studies',
+    description:
+      'Three Atom 1.0 feeds at /blog/rss.xml, /changelog/rss.xml, and /case-studies/rss.xml for subscribers and aggregators.',
+    status: 'shipped',
+    audience: ['individual', 'sme', 'startup', 'organisation'],
+    category: 'content',
+    shippedDate: '2026-05-11',
+  },
+  {
+    id: 'ship-avif-images',
+    title: 'AVIF image format support',
+    description:
+      'Image pipeline now serves AVIF with WebP fallback via sharp + libvips 8.17 — 91% smaller hero image transfer size.',
+    status: 'shipped',
+    audience: ['individual', 'sme', 'startup', 'organisation'],
+    category: 'platform',
+    shippedDate: '2026-05-11',
+  },
+  {
+    id: 'ship-academy-70',
+    title: 'AI Academy — 70 free lessons',
+    description:
+      'Library expanded to 70 free lessons (14 per path across 5 paths, ~46,000 words total).',
+    status: 'shipped',
+    audience: ['individual', 'sme'],
+    category: 'content',
+    shippedDate: '2026-05-12',
   },
 ];

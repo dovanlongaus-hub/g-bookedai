@@ -10,8 +10,9 @@ import {
 } from 'remotion';
 import { COLORS } from '../theme';
 
-// 6s outro = 180 frames @ 30fps. Banner full-bleed + "Visit longcare.au" overlay + small CTA pill.
-// No LogoOverlay component is used during this scene (banner already brand-rich).
+// 6s outro = 180 frames @ 30fps.
+// Full banner visible (objectFit: contain) on the same brand-gradient backdrop
+// as the intro, with the "Visit longcare.au" CTA as the focal point.
 export const SceneBannerOutro: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -26,8 +27,8 @@ export const SceneBannerOutro: React.FC = () => {
   });
   const opacity = Math.min(fadeIn, fadeOut);
 
-  // Subtle continued zoom from 1.04 -> 1.00 (anti-Ken-Burns to feel like a settle)
-  const scale = interpolate(frame, [0, 180], [1.04, 1.0], {
+  // Very subtle settle: 1.02 -> 1.00 (stays inside contain bounds, no crop).
+  const scale = interpolate(frame, [0, 180], [1.02, 1.0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -56,25 +57,53 @@ export const SceneBannerOutro: React.FC = () => {
     extrapolateRight: 'clamp',
   });
 
+  const bannerSrc = staticFile('longcare_banner.png');
+
   return (
-    <AbsoluteFill style={{ backgroundColor: '#000', opacity }}>
-      <Img
-        src={staticFile('longcare_banner.png')}
+    <AbsoluteFill style={{ opacity }}>
+      {/* Brand gradient backdrop fills the pillarbox bars. */}
+      <AbsoluteFill
         style={{
+          background: `linear-gradient(135deg, ${COLORS.primary1} 0%, ${COLORS.primary2} 50%, ${COLORS.primary3} 100%)`,
+        }}
+      />
+
+      {/* Soft blurred banner copy as backdrop texture. */}
+      <Img
+        src={bannerSrc}
+        style={{
+          position: 'absolute',
+          inset: 0,
           width: '100%',
           height: '100%',
           objectFit: 'cover',
+          filter: 'blur(40px) saturate(1.1)',
+          opacity: 0.4,
+          transform: 'scale(1.15)',
+        }}
+      />
+
+      {/* Full banner — contain, no crop. */}
+      <Img
+        src={bannerSrc}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
           transform: `scale(${scale})`,
           transformOrigin: 'center center',
         }}
       />
-      {/* Dark scrim so overlay text is legible */}
+
+      {/* Dark scrim so overlay text is legible over the banner. */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.7) 100%)',
+            'linear-gradient(to bottom, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.78) 100%)',
         }}
       />
 
@@ -84,7 +113,7 @@ export const SceneBannerOutro: React.FC = () => {
           justifyContent: 'center',
           flexDirection: 'column',
           padding: 80,
-          gap: 28,
+          gap: 24,
         }}
       >
         <h1
@@ -97,28 +126,45 @@ export const SceneBannerOutro: React.FC = () => {
             textAlign: 'center',
             opacity: headlineOp,
             transform: `translateY(${headlineY}px)`,
-            textShadow: '0 6px 28px rgba(0,0,0,0.65)',
+            textShadow: '0 6px 28px rgba(0,0,0,0.7)',
           }}
         >
           Visit longcare.au
         </h1>
 
+        {/* Prominent gradient URL with chevron */}
         <div
           style={{
-            fontSize: 38,
-            fontWeight: 600,
-            color: 'rgba(255,255,255,0.95)',
-            letterSpacing: 8,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
             opacity: urlOp,
-            textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+            background: 'rgba(15, 23, 42, 0.72)',
+            padding: '20px 52px',
+            borderRadius: 999,
+            border: '1.5px solid rgba(255,255,255,0.22)',
+            boxShadow: '0 18px 50px rgba(0,0,0,0.55)',
+            backdropFilter: 'blur(8px)',
           }}
         >
-          longcare.au
+          <span
+            style={{
+              fontSize: 64,
+              fontWeight: 900,
+              letterSpacing: -1.5,
+              background: `linear-gradient(135deg, #A78BFA 0%, #60A5FA 50%, #38BDF8 100%)`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              lineHeight: 1,
+            }}
+          >
+            longcare.au
+          </span>
         </div>
 
         <div
           style={{
-            marginTop: 20,
+            marginTop: 18,
             opacity: btnOp,
             transform: `scale(${btnSp})`,
             background: '#fff',

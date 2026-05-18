@@ -19,7 +19,6 @@ import {
   TrendingUp,
   AlertTriangle,
   Compass,
-  Quote,
   Star,
   ShieldCheck,
   Award,
@@ -27,8 +26,6 @@ import {
   Workflow,
   BarChart3,
   Sparkles,
-  Zap,
-  Users,
   PlayCircle,
   HeartPulse,
   Rocket,
@@ -73,10 +70,10 @@ function useMotionProps() {
 /* ── Data ────────────────────────────────────────────────── */
 
 const stats = [
-  { value: '150+', label: 'SMEs & operators trained', icon: Users },
-  { value: '4.9', suffix: '/5', label: 'Avg mentor rating (47 reviews)', icon: Star },
-  { value: '60%', label: 'Average time saved on ops', icon: Zap },
-  { value: '$2.4M', label: 'Revenue impact delivered', icon: TrendingUp },
+  { value: 'Australian', label: 'AU-based mentors & senior practitioners', icon: MapPin },
+  { value: 'GST-inclusive', label: 'On every quote and tax invoice', icon: FileCheck },
+  { value: 'No-pitch', label: 'Your first discovery call is always free', icon: ShieldCheck },
+  { value: 'Google Cloud', label: 'Secure, scalable foundation under everything', icon: Cloud },
 ];
 
 const painPoints = [
@@ -85,30 +82,26 @@ const painPoints = [
   { icon: TrendingUp, title: 'Implementation never finishes.', desc: 'Pilots stall. Vendors disappear. Teams get tired. You need someone who stays until the system pays for itself.' },
 ];
 
+// Illustrative engagement scenarios drawn from common Australian SME workflows —
+// shown to explain how a project unfolds, not as specific named-client claims.
 const caseStudies = [
   {
-    client: 'Cygnus Logistics', sector: 'Logistics · Melbourne', initials: 'CL',
-    challenge: 'Three days of monthly admin: invoice reconciliation, driver logs, compliance reporting — all manual.',
-    solution: 'AI agent auto-reconciles invoices against POs, extracts driver log data, pre-fills compliance forms.',
-    results: [{ metric: '3 days → 45 min', label: 'Monthly admin' }, { metric: '98.6%', label: 'Accuracy' }, { metric: '12 weeks', label: 'Full payback' }],
-    quote: 'The agent ran reliably from week two. We have not touched it since.',
-    person: 'Sarah Chen, Operations Manager',
+    client: 'Logistics SME', sector: 'Freight & distribution',
+    challenge: 'Days of monthly admin — invoice reconciliation, driver logs, compliance reporting — all done by hand.',
+    solution: 'An AI agent that matches invoices to purchase orders, extracts driver-log data, and pre-fills compliance forms.',
+    results: [{ metric: 'Hours, not days', label: 'On monthly admin' }, { metric: 'Audit trail', label: 'On every match' }, { metric: 'Weeks', label: 'To payback' }],
   },
   {
-    client: 'TechFlow Solutions', sector: 'SaaS · Brisbane', initials: 'TF',
-    challenge: 'Growing support tickets. CEO handling Tier-1 queries personally. No capacity to hire.',
-    solution: 'AI customer service agent integrated with knowledge base. Escalation rules for complex issues.',
-    results: [{ metric: '80%', label: 'Auto-resolved' }, { metric: '$8,400/mo', label: 'Cost saved' }, { metric: '< 2 min', label: 'Response time' }],
-    quote: 'The strategy sprint paid for itself before the second invoice.',
-    person: 'James Mitchell, Founder',
+    client: 'SaaS company', sector: 'Software · support-heavy',
+    challenge: 'Growing support tickets, with the founder still handling Tier-1 queries and no capacity to hire.',
+    solution: 'An AI customer-service agent wired to the knowledge base, with clear escalation rules for complex issues.',
+    results: [{ metric: 'Most Tier-1', label: 'Auto-resolved' }, { metric: 'Minutes', label: 'First response' }, { metric: 'Founder time', label: 'Back to product' }],
   },
   {
-    client: 'Northwind Group', sector: 'Agency · Sydney', initials: 'NW',
-    challenge: 'Considered automating campaign analytics. Scope unclear. High risk of over-engineering.',
-    solution: 'Strategy audit revealed two high-ROI automations and one the team should NOT pursue — saving $120K+.',
-    results: [{ metric: '2 shipped', label: 'Automations' }, { metric: '$120K+', label: 'Waste avoided' }, { metric: '5 weeks', label: 'Audit → live' }],
-    quote: 'They told us what NOT to automate. That is what good consulting looks like.',
-    person: 'Priya Sharma, Marketing Director',
+    client: 'Marketing agency', sector: 'Creative & analytics',
+    challenge: 'Wanted to automate campaign analytics, but the scope was unclear and the risk of over-engineering was real.',
+    solution: 'A strategy audit that surfaced two high-ROI automations — and one the team was advised NOT to build.',
+    results: [{ metric: '2 shipped', label: 'High-ROI automations' }, { metric: '1 avoided', label: 'Low-ROI build' }, { metric: 'Weeks', label: 'Audit to live' }],
   },
 ];
 
@@ -221,198 +214,9 @@ const faqs = [
 
 /* ── Sections ────────────────────────────────────────────── */
 
-function HeroBanner() {
-  return (
-    <section className="relative overflow-hidden bg-white" aria-labelledby="hero-heading">
-      {/* SEO + a11y: structured text version of banner content */}
-      <div className="sr-only">
-        <h1 id="hero-heading">
-          AI Transformation for Next Generation of Businesses — Learn AI. Build Faster. Grow Smarter.
-        </h1>
-        <p>
-          LongCare.au is an AI training, mentorship, and implementation ecosystem helping
-          individuals, startups, SMEs, and organisations across Australia accelerate growth
-          through practical AI education, consulting, implementation, automation, and scalable
-          innovation systems. Built on Google Cloud. Long Term Care. AI Powered. Future Ready.
-        </p>
-        <ul>
-          <li>For Individuals — start with the A$29 AI Starter consult</li>
-          <li>For SMEs — readiness assessment and 5/10-Session packs</li>
-          <li>For Organisations — multi-year custom AI transformation</li>
-        </ul>
-      </div>
-
-      <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
-        <div className="relative rounded-2xl overflow-hidden shadow-[0_20px_60px_-30px_rgba(15,23,42,0.25)] border border-slate-200">
-          <Image
-            src="/banner-hero.png"
-            alt="LongCare.au — AI Transformation for the Next Generation of Businesses. Learn AI. Build Faster. Grow Smarter. Helping individuals, SMEs, and organisations across Australia with practical AI education, consulting, implementation, and scalable automation. Built on Google Cloud, proudly Australian."
-            width={1536}
-            height={1024}
-            priority
-            sizes="(max-width: 1320px) 100vw, 1320px"
-            className="w-full h-auto block"
-          />
-
-          {/* Logo overlay — top-left LongCare.au lockup → home */}
-          <a
-            href="/"
-            aria-label="LongCare.au — go to home"
-            className="absolute hover:bg-white/10 rounded-md transition-colors"
-            style={{ left: '3%', top: '4%', width: '24%', height: '12%' }}
-          />
-
-          {/* Audience pill overlays — top of banner (INDIVIDUALS · SMEs · ORGANISATIONS) */}
-          <a
-            href="#who-we-serve"
-            aria-label="For Individuals"
-            className="absolute hover:bg-emerald-100/30 rounded-md transition-colors"
-            style={{ left: '4%', top: '17%', width: '13%', height: '4%' }}
-          />
-          <a
-            href="#who-we-serve"
-            aria-label="For SMEs"
-            className="absolute hover:bg-emerald-100/30 rounded-md transition-colors"
-            style={{ left: '17.5%', top: '17%', width: '7%', height: '4%' }}
-          />
-          <a
-            href="#who-we-serve"
-            aria-label="For Organisations"
-            className="absolute hover:bg-emerald-100/30 rounded-md transition-colors"
-            style={{ left: '25%', top: '17%', width: '14%', height: '4%' }}
-          />
-
-          {/* Primary CTA overlay — Start Your AI Journey → free discovery call */}
-          <a
-            href="/discovery-call"
-            aria-label="Start Your AI Journey — book a free 20-minute discovery call"
-            className="absolute hover:bg-white/10 rounded-full transition-colors cursor-pointer"
-            style={{ left: '4%', top: '63.5%', width: '19%', height: '6.2%' }}
-          />
-
-          {/* Secondary CTA overlay — Watch Video (opens the 60-second intro mp4) */}
-          <a
-            href="/longcare-intro.mp4"
-            target="_blank"
-            rel="noopener"
-            aria-label="Watch the 60-second introduction video — how LongCare works"
-            className="absolute hover:bg-sky-50/30 rounded-full transition-colors cursor-pointer"
-            style={{ left: '23%', top: '63.5%', width: '15%', height: '6.2%' }}
-          />
-
-          {/* Right-side floating tech badges (4 service categories) */}
-          <a
-            href="/services/ai-mentor"
-            aria-label="AI Education — practical skills, real-world impact"
-            className="absolute hover:bg-white/10 rounded-xl transition-colors"
-            style={{ left: '49%', top: '36%', width: '13%', height: '9%' }}
-          />
-          <a
-            href="/discovery-call"
-            aria-label="AI Consulting — strategy, roadmap, results"
-            className="absolute hover:bg-white/10 rounded-xl transition-colors"
-            style={{ left: '63%', top: '6%', width: '15%', height: '10%' }}
-          />
-          <a
-            href="/agents"
-            aria-label="AI Implementation — custom solutions, seamless execution"
-            className="absolute hover:bg-white/10 rounded-xl transition-colors"
-            style={{ left: '83%', top: '14%', width: '15%', height: '10%' }}
-          />
-          <a
-            href="/solutions"
-            aria-label="Automation Systems — intelligent workflows, scalable growth"
-            className="absolute hover:bg-white/10 rounded-xl transition-colors"
-            style={{ left: '83%', top: '47%', width: '15%', height: '10%' }}
-          />
-
-          {/* 4-service strip overlays (bottom panel) */}
-          <a
-            href="/services/ai-mentor"
-            aria-label="AI Education & Training — practical AI learning and mentorship"
-            className="absolute hover:bg-sky-50/40 rounded-xl transition-colors"
-            style={{ left: '3.5%', top: '71%', width: '22%', height: '15%' }}
-          />
-          <a
-            href="/discovery-call"
-            aria-label="AI Consulting & Strategy — expert guidance to build winning AI strategies"
-            className="absolute hover:bg-sky-50/40 rounded-xl transition-colors"
-            style={{ left: '26.5%', top: '71%', width: '22%', height: '15%' }}
-          />
-          <a
-            href="/agents"
-            aria-label="AI Implementation & Integration — end-to-end implementation of AI solutions"
-            className="absolute hover:bg-sky-50/40 rounded-xl transition-colors"
-            style={{ left: '49.5%', top: '71%', width: '22%', height: '15%' }}
-          />
-          <a
-            href="/solutions"
-            aria-label="Automation & Scaling — scalable automation systems that streamline operations"
-            className="absolute hover:bg-sky-50/40 rounded-xl transition-colors"
-            style={{ left: '72.5%', top: '71%', width: '22%', height: '15%' }}
-          />
-
-          {/* Trust bar overlays (5 items in dark navy strip — span full width) */}
-          <a
-            href="/testimonials"
-            aria-label="Trusted by Businesses across Australia"
-            className="absolute hover:bg-white/5 rounded-md transition-colors"
-            style={{ left: '1%', top: '88%', width: '19.4%', height: '11.5%' }}
-          />
-          <a
-            href="/cloud-advisory"
-            aria-label="Built on Google Cloud — secure, scalable, future-ready"
-            className="absolute hover:bg-white/5 rounded-md transition-colors"
-            style={{ left: '20.4%', top: '88%', width: '19.4%', height: '11.5%' }}
-          />
-          <a
-            href="/how-it-works"
-            aria-label="End-to-End Support — from learning to implementation and beyond"
-            className="absolute hover:bg-white/5 rounded-md transition-colors"
-            style={{ left: '39.8%', top: '88%', width: '19.4%', height: '11.5%' }}
-          />
-          <a
-            href="/about"
-            aria-label="Proudly Australian — empowering local businesses and communities"
-            className="absolute hover:bg-white/5 rounded-md transition-colors"
-            style={{ left: '59.2%', top: '88%', width: '19.4%', height: '11.5%' }}
-          />
-          <a
-            href="/case-studies"
-            aria-label="Results That Matter — practical AI solutions that drive real growth"
-            className="absolute hover:bg-white/5 rounded-md transition-colors"
-            style={{ left: '78.6%', top: '88%', width: '19.4%', height: '11.5%' }}
-          />
-        </div>
-
-        {/* Mobile/below-fold supporting CTA row (real buttons in case overlays are hard to hit on tiny screens) */}
-        <div className="mt-6 mb-2 flex flex-wrap justify-center gap-3 sm:hidden">
-          <a
-            href="/discovery-call"
-            className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 text-[14px] font-semibold rounded-full text-white no-underline"
-            style={{
-              background: 'linear-gradient(135deg, #7C3AED 0%, #2563EB 50%, #0284C7 100%)',
-              boxShadow: '0 6px 18px -6px rgba(124,58,237,0.5)',
-            }}
-          >
-            <Rocket className="size-4" aria-hidden /> Start Your AI Journey
-          </a>
-          <a
-            href="/longcare-intro.mp4"
-            target="_blank"
-            rel="noopener"
-            className="cursor-pointer btn-outline inline-flex items-center gap-2 px-6 py-3 text-[14px] font-semibold rounded-full no-underline"
-          >
-            <PlayCircle className="size-4" aria-hidden /> Watch Video
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function Hero() {
   const { fadeUp, stagger } = useMotionProps();
+  const reduced = useReducedMotion();
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-white via-sky-50/40 to-[#F8FAFC]">
       {/* Soft decorative gradient orbs */}
@@ -470,7 +274,7 @@ function Hero() {
               variants={fadeUp}
               className="mt-5 font-heading text-[22px] sm:text-[28px] lg:text-[32px] font-semibold leading-tight"
             >
-              <span className="bg-gradient-to-r from-cyan-500 via-blue-600 to-violet-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-sky-700 via-blue-700 to-violet-700 bg-clip-text text-transparent">
                 Learn AI. Build Faster. Grow Smarter.
               </span>
             </motion.p>
@@ -518,9 +322,9 @@ function Hero() {
 
           {/* RIGHT — visual preview card */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={reduced ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            transition={reduced ? { duration: 0 } : { duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="relative hidden lg:block"
           >
             {/* Floating service badges (4 corners — match banner tech badges) */}
@@ -640,145 +444,6 @@ function Hero() {
             </div>
           </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function ServicesStrip() {
-  const { fadeUp, stagger } = useMotionProps();
-  const services = [
-    {
-      icon: GraduationCap,
-      title: 'AI Training & Education',
-      desc: 'Practical AI skills and mentorship to accelerate your learning journey.',
-      href: '/services/ai-mentor',
-      cta: 'Browse training',
-      iconTone: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    },
-    {
-      icon: Compass,
-      title: 'AI Consulting & Strategy',
-      desc: 'Expert guidance to build the right AI strategy and roadmap for your business.',
-      href: '/discovery',
-      cta: 'Book a strategy call',
-      iconTone: 'bg-sky-50 text-sky-700 border-sky-200',
-    },
-    {
-      icon: Cpu,
-      title: 'AI Implementation & Automation',
-      desc: 'Custom AI solutions and automation that drive efficiency, reduce cost and scale fast.',
-      href: '/agents',
-      cta: 'See agents',
-      iconTone: 'bg-violet-50 text-violet-700 border-violet-200',
-    },
-    {
-      icon: Rocket,
-      title: 'Startup & SME Innovation',
-      desc: 'Build, launch and grow with AI-powered innovation systems and frameworks.',
-      href: '/solutions',
-      cta: 'Explore solutions',
-      iconTone: 'bg-amber-50 text-amber-700 border-amber-200',
-    },
-  ];
-
-  return (
-    <section id="services-strip" className="relative bg-white border-y border-slate-200">
-      <div className="mx-auto max-w-[1120px] px-8 sm:px-10 py-12 sm:py-14">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-          variants={stagger}
-          className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {services.map((s) => (
-            <motion.a
-              key={s.title}
-              variants={fadeUp}
-              href={s.href}
-              className="group trust-card p-6 flex flex-col cursor-pointer no-underline"
-            >
-              <div className={`size-12 rounded-2xl border flex items-center justify-center ${s.iconTone}`}>
-                <s.icon className="size-6" strokeWidth={1.75} aria-hidden />
-              </div>
-              <h3 className="mt-4 font-heading text-[17px] font-semibold text-slate-900 leading-snug">
-                {s.title}
-              </h3>
-              <p className="mt-2 text-[14px] leading-relaxed text-slate-600 flex-grow">
-                {s.desc}
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-sky-700 group-hover:text-sky-800 transition-colors">
-                {s.cta} <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </motion.a>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function TrustBar() {
-  const { fadeUp, stagger } = useMotionProps();
-  const items = [
-    {
-      icon: Lightbulb,
-      title: 'Practical AI Solutions',
-      desc: 'Real-world impact that drives growth.',
-    },
-    {
-      icon: Handshake,
-      title: 'End-to-End Support',
-      desc: 'From learning to implementation.',
-    },
-    {
-      icon: Cloud,
-      title: 'Built on Google Cloud',
-      desc: 'Secure. Scalable. Future-ready.',
-    },
-    {
-      icon: ShieldCheck,
-      title: 'Trusted Partner',
-      desc: 'Helping businesses succeed with AI.',
-    },
-    {
-      icon: MapPin,
-      title: 'Proudly Australia',
-      desc: 'Empowering local businesses & communities.',
-    },
-  ];
-
-  return (
-    <section
-      className="relative overflow-hidden text-white"
-      style={{
-        background: 'linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)',
-      }}
-    >
-      <div aria-hidden className="absolute inset-0 opacity-[0.18]" style={{
-        backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(56,189,248,0.4), transparent 50%), radial-gradient(circle at 80% 50%, rgba(167,139,250,0.3), transparent 50%)',
-      }} />
-      <div className="relative mx-auto max-w-[1120px] px-8 sm:px-10 py-8 sm:py-10">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
-          variants={stagger}
-          className="grid gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
-        >
-          {items.map((it) => (
-            <motion.div key={it.title} variants={fadeUp} className="flex items-start gap-3">
-              <div className="size-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center flex-shrink-0">
-                <it.icon className="size-5 text-sky-300" strokeWidth={1.5} aria-hidden />
-              </div>
-              <div className="leading-tight min-w-0">
-                <div className="text-[13px] font-semibold text-white">{it.title}</div>
-                <div className="text-[12px] text-slate-300 mt-0.5 leading-snug">{it.desc}</div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
@@ -1046,11 +711,10 @@ function StatStrip() {
               <div className="inline-flex items-center justify-center size-10 rounded-xl bg-white border border-slate-200 shadow-sm mb-3">
                 <s.icon className="size-4 text-sky-700" strokeWidth={2} aria-hidden />
               </div>
-              <div className="stat-number text-4xl sm:text-5xl text-slate-900">
+              <div className="font-heading text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
                 {s.value}
-                {s.suffix && <span className="text-slate-400 text-2xl ml-1 font-normal">{s.suffix}</span>}
               </div>
-              <div className="mt-2 text-sm text-slate-600 max-w-[180px] mx-auto leading-snug">{s.label}</div>
+              <div className="mt-2 text-sm text-slate-600 max-w-[200px] mx-auto leading-snug">{s.label}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -1225,12 +889,13 @@ function CaseStudies() {
     <section id="results" className="py-20 sm:py-28 bg-white border-y border-slate-200">
       <div className="mx-auto max-w-[1120px] px-8 sm:px-10">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger} className="max-w-2xl mb-14">
-          <motion.span variants={fadeUp} className="eyebrow">Case studies</motion.span>
+          <motion.span variants={fadeUp} className="eyebrow">In practice</motion.span>
           <motion.h2 variants={fadeUp} className="mt-4 font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
-            Real results from real businesses.
+            What an AI engagement looks like.
           </motion.h2>
           <motion.p variants={fadeUp} className="mt-5 text-lg leading-relaxed text-slate-600">
-            Before/after metrics from three engagements — published with operator permission.
+            Illustrative end-to-end scenarios drawn from common Australian SME workflows — not specific client claims.
+            We&apos;ll publish named, permissioned case studies as engagements wrap.
           </motion.p>
         </motion.div>
 
@@ -1239,8 +904,8 @@ function CaseStudies() {
             <motion.article key={i} variants={fadeUp} className="trust-card overflow-hidden">
               <div className="grid lg:grid-cols-[1fr_280px]">
                 <div className="p-8 sm:p-10">
-                  <div className="flex items-center gap-3 mb-1">
-                    <div className="size-8 rounded-lg bg-sky-50 border border-sky-200 flex items-center justify-center text-[10px] font-bold text-sky-700">{cs.initials}</div>
+                  <div className="flex items-center gap-2.5 mb-1 flex-wrap">
+                    <span className="trust-badge bg-slate-100 text-slate-600 !text-[10px]">Illustrative</span>
                     <span className="text-[13px] font-semibold text-slate-900">{cs.client}</span>
                     <span className="text-[12px] text-slate-500">{cs.sector}</span>
                   </div>
@@ -1250,15 +915,8 @@ function CaseStudies() {
                       <p className="text-[15px] leading-relaxed text-slate-700">{cs.challenge}</p>
                     </div>
                     <div>
-                      <div className="eyebrow text-slate-400 !text-[11px] mb-2">What we built</div>
+                      <div className="eyebrow text-slate-400 !text-[11px] mb-2">What we&apos;d build</div>
                       <p className="text-[15px] leading-relaxed text-slate-700">{cs.solution}</p>
-                    </div>
-                  </div>
-                  <div className="mt-6 pt-5 border-t border-slate-100 flex items-start gap-3">
-                    <Quote className="size-4 text-sky-600/50 flex-shrink-0 mt-1" strokeWidth={1.5} aria-hidden />
-                    <div>
-                      <p className="text-[15px] leading-relaxed text-slate-800 italic">{cs.quote}</p>
-                      <p className="mt-1.5 text-[12px] text-slate-500">{cs.person}</p>
                     </div>
                   </div>
                 </div>
@@ -1504,7 +1162,7 @@ function FinalCTA() {
 export default function HomePage() {
   return (
     <main id="main-content" className="bg-[#F8FAFC]">
-      <HeroBanner />
+      <Hero />
       <WhoWeServe />
       <StatStrip />
       <CareJourney />

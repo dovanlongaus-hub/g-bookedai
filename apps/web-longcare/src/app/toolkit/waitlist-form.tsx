@@ -87,6 +87,7 @@ export function WaitlistForm({
       </div>
       <button
         type="submit"
+        aria-busy={submitting}
         disabled={submitting}
         className="inline-flex items-center justify-center gap-2 rounded-full bg-sky-700 px-6 py-3 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-70"
       >

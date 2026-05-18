@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'motion/react';
 import { Calculator, TrendingUp, Clock, DollarSign, ArrowRight, Sparkles } from 'lucide-react';
 
 const automationScenarios = [
@@ -60,18 +59,20 @@ export function ROICalculator() {
             {/* Hours on admin */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-[13px] font-medium text-slate-700">Hours on admin per person per week</label>
-                <span className="text-[15px] font-bold text-sky-700">{hoursOnAdmin}h</span>
+                <label htmlFor="roi-hours" className="text-[13px] font-medium text-slate-700">Hours on admin per person per week</label>
+                <span className="text-[15px] font-bold text-sky-700" aria-hidden>{hoursOnAdmin}h</span>
               </div>
               <input
+                id="roi-hours"
                 type="range"
                 min={1}
                 max={40}
                 value={hoursOnAdmin}
                 onChange={(e) => setHoursOnAdmin(Number(e.target.value))}
+                aria-valuetext={`${hoursOnAdmin} hours per week`}
                 className="w-full accent-sky-600"
               />
-              <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+              <div className="flex justify-between text-[11px] text-slate-500 mt-1" aria-hidden>
                 <span>1h</span><span>40h</span>
               </div>
             </div>
@@ -79,18 +80,20 @@ export function ROICalculator() {
             {/* Team size */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-[13px] font-medium text-slate-700">Team members doing admin</label>
-                <span className="text-[15px] font-bold text-sky-700">{teamSize}</span>
+                <label htmlFor="roi-team" className="text-[13px] font-medium text-slate-700">Team members doing admin</label>
+                <span className="text-[15px] font-bold text-sky-700" aria-hidden>{teamSize}</span>
               </div>
               <input
+                id="roi-team"
                 type="range"
                 min={1}
                 max={50}
                 value={teamSize}
                 onChange={(e) => setTeamSize(Number(e.target.value))}
+                aria-valuetext={`${teamSize} team members`}
                 className="w-full accent-sky-600"
               />
-              <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+              <div className="flex justify-between text-[11px] text-slate-500 mt-1" aria-hidden>
                 <span>1</span><span>50</span>
               </div>
             </div>
@@ -98,19 +101,21 @@ export function ROICalculator() {
             {/* Hourly rate */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-[13px] font-medium text-slate-700">Average hourly rate (AUD)</label>
-                <span className="text-[15px] font-bold text-sky-700">${avgHourlyRate}</span>
+                <label htmlFor="roi-rate" className="text-[13px] font-medium text-slate-700">Average hourly rate (AUD)</label>
+                <span className="text-[15px] font-bold text-sky-700" aria-hidden>${avgHourlyRate}</span>
               </div>
               <input
+                id="roi-rate"
                 type="range"
                 min={25}
                 max={150}
                 step={5}
                 value={avgHourlyRate}
                 onChange={(e) => setAvgHourlyRate(Number(e.target.value))}
+                aria-valuetext={`${avgHourlyRate} Australian dollars per hour`}
                 className="w-full accent-sky-600"
               />
-              <div className="flex justify-between text-[11px] text-slate-400 mt-1">
+              <div className="flex justify-between text-[11px] text-slate-500 mt-1" aria-hidden>
                 <span>$25</span><span>$150</span>
               </div>
             </div>
@@ -124,6 +129,7 @@ export function ROICalculator() {
                     key={s.label}
                     type="button"
                     onClick={() => toggleScenario(s.label)}
+                    aria-pressed={selectedScenarios.includes(s.label)}
                     className={`cursor-pointer text-left p-3 rounded-lg border text-[12px] font-medium transition-all ${
                       selectedScenarios.includes(s.label)
                         ? 'border-sky-600 bg-sky-50 text-sky-800'
@@ -204,8 +210,8 @@ export function ROICalculator() {
             </a>
 
             <p className="text-[12px] text-slate-500 text-center">
-              These estimates are based on industry averages from 150+ Australian SME engagements.
-              Actual results vary by business complexity and implementation scope.
+              These are rough estimates based on typical Australian SME admin workloads.
+              Actual results vary by business complexity and implementation scope — bring your real numbers to the discovery call.
             </p>
           </div>
         </div>

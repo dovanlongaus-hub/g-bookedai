@@ -1,20 +1,21 @@
-const CACHE_NAME = 'longcare-v1';
-const OFFLINE_URL = '/offline';
+const CACHE_NAME = 'longcare-v2';
 
 const PRECACHE_URLS = [
   '/',
   '/services',
-  '/pricing',
   '/faq',
   '/about',
   '/contact',
   '/manifest.json',
-  '/logo.svg',
+  '/logo.png',
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
+    caches.open(CACHE_NAME).then((cache) =>
+      // Add each URL independently so one 404/redirect can't abort the whole install.
+      Promise.all(PRECACHE_URLS.map((url) => cache.add(url).catch(() => {})))
+    )
   );
   self.skipWaiting();
 });

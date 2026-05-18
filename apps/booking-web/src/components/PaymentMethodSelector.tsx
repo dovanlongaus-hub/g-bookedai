@@ -25,24 +25,35 @@ interface PaymentMethodSelectorProps {
   qrContent?: React.ReactNode;
 }
 
+// Card checkout is temporarily disabled: the guest Stripe checkout endpoint
+// (services/api/src/routes/payment.ts → /payment/guest-checkout) creates a
+// Stripe session WITHOUT a matching booking/payment record, so a card payment
+// would be taken with no booking created. Re-enable only once that endpoint
+// creates the booking + payment rows and sets metadata.bookingId so the
+// Stripe webhook can complete the booking.
+const ENABLE_CARD_CHECKOUT = false;
+
 const METHODS: PaymentMethod[] = [
-  {
-    id: 'stripe',
-    name: 'Pay with Card',
-    description: 'Visa, Mastercard, AMEX via Stripe',
-    icon: <CreditCard size={24} />,
-    recommended: true,
-  },
+  ...(ENABLE_CARD_CHECKOUT
+    ? [{
+        id: 'stripe',
+        name: 'Pay with Card',
+        description: 'Visa, Mastercard, AMEX via Stripe',
+        icon: <CreditCard size={24} />,
+        recommended: true,
+      } as PaymentMethod]
+    : []),
   {
     id: 'bank_transfer',
     name: 'QR Code / Bank Transfer',
-    description: 'PayID (AUD) or VietQR (VND)',
+    description: 'PayID (AUD) or VietQR (VND) — tax invoice provided',
     icon: <QrCode size={24} />,
+    recommended: !ENABLE_CARD_CHECKOUT,
   },
   {
     id: 'pay_later',
     name: 'Book Now, Pay Later',
-    description: 'Confirm booking and arrange payment before session',
+    description: 'Confirm booking and arrange payment before your session',
     icon: <Clock size={24} />,
   },
 ];
@@ -149,7 +160,7 @@ export function PaymentMethodSelector({
       <div className="payment-selector__trust">
         <div className="payment-selector__trust-badge">
           <ShieldCheck size={14} style={{ color: 'var(--accent)' }} />
-          Secured by Stripe
+          GST tax invoice provided
         </div>
         <div className="payment-selector__trust-badge">
           <Lock size={14} style={{ color: 'var(--accent)' }} />

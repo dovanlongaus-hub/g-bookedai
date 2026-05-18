@@ -253,9 +253,11 @@ export default function PromptTemplatesForSMELessonPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <a
                 href="#"
-                className="inline-flex items-center gap-2 bg-sky-700 hover:bg-sky-800 text-white font-medium px-5 py-2.5 rounded-lg transition"
+                aria-disabled="true"
+                tabIndex={-1}
+                className="inline-flex items-center gap-2 bg-slate-300 text-slate-500 font-medium px-5 py-2.5 rounded-lg pointer-events-none cursor-not-allowed select-none"
               >
-                Mark complete &amp; next <ArrowRight className="size-4" />
+                Coming soon
               </a>
               <Link
                 href="/academy/prompt-engineering"
@@ -464,9 +466,11 @@ export default function PromptTemplatesForSMELessonPage() {
           </div>
           <a
             href="#"
-            className="inline-flex items-center gap-2 bg-sky-700 hover:bg-sky-800 text-white font-medium px-5 py-2.5 rounded-lg transition"
+            aria-disabled="true"
+            tabIndex={-1}
+            className="inline-flex items-center gap-2 bg-slate-300 text-slate-500 font-medium px-5 py-2.5 rounded-lg pointer-events-none cursor-not-allowed select-none"
           >
-            Continue <ArrowRight className="size-4" />
+            Coming soon
           </a>
         </div>
       </section>

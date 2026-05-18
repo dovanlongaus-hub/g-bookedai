@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
-import { LocalBusinessSchema, FAQSchema } from '../components/schema-markup';
+import { LocalBusinessSchema, FAQSchema, WebsiteSchema } from '../components/schema-markup';
 import { Analytics } from '../components/analytics';
 import { Nav } from '../components/nav';
 import { SiteFooter } from '../components/site-footer';
@@ -63,7 +63,8 @@ export const metadata: Metadata = {
     description: 'AI mentoring from $29 AUD. Strategy sprints. Full agent deployment. GST-inclusive.',
     images: ['/api/og?title=Longcare%20%E2%80%94%20AI%20Training%20%26%20Implementation'],
   },
-  icons: { icon: '/favicon.ico', apple: '/apple-touch-icon.png' },
+  // Favicons & app icons are generated automatically from src/app/icon.png
+  // and src/app/apple-icon.png (Next.js file-based metadata).
   robots: {
     index: true, follow: true,
     googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
@@ -81,12 +82,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ResourceHints />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#F8FAFC" />
+        {/* Atom feed discovery — surfaced to browsers/readers and to crawlers. */}
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          title="LongCare AU — Blog"
+          href="/blog/rss.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          title="LongCare AU — Changelog"
+          href="/changelog/rss.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          title="LongCare AU — Case Studies"
+          href="/case-studies/rss.xml"
+        />
       </head>
       <body className="antialiased bg-[#F8FAFC] text-[#334155]" style={{ paddingTop: '64px' }}>
         <a href="#main-content" className="skip-link">Skip to main content</a>
         <Nav />
         <Analytics />
         <LocalBusinessSchema />
+        <WebsiteSchema />
         <FAQSchema />
         {children}
         <SiteFooter />

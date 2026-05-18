@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  // Negotiate AVIF first (smallest) → WebP (universal modern) → PNG/JPEG fallback.
+  // next/image inspects the request `Accept` header and serves the best variant
+  // the browser advertises. Disk siblings (`banner-hero.avif`, `.webp`, `.png`)
+  // are not required for the optimizer to emit AVIF — it transcodes from the
+  // source on the fly — but pre-encoded siblings save Cloud Run CPU.
+  images: {
+    formats: ['image/avif', 'image/webp'],
+  },
   async redirects() {
     return [
       // P0 — empty/duplicate pages collapsed into canonical routes.

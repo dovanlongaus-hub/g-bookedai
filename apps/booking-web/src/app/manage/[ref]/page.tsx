@@ -8,8 +8,11 @@ export default function ManageBookingPage() {
   const ref = params.ref as string;
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [action, setAction] = useState<'view' | 'reschedule' | 'cancel' | 'done'>('view');
+  const [action, setAction] = useState<'view' | 'reschedule' | 'cancel'>('view');
   const [cancelReason, setCancelReason] = useState('');
+
+  const WA_NUMBER = '61455301335';
+  const waLink = (msg: string) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
 
   useEffect(() => {
     // Try to fetch booking by ref from API
@@ -24,22 +27,6 @@ export default function ManageBookingPage() {
     return (
       <main className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <p style={{ color: 'var(--text-muted)' }}>Loading booking {ref}...</p>
-      </main>
-    );
-  }
-
-  if (action === 'done') {
-    return (
-      <main className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="glass-panel" style={{ maxWidth: 480, textAlign: 'center', padding: '3rem 2rem' }}>
-          <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2.5rem' }}>✓</div>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Request Submitted</h1>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>We've received your request. You'll get a confirmation email shortly.</p>
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-            <a href="https://book.longcare.au" className="btn-primary" style={{ margin: 0, width: 'auto', padding: '0.7rem 1.5rem' }}>Book New Session</a>
-            <a href={`https://wa.me/61455301335?text=${encodeURIComponent(`Hi, regarding booking ${ref}`)}`} className="btn-secondary" style={{ margin: 0, width: 'auto', padding: '0.7rem 1.5rem' }}>WhatsApp</a>
-          </div>
-        </div>
       </main>
     );
   }
@@ -77,7 +64,7 @@ export default function ManageBookingPage() {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Amount</span>
-                <span style={{ fontWeight: 600, color: 'var(--accent)' }}>${(booking.amount / 100).toFixed(2)} AUD</span>
+                <span style={{ fontWeight: 600, color: 'var(--accent)' }}>{booking.amountAud != null ? `$${booking.amountAud} AUD` : '—'}</span>
               </div>
               {booking.meetUrl && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -167,8 +154,9 @@ export default function ManageBookingPage() {
             <p style={{ color: '#991B1B' }}>• No-show: No refund</p>
           </div>
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'block', marginBottom: 6 }}>Reason for cancellation (optional)</label>
+            <label htmlFor="cancel-reason" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'block', marginBottom: 6 }}>Reason for cancellation (optional)</label>
             <textarea
+              id="cancel-reason"
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
               placeholder="Let us know why you're cancelling..."
@@ -176,9 +164,19 @@ export default function ManageBookingPage() {
               style={{ width: '100%', padding: '0.75rem 1rem', background: '#FFFFFF', border: '1px solid var(--surface-border)', borderRadius: 8, color: '#0F172A', fontSize: '0.9rem', outline: 'none', resize: 'vertical' }}
             />
           </div>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.75rem' }}>
+            We don&apos;t auto-cancel online yet — sending this lets our team confirm your cancellation and any refund by WhatsApp or email.
+          </p>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn-secondary" style={{ flex: 1, margin: 0 }} onClick={() => setAction('view')}>← Back</button>
-            <button style={{ flex: 1, padding: '0.75rem', background: '#ef4444', color: '#0F172A', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }} onClick={() => setAction('done')}>Confirm Cancel</button>
+            <a
+              href={waLink(`Hi, I'd like to cancel booking ${ref}.${cancelReason ? ' Reason: ' + cancelReason : ''}`)}
+              target="_blank"
+              rel="noopener"
+              style={{ flex: 1, padding: '0.75rem', background: '#ef4444', color: '#fff', borderRadius: 8, fontWeight: 600, cursor: 'pointer', textAlign: 'center', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+            >
+              💬 Send cancellation request
+            </a>
           </div>
         </div>
       )}

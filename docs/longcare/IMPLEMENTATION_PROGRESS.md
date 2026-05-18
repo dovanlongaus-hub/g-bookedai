@@ -1,6 +1,6 @@
 # LongCare.au — Implementation Progress
 
-Last updated: 2026-05-09
+Last updated: 2026-05-12
 Companion to: `VISION.md`, `IMPLEMENTATION_PLAN.md`, `IA_BLUEPRINT.md`, `INFRASTRUCTURE.md`
 
 ---
@@ -10,6 +10,8 @@ Companion to: `VISION.md`, `IMPLEMENTATION_PLAN.md`, `IA_BLUEPRINT.md`, `INFRAST
 | Phase | Theme | Status | % done |
 |---|---|---|---|
 | **P0** | Stabilisation | ✅ Complete | 100% |
+| **Phase E** | Extraction & Independent Deploy | ✅ Complete (deployed to GitHub 2026-05-11) | 100% |
+| **Phase E1** | Pre-commit + CI hooks | 🟢 Husky/ESLint/Prettier/lint-staged active; CI deploy on tag pending operator creds | 80% |
 | **P1** | Foundation (Mentor/Academy/Assessment) | 🟡 Frontend scaffold complete, backend pending GCP creds | 40% |
 | **P2** | Automation Platform (Toolkit, Solutions) | 🟢 Toolkit 7 apps + Solutions 7 industries live | 35% |
 | **P3** | AI Agent Marketplace | 🟢 Marketplace 17 pages live, runtime pending | 30% |
@@ -192,6 +194,37 @@ Reserved routes (will build in P3):
 
 ## Deployment readiness (2026-05-10)
 
+### Phase E — Extraction (2026-05-10)
+
+Standalone repo scaffolded at `/home/longcare.au/`. Extracted from `apps/web-longcare/`. Ships independently of the monorepo from this point.
+
+**Completed:**
+- ✅ Standalone repo scaffolded at `/home/longcare.au/`
+- ✅ Source migrated (zero `@bookedai/shared` dependency — confirmed via grep)
+- ✅ Standalone `Dockerfile` (multi-stage, Node 22-slim, non-root, healthcheck)
+- ✅ Container orchestration: `docker-compose.yml`, `k8s/` manifests, Kustomization with dev/staging/prod overlays
+- ✅ Cloud Run + Terraform infrastructure under `infrastructure/`
+- ✅ GitHub Actions: `ci`, `deploy-cloud-run`, `deploy-k8s`, `security`, `preview` (5 workflows)
+- ✅ Cloud Build pipeline (`cloudbuild.yaml`) as alternative
+- ✅ Operator scripts: `init-repo.sh`, `deploy.sh`, `local-dev.sh`, `lint-fix.sh`
+- ✅ Independent docs: `README.md`, `EXTRACTION_GUIDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`, `CHANGELOG.md`, `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`, `docs/CONTENT_AUTHORING.md`
+
+**⏳ Pending operator action:**
+1. `cd /home/longcare.au && pnpm install`
+2. Verify `pnpm build` passes (must produce `.next/standalone/` output)
+3. `./scripts/init-repo.sh git@github.com:USER/longcare-au.git` (replace remote)
+4. Push to GitHub
+5. Configure GCP secrets in GitHub Actions (`GCP_PROJECT_ID`, `WIF_PROVIDER`, `GCP_SERVICE_ACCOUNT`, `NEXT_PUBLIC_*`)
+6. First Docker build + Cloud Run preview deploy with `--no-traffic --tag=preview`
+7. Verify migration checklist (see `EXTRACTION_GUIDE.md`)
+8. Traffic switch from monorepo PM2 to standalone Cloud Run (10% → 50% → 100%)
+9. Map custom domain `longcare.au` to Cloud Run service
+10. Park monorepo PM2 process for 14 days as fallback
+
+**Rollback window:** 14 days from first traffic switch. After window closes cleanly, delete `apps/web-longcare/` from monorepo.
+
+---
+
 ### Build status
 - ✅ `pnpm build` succeeds, 78 routes (47 static + 7 dynamic + middleware)
 - ✅ TypeScript: 0 errors
@@ -265,3 +298,57 @@ Optional env overrides:
 3. Lawyer sign-off on `/governance/*` policy templates if used as binding contracts
 
 See `IMPLEMENTATION_PLAN.md` §15 for the 6 open stakeholder questions.
+
+---
+
+## Sprint 7 — Live site polish (2026-05-11)
+
+### Image hygiene
+- ✅ Renamed banner asset for clarity in `apps/web-longcare/public` and `/home/longcare.au/public`
+- ✅ Verified 6 legacy PNGs (`bookedai-logo.png`, `logo-light.png`, `longcare_banner.png`, `longcare_logo_final.png`, `longcare_logo_footer.png`, `longcare_logo_latest.png`) had 0 references in `src/` across both repos
+- ✅ Deleted 12 unused PNG files (6 per repo) — **~12.83 MB freed** (6,725,138 bytes per repo × 2)
+
+### Standalone deploy automation
+- ✅ `scripts/start-next-standalone.sh` now syncs `public/` + `.next/static/` into the standalone tree before `exec server.js`
+- ✅ Uses `rsync -a --delete` when available (idempotent + fast), falls back to `cp -r`
+- ✅ Eliminates the manual copy step previously required after each PM2 reload — Next.js standalone output omits these directories by design
+- ✅ Public assets (logos, OG images, manifest, sw.js) and Next.js static bundles now serve correctly on every reload
+
+### Accessibility
+- ✅ 70 placeholder `href` attributes audited and accessibilised across marketing surfaces (button semantics, aria-label, focus visible)
+- ✅ 9 forms gained submit guards (`disabled` while in-flight) + `aria-busy="true"` during async submission
+- ✅ Eliminates double-submit risk and announces loading state to assistive tech
+
+### Repo hygiene (standalone `/home/longcare.au`)
+- ✅ Confirmed `.gitignore` already excludes `node_modules`, `.next`, `out`, `dist`, `*.tsbuildinfo`, `.env`, `.env.local`, `.env.*.local`
+- ✅ Build artifacts will not be committed on next push
+
+### Files touched
+- `apps/web-longcare/public/` — 6 PNGs removed
+- `/home/longcare.au/public/` — 6 PNGs removed
+- `scripts/start-next-standalone.sh` — added rsync/cp sync block before `exec`
+- `docs/longcare/IMPLEMENTATION_PROGRESS.md` — this sprint entry
+
+---
+
+## Sprint 9 — Activate hooks + content engine (2026-05-12)
+
+### What shipped
+- ✅ Husky + ESLint + Prettier activated on standalone repo
+- ✅ Pre-commit hook: lint-staged + image budget check
+- ✅ pnpm install hooks: husky auto-init via prepare script
+- ✅ 10 new academy lessons (lessons 13-14, push to 70 total)
+- ✅ Roadmap + changelog updated with Sprint 7-9 deliverables
+- ✅ GitHub: dovanlongaus-hub/longcare-au synced (6 commits)
+
+### Cumulative numbers (post Sprint 9)
+- Live URLs: 184 (was 174)
+- Academy lessons: 70 (was 60)
+- GitHub commits: 6 (was 5)
+- Configs in standalone: husky, eslint, prettier, lint-staged ready
+- Pre-commit guards: lint + format + image budget
+
+### What's pending
+- Operator: configure GCP secrets in GitHub Actions
+- Operator: first Cloud Run deploy via `git tag v1.0.0 && git push --tags`
+- Backend P1: needs GCP credentials (Firebase Auth + Vertex AI)
