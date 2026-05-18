@@ -39,7 +39,7 @@ export interface TooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'cont
 
 export function Tooltip({ content, position = 'top', delay = 200, children, className, ...props }: TooltipProps) {
   const [visible, setVisible] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const show = useCallback(() => {
     timerRef.current = setTimeout(() => setVisible(true), delay);
