@@ -1,11 +1,6 @@
-const CACHE_NAME = 'longcare-v2';
+const CACHE_NAME = 'longcare-v3';
 
 const PRECACHE_URLS = [
-  '/',
-  '/services',
-  '/faq',
-  '/about',
-  '/contact',
   '/manifest.json',
   '/logo.png',
 ];
@@ -23,7 +18,11 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((names) =>
-      Promise.all(names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
+      Promise.all(
+        names
+          .filter((n) => n.startsWith('longcare-') && n !== CACHE_NAME)
+          .map((n) => caches.delete(n))
+      )
     )
   );
   self.clients.claim();
@@ -32,22 +31,27 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() =>
-        caches.match(event.request).then((cached) => cached || caches.match('/'))
-      )
+      fetch(event.request).catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  if (event.request.url.includes('/_next/static/')) {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      }).catch(() => caches.match(event.request))
     );
     return;
   }
 
   event.respondWith(
     caches.match(event.request).then((cached) =>
-      cached || fetch(event.request).then((response) => {
-        if (response.ok && event.request.url.includes('/_next/static/')) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-        }
-        return response;
-      }).catch(() => cached)
+      cached || fetch(event.request).catch(() => cached)
     )
   );
 });
