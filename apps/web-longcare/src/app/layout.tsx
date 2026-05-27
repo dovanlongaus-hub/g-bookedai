@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     locale: 'en_AU',
     type: 'website',
     images: [{
-      url: 'https://longcare.au/api/og?title=AI+Training+%26+Implementation&subtitle=For+Australian+SMEs',
+      url: 'https://longcare.au/og?title=AI+Training+%26+Implementation&subtitle=For+Australian+SMEs',
       width: 1200, height: 630,
       alt: 'Longcare — AI Training & Implementation',
     }],
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Longcare — AI Training & Implementation',
     description: 'AI mentoring from $29 AUD. Strategy sprints. Full agent deployment. GST-inclusive.',
-    images: ['/api/og?title=Longcare%20%E2%80%94%20AI%20Training%20%26%20Implementation'],
+    images: ['/og?title=Longcare%20%E2%80%94%20AI%20Training%20%26%20Implementation'],
   },
   // Favicons & app icons are generated automatically from src/app/icon.png
   // and src/app/apple-icon.png (Next.js file-based metadata).
