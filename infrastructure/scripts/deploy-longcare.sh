@@ -54,17 +54,15 @@ gcloud artifacts repositories describe "${REPO_NAME}" \
     --project="${PROJECT_ID}" \
     --description="LongCare AU Cloud Run images"
 
-echo "==> Submitting Cloud Build (multi-arch from Dockerfile)..."
+echo "==> Building and pushing image..."
 cd "$(dirname "$0")/../.."
-gcloud builds submit \
-  --tag="${IMAGE}" \
-  --project="${PROJECT_ID}" \
-  --region="${REGION}" \
-  --machine-type=e2-highcpu-8 \
-  --timeout=20m \
-  --gcs-source-staging-dir="gs://${PROJECT_ID}_cloudbuild/source" \
-  --substitutions=_DOCKERFILE=apps/web-longcare/Dockerfile \
-  apps/web-longcare/
+docker build \
+  -f apps/web-longcare/Dockerfile \
+  -t "${IMAGE}" \
+  --build-arg "NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}" \
+  --build-arg "API_URL=${NEXT_PUBLIC_API_URL}" \
+  .
+docker push "${IMAGE}"
 
 echo "==> Deploying to Cloud Run..."
 gcloud run deploy "${SERVICE_NAME}" \

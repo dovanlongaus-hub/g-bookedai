@@ -37,7 +37,7 @@ steps:
     waitFor: ['test']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:latest', 'apps/web-longcare']
+    args: ['build', '-f', 'apps/web-longcare/Dockerfile', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}', '-t', '${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:latest', '--build-arg', 'NEXT_PUBLIC_API_URL=https://api-g-bookedai-${_CLOUD_RUN_SUFFIX}.run.app', '--build-arg', 'API_URL=https://api-g-bookedai-${_CLOUD_RUN_SUFFIX}.run.app', '.']
     id: 'build-web-lc'
     waitFor: ['test']
 
@@ -131,7 +131,7 @@ steps:
       - '--cpu=1'
       - '--min-instances=0'
       - '--max-instances=10'
-      - '--set-env-vars=NODE_ENV=production,ALLOWED_ORIGINS=https://g.bookedai.au,https://longcare.au,https://book.longcare.au,https://app.longcare.au,https://admin.longcare.au,STRIPE_PAYMENT_METHODS=${_STRIPE_PAYMENT_METHODS},BANK_TRANSFER_BANK_NAME=${_BANK_NAME},BANK_TRANSFER_PAYID=${_BANK_PAYID},BANK_TRANSFER_ACCOUNT_NAME=${_BANK_ACCOUNT_NAME},PAY_ON_ARRIVAL_ENABLED=${_PAY_ON_ARRIVAL_ENABLED}'
+      - '--set-env-vars=^|^NODE_ENV=production|ALLOWED_ORIGINS=https://g.bookedai.au,https://longcare.au,https://www.longcare.au,https://book.longcare.au,https://app.longcare.au,https://admin.longcare.au|STRIPE_PAYMENT_METHODS=${_STRIPE_PAYMENT_METHODS}|BANK_TRANSFER_BANK_NAME=${_BANK_NAME}|BANK_TRANSFER_PAYID=${_BANK_PAYID}|BANK_TRANSFER_ACCOUNT_NAME=${_BANK_ACCOUNT_NAME}|PAY_ON_ARRIVAL_ENABLED=${_PAY_ON_ARRIVAL_ENABLED}'
       - '--set-secrets=GEMINI_API_KEY=GEMINI_API_KEY:latest,DATABASE_URL=DATABASE_URL:latest,STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest,STRIPE_WEBHOOK_SECRET=STRIPE_WEBHOOK_SECRET:latest,BANK_TRANSFER_BSB=BANK_TRANSFER_BSB:latest,BANK_TRANSFER_ACCOUNT_NUMBER=BANK_TRANSFER_ACCOUNT_NUMBER:latest,BPAY_BILLER_CODE=BPAY_BILLER_CODE:latest,VIETQR_BANK_BIN=VIETQR_BANK_BIN:latest,VIETQR_ACCOUNT_NUMBER=VIETQR_ACCOUNT_NUMBER:latest,VIETQR_ACCOUNT_NAME=VIETQR_ACCOUNT_NAME:latest'
     id: 'deploy-api'
     waitFor: ['push-api']
@@ -160,7 +160,18 @@ steps:
     waitFor: ['push-web-g']
 
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'web-longcare', '--image=${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}', '--region=${_REGION}', '--platform=managed', '--port=3000', '--allow-unauthenticated', '--memory=512Mi']
+    args:
+      - 'run'
+      - 'deploy'
+      - 'web-longcare'
+      - '--image=${_REGISTRY}/${PROJECT_ID}/bookedai-services/web-longcare:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--port=3000'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+      - '--set-env-vars=^|^API_URL=https://api-g-bookedai-${_CLOUD_RUN_SUFFIX}.run.app|NEXT_PUBLIC_API_URL=https://api-g-bookedai-${_CLOUD_RUN_SUFFIX}.run.app|ALLOWED_ORIGINS=https://longcare.au,https://www.longcare.au,https://book.longcare.au,https://app.longcare.au'
+      - '--set-secrets=STRIPE_WEBHOOK_SECRET=STRIPE_WEBHOOK_SECRET:latest'
     id: 'deploy-web-lc'
     waitFor: ['push-web-lc']
 

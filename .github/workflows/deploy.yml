@@ -115,8 +115,15 @@ jobs:
       - name: Build and push
         run: |
           IMAGE=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.app.name }}:${{ github.sha }}
-          docker build -t $IMAGE ${{ matrix.app.dir }} \
-            --build-arg NEXT_PUBLIC_API_URL=https://api.g.bookedai.au
+          if [ "${{ matrix.app.name }}" = "web-longcare" ]; then
+            docker build -f apps/web-longcare/Dockerfile -t $IMAGE \
+              --build-arg NEXT_PUBLIC_API_URL=https://api.g.bookedai.au \
+              --build-arg API_URL=https://api.g.bookedai.au \
+              .
+          else
+            docker build -t $IMAGE ${{ matrix.app.dir }} \
+              --build-arg NEXT_PUBLIC_API_URL=https://api.g.bookedai.au
+          fi
           docker push $IMAGE
 
       - name: Deploy to Cloud Run
