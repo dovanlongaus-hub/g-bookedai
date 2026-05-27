@@ -32,7 +32,6 @@ jobs:
   deploy-services:
     name: Deploy ${{ matrix.service.name }}
     runs-on: ubuntu-latest
-    if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
     strategy:
       matrix:
         service:
@@ -48,25 +47,31 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
 
       - id: auth
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - uses: google-github-actions/setup-gcloud@v2
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
 
       - name: Configure Docker
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
         run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
 
       - name: Build and push
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
         run: |
           IMAGE=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.service.name }}:${{ github.sha }}
           docker build -t $IMAGE ${{ matrix.service.dir }}
           docker push $IMAGE
 
       - name: Deploy to Cloud Run
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.service.name
         run: |
           gcloud run deploy ${{ matrix.service.cloud_run }} \
             --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.service.name }}:${{ github.sha }} \
@@ -83,7 +88,6 @@ jobs:
   deploy-apps:
     name: Deploy ${{ matrix.app.name }}
     runs-on: ubuntu-latest
-    if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
     strategy:
       matrix:
         app:
@@ -100,19 +104,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
 
       - id: auth
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - uses: google-github-actions/setup-gcloud@v2
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
 
       - name: Configure Docker
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
         run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
 
       - name: Build and push
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
         run: |
           IMAGE=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.app.name }}:${{ github.sha }}
           if [ "${{ matrix.app.name }}" = "web-longcare" ]; then
@@ -127,6 +136,7 @@ jobs:
           docker push $IMAGE
 
       - name: Deploy to Cloud Run
+        if: github.event.inputs.service == 'all' || github.event.inputs.service == '' || github.event.inputs.service == matrix.app.name
         run: |
           gcloud run deploy ${{ matrix.app.cloud_run }} \
             --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/bookedai-services/${{ matrix.app.name }}:${{ github.sha }} \
